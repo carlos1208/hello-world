@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Johana Duque &amp; Consultores S.A.S — Abogados en Barranquilla">
+  <defs>
+    <linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A1420"/>
+      <stop offset="55%" stop-color="#102032"/>
+      <stop offset="100%" stop-color="#16293C"/>
+    </linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#A5813E"/>
+      <stop offset="50%" stop-color="#E4C88E"/>
+      <stop offset="100%" stop-color="#A5813E"/>
+    </linearGradient>
+    <radialGradient id="h" cx="82%" cy="18%" r="46%">
+      <stop offset="0%" stop-color="#C6A15B" stop-opacity=".30"/>
+      <stop offset="100%" stop-color="#C6A15B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#b)"/>
+  <rect width="1200" height="630" fill="url(#h)"/>
+
+  <g transform="translate(935 315)" fill="none" stroke="#C6A15B" opacity=".22">
+    <circle r="215" stroke-width="1.4"/>
+    <circle r="180" stroke-width="1.4" stroke-dasharray="3 10"/>
+    <g stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M0-118V96"/><path d="M-88-80h176"/>
+      <path d="M-88-80-122 4h68Z"/><path d="M88-80 54 4h68Z"/>
+      <path d="M-40 96h80"/>
+    </g>
+  </g>
+
+  <text x="90" y="238" font-family="Inter, Helvetica, Arial, sans-serif" font-size="19" letter-spacing="7" fill="#C6A15B">BARRANQUILLA · ATLÁNTICO · COLOMBIA</text>
+
+  <text x="86" y="330" font-family="Cormorant Garamond, Georgia, serif" font-size="82" fill="#FFFFFF">Johana Duque</text>
+  <text x="86" y="404" font-family="Cormorant Garamond, Georgia, serif" font-size="60" font-style="italic" fill="url(#g)">&amp; Consultores S.A.S</text>
+
+  <line x1="90" y1="450" x2="330" y2="450" stroke="#C6A15B" stroke-width="1.4" stroke-opacity=".7"/>
+
+  <text x="90" y="500" font-family="Inter, Helvetica, Arial, sans-serif" font-size="24" fill="#FFFFFF" fill-opacity=".7">Defensa jurídica con criterio, cercanía y resultados.</text>
+</svg>
