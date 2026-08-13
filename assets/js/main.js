@@ -102,7 +102,7 @@
   /* ---------------------------------------------------------
      3. Revelado progresivo al hacer scroll
      --------------------------------------------------------- */
-  var revealables = $$('[data-reveal]');
+  var revealables = $$('[data-reveal], [data-unveil]');
 
   if (reduced || !('IntersectionObserver' in window)) {
     revealables.forEach(function (el) { el.classList.add('is-in'); });
@@ -386,7 +386,124 @@
   }
 
   /* ---------------------------------------------------------
-     9. Detalles finales
+     9. Galería de la oficina: visor de fotografías
+     --------------------------------------------------------- */
+  (function lightbox() {
+    var box = $('#lightbox');
+    var shots = $$('.shot');
+    if (!box || !shots.length) return;
+
+    var img = $('#lbImg');
+    var cap = $('#lbCap');
+    var current = 0;
+    var lastFocus = null;
+
+    function render(i) {
+      current = (i + shots.length) % shots.length;
+      var source = $('img', shots[current]);
+      img.src = source.getAttribute('src');
+      img.alt = source.getAttribute('alt') || '';
+      cap.textContent = shots[current].getAttribute('data-caption') || '';
+    }
+
+    function open(i) {
+      lastFocus = document.activeElement;
+      render(i);
+      box.hidden = false;
+      document.body.classList.add('is-locked');
+      requestAnimationFrame(function () { box.classList.add('is-on'); });
+      $('#lbClose').focus();
+    }
+
+    function close() {
+      box.classList.remove('is-on');
+      document.body.classList.remove('is-locked');
+      setTimeout(function () { box.hidden = true; }, 350);
+      if (lastFocus) lastFocus.focus();
+    }
+
+    shots.forEach(function (shot, i) {
+      shot.addEventListener('click', function () { open(i); });
+    });
+
+    $('#lbClose').addEventListener('click', close);
+    $('#lbNext').addEventListener('click', function () { render(current + 1); });
+    $('#lbPrev').addEventListener('click', function () { render(current - 1); });
+    $$('[data-close]', box).forEach(function (el) { el.addEventListener('click', close); });
+
+    document.addEventListener('keydown', function (e) {
+      if (box.hidden) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowRight') render(current + 1);
+      if (e.key === 'ArrowLeft') render(current - 1);
+      if (e.key === 'Tab') {
+        // Mantiene el foco dentro del visor mientras está abierto.
+        var focusables = $$('button', box);
+        var first = focusables[0];
+        var last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+
+    // Gesto táctil para pasar de foto
+    var tx = null;
+    box.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    box.addEventListener('touchend', function (e) {
+      if (tx === null) return;
+      var dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 50) render(current + (dx < 0 ? 1 : -1));
+      tx = null;
+    });
+  })();
+
+  /* ---------------------------------------------------------
+     10. Retrato del hero: leve paralaje con el puntero
+     --------------------------------------------------------- */
+  (function parallax() {
+    var stage = $('#stage');
+    var photo = $('#stagePhoto');
+    if (!stage || !photo || reduced) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    var raf = null, tx = 0, ty = 0;
+
+    stage.addEventListener('mousemove', function (e) {
+      var r = stage.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 16;
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 12;
+      if (!raf) raf = requestAnimationFrame(apply);
+    });
+    stage.addEventListener('mouseleave', function () {
+      tx = 0; ty = 0;
+      if (!raf) raf = requestAnimationFrame(apply);
+    });
+
+    function apply() {
+      raf = null;
+      photo.style.transform = 'translate3d(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px,0)';
+    }
+  })();
+
+  /* ---------------------------------------------------------
+     11. Barra de acción en móvil
+     --------------------------------------------------------- */
+  (function mobileBar() {
+    var bar = $('#mobileBar');
+    var hero = $('#inicio');
+    if (!bar || !hero || !('IntersectionObserver' in window)) return;
+
+    // Aparece cuando el hero deja de verse: el usuario ya leyó la propuesta
+    // y a partir de ahí tiene siempre a mano llamar, escribir o agendar.
+    var mio = new IntersectionObserver(function (entries) {
+      bar.classList.toggle('is-on', !entries[0].isIntersecting);
+    }, { threshold: 0, rootMargin: '-72px 0px 0px 0px' });
+
+    mio.observe(hero);
+  })();
+
+  /* ---------------------------------------------------------
+     12. Detalles finales
      --------------------------------------------------------- */
   var year = $('#year');
   if (year) year.textContent = String(new Date().getFullYear());

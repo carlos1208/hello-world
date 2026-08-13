@@ -28,29 +28,39 @@ Luego visite <http://localhost:8080>.
 └── assets/
     ├── css/styles.css      Estilos (tokens, componentes, responsive)
     ├── js/main.js          Interacciones y animaciones
-    └── img/                Carpeta para fotografías reales
+    └── img/                Fotografías — ver assets/img/README.md
 ```
 
 ## Secciones
 
 1. **Cabecera** — barra superior con datos de contacto, navegación fija que
    cambia de color sobre el hero, menú lateral en móvil.
-2. **Hero** — titular animado y formulario corto de captación.
-3. **Cifras** — contadores animados al entrar en pantalla.
-4. **La firma** — presentación, ilustración y tres pilares de trabajo.
+2. **Hero** — titular animado y fotografía recortada de la socia fundadora
+   sobre un halo, con tarjetas flotantes de credibilidad.
+3. **Cifras + contacto rápido** — cinco contadores animados y un formulario
+   de devolución de llamada.
+4. **La firma** — presentación, composición de dos fotografías y tres pilares.
 5. **Áreas de práctica** — ocho tarjetas con detalle de servicios.
-6. **Cómo trabajamos** — proceso en cuatro etapas.
-7. **Equipo** — perfiles de los abogados.
-8. **Testimonios** — carrusel con autoavance, gestos táctiles y navegación.
-9. **Preguntas frecuentes** — acordeón accesible.
-10. **Contacto** — datos de la oficina y formulario completo con validación.
-11. **Pie de página** — mapa del sitio, avisos legales y disclaimer.
+6. **La oficina** — galería de cinco fotografías con visor ampliable.
+7. **Cómo trabajamos** — proceso en cuatro etapas.
+8. **Equipo** — perfiles de los abogados con retrato.
+9. **Testimonios** — carrusel con autoavance, gestos táctiles y navegación.
+10. **Preguntas frecuentes** — acordeón accesible.
+11. **Contacto** — datos de la oficina, cómo llegar y formulario con validación.
+12. **Pie de página** — mapa del sitio, avisos legales y disclaimer.
+
+En móvil aparece además una barra de acción fija (llamar, WhatsApp, agendar)
+apenas el visitante pasa el hero.
 
 ## Animaciones
 
 - Revelado progresivo al hacer scroll con `IntersectionObserver` y retardos
   escalonados por elemento (`--d`).
 - Entrada del titular por líneas enmascaradas.
+- Fotografías que se descubren con una cortina que se levanta mientras la
+  imagen se asienta (`data-unveil`).
+- Retrato del hero con paralaje suave según el puntero, halo que respira y
+  tarjetas flotantes con movimiento desfasado.
 - Contadores numéricos con curva `easeOutExpo`.
 - Cabecera que se contrae, se oculta al bajar y reaparece al subir.
 - Barra de progreso de lectura, marquesina infinita, resaltado de la sección
@@ -75,7 +85,8 @@ bloque está marcado con un comentario `PLACEHOLDER`.
 | Correo | contacto, pie, JSON-LD | contacto@johanaduqueconsultores.co |
 | NIT | pie de página | 900.000.000-0 |
 | Dominio | `canonical`, Open Graph, JSON-LD | johanaduqueconsultores.co |
-| Cifras de la firma | sección «Cifras» | 14 años, 820 casos, 24 h |
+| Cifras de la firma | banda de cifras | 14 años, 820 casos, 640 fallos |
+| Fotografías | hero, «La firma», galería, equipo | marcadores SVG |
 | Testimonios | sección «Clientes» | 3 testimonios de ejemplo |
 | Equipo | sección «Equipo» | 2 perfiles sin nombre + fotos |
 | Redes sociales | pie de página | enlaces `#` vacíos |
@@ -85,25 +96,26 @@ Dos advertencias importantes:
 - **Testimonios.** Publique únicamente reseñas reales y con autorización escrita
   del cliente, cuidando el secreto profesional. Los tres textos incluidos son de
   muestra.
-- **Cifras y credenciales.** Los números del contador son ilustrativos.
-  Publicar estadísticas de resultados no comprobables puede acarrear problemas
-  frente al régimen de publicidad y al estatuto del consumidor.
+- **Cifras y credenciales.** Los números del contador son ilustrativos. El dato
+  de «procesos con fallo favorable» es el más delicado: publicar estadísticas
+  de resultados que no pueda respaldar con el registro de sus procesos puede
+  acarrear problemas frente al régimen de publicidad y al estatuto del
+  consumidor. Si no lleva ese conteo, cambie la métrica por una verificable
+  (años de ejercicio, número de clientes, áreas atendidas).
 
 ### Fotografías
 
-Los retratos del equipo y la ilustración de «La firma» son gráficos SVG con el
-monograma de la firma, pensados como sustitutos dignos mientras no haya fotos.
-Para reemplazarlos, cambie el `<svg>` por una imagen:
+El sitio tiene once espacios de fotografía ya montados, cada uno con su
+proporción fija y un marcador SVG diseñado. Reemplazarlos es cambiar el `src`
+de un `<img>`, nada más.
 
-```html
-<div class="member__photo">
-  <img src="assets/img/johana-duque.jpg" alt="Johana Duque, socia fundadora"
-       width="600" height="750" loading="lazy">
-</div>
-```
+**`assets/img/README.md` contiene la lista completa de tomas**, las medidas de
+cada una, cómo debe prepararse el recorte sin fondo del hero y las
+autorizaciones de imagen que hacen falta para publicar fotos con clientes.
 
-El contenedor ya recorta a proporción 4:5 con `object-fit: cover`, así que
-cualquier foto vertical encaja sin deformarse.
+La foto más importante es la del hero: un recorte vertical **con fondo
+transparente** de la socia fundadora, apoyado en el borde inferior del archivo.
+Es la pieza que sostiene la composición de halo, aro y tarjetas flotantes.
 
 ## Conectar los formularios
 

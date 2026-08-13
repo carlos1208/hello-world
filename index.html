@@ -25,6 +25,22 @@
 
 <link rel="stylesheet" href="assets/css/styles.css">
 
+<!-- Sin JavaScript no se agrega la clase que dispara las animaciones de
+     entrada: se muestra todo el contenido en su estado final. -->
+<noscript><style>
+  [data-reveal] { opacity: 1; transform: none; }
+  [data-unveil]::after { transform: scaleY(0); }
+  [data-unveil] > img { transform: none; }
+  /* La cabecera tampoco pasaría nunca a su estado fijo: se deja sólida
+     para que el texto no quede claro sobre las secciones marfil. */
+  .site-header::after { opacity: 1; }
+  .site-header:not(.is-stuck) .brand__txt strong { color: #0C1524; }
+  .site-header:not(.is-stuck) .brand__mark text { fill: #0C1524; }
+  .site-header:not(.is-stuck) .brand__txt em { color: #8F6F3B; }
+  .site-header:not(.is-stuck) .menu__a { color: #2B3344; }
+  .site-header:not(.is-stuck) .burger span { background: #0C1524; }
+</style></noscript>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -79,6 +95,7 @@
         <li><a href="#inicio" class="menu__a">Inicio</a></li>
         <li><a href="#firma" class="menu__a">La Firma</a></li>
         <li><a href="#areas" class="menu__a">Áreas de práctica</a></li>
+        <li><a href="#oficina" class="menu__a">La oficina</a></li>
         <li><a href="#proceso" class="menu__a">Cómo trabajamos</a></li>
         <li><a href="#equipo" class="menu__a">Equipo</a></li>
         <li><a href="#faq" class="menu__a">Preguntas</a></li>
@@ -147,49 +164,45 @@
       </ul>
     </div>
 
-    <aside class="hero__card" data-reveal style="--d:.5s">
-      <div class="card-consulta">
-        <p class="card-consulta__kicker">Consulta rápida</p>
-        <h2 class="card-consulta__title">Cuéntenos su caso</h2>
-        <p class="card-consulta__sub">Le respondemos en menos de 24 horas hábiles.</p>
+    <!-- Escenario de la fotografía principal.
+         PLACEHOLDER: reemplace el src por el recorte real (PNG/WebP sin fondo). -->
+    <div class="stage" id="stage">
+      <span class="stage__halo" aria-hidden="true"></span>
+      <span class="stage__arc" aria-hidden="true"></span>
+      <span class="stage__plinth" aria-hidden="true"></span>
 
-        <form class="mini-form" id="miniForm" novalidate>
-          <div class="field field--dark">
-            <input type="text" id="mf-nombre" name="nombre" placeholder=" " required autocomplete="name">
-            <label for="mf-nombre">Nombre completo</label>
-            <span class="field__err"></span>
-          </div>
-          <div class="field field--dark">
-            <input type="tel" id="mf-tel" name="telefono" placeholder=" " required autocomplete="tel" inputmode="tel">
-            <label for="mf-tel">Teléfono / WhatsApp</label>
-            <span class="field__err"></span>
-          </div>
-          <div class="field field--dark">
-            <select id="mf-area" name="area" required>
-              <option value="" selected disabled>Área de su consulta</option>
-              <option>Derecho laboral y seguridad social</option>
-              <option>Derecho civil y contractual</option>
-              <option>Derecho de familia</option>
-              <option>Derecho penal</option>
-              <option>Derecho comercial y societario</option>
-              <option>Derecho administrativo</option>
-              <option>Inmobiliario y propiedad horizontal</option>
-              <option>Insolvencia de persona natural</option>
-              <option>Otra</option>
-            </select>
-            <label for="mf-area" class="label--static">Área de su consulta</label>
-            <svg class="field__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-            <span class="field__err"></span>
-          </div>
-          <button type="submit" class="btn btn--solid btn--block">Solicitar contacto</button>
-          <p class="mini-form__legal">
-            Al enviar acepta nuestra
-            <a href="#politica">política de tratamiento de datos</a> (Ley 1581 de 2012).
-          </p>
-          <p class="form-msg" id="miniMsg" role="status" aria-live="polite"></p>
-        </form>
-      </div>
-    </aside>
+      <img class="stage__photo" id="stagePhoto"
+           src="assets/img/johana-duque.svg"
+           alt="Johana Duque, abogada y socia fundadora de la firma"
+           width="620" height="820" fetchpriority="high">
+
+      <figure class="stage__card stage__card--a" data-reveal style="--d:.75s">
+        <span class="stage__card-ic" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.4 3.4 8.2 8 9 4.6-.8 8-4.6 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+        </span>
+        <figcaption>
+          <strong>Johana Duque</strong>
+          <span>Abogada · Socia fundadora</span>
+        </figcaption>
+      </figure>
+
+      <figure class="stage__card stage__card--b" data-reveal style="--d:.9s">
+        <figcaption>
+          <strong class="stage__card-num"><span class="count" data-to="14">0</span>+ años</strong>
+          <span>ejerciendo en el Atlántico</span>
+        </figcaption>
+      </figure>
+
+      <a class="stage__card stage__card--c" href="https://wa.me/573000000000" target="_blank" rel="noopener" data-reveal style="--d:1.05s">
+        <span class="stage__card-ic stage__card-ic--wa" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.9 7L4 20l1.6-3.9A8 8 0 1 1 20 11.5Z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>
+        </span>
+        <span class="stage__card-txt">
+          <strong>Consulta inicial sin costo</strong>
+          <span>Escríbanos por WhatsApp</span>
+        </span>
+      </a>
+    </div>
   </div>
 
   <a href="#firma" class="hero__scroll" aria-label="Bajar a la siguiente sección">
@@ -197,25 +210,76 @@
   </a>
 </section>
 
-<!-- ============ STATS ============ -->
-<!-- PLACEHOLDER: reemplace estas cifras por datos verificables de la firma -->
-<section class="stats" aria-label="La firma en cifras">
-  <div class="shell stats__grid">
-    <div class="stat" data-reveal>
-      <p class="stat__num"><span class="count" data-to="14">0</span><i>+</i></p>
-      <p class="stat__lbl">Años ejerciendo en el Atlántico</p>
+<!-- ============ CIFRAS + CONTACTO RÁPIDO ============ -->
+<!-- PLACEHOLDER: reemplace estas cifras por datos verificables de la firma.
+     Publicar resultados no comprobables acarrea riesgo frente al régimen
+     de publicidad y al estatuto del consumidor. -->
+<section class="trust" aria-label="La firma en cifras">
+  <div class="shell">
+    <div class="trust__stats">
+      <div class="stat" data-reveal>
+        <p class="stat__num"><span class="count" data-to="14">0</span><i>+</i></p>
+        <p class="stat__lbl">Años de ejercicio</p>
+      </div>
+      <div class="stat" data-reveal style="--d:.08s">
+        <p class="stat__num"><span class="count" data-to="820">0</span><i>+</i></p>
+        <p class="stat__lbl">Casos atendidos</p>
+      </div>
+      <div class="stat" data-reveal style="--d:.16s">
+        <p class="stat__num"><span class="count" data-to="640">0</span><i>+</i></p>
+        <p class="stat__lbl">Procesos con fallo favorable</p>
+      </div>
+      <div class="stat" data-reveal style="--d:.24s">
+        <p class="stat__num"><span class="count" data-to="8">0</span></p>
+        <p class="stat__lbl">Áreas de práctica</p>
+      </div>
+      <div class="stat" data-reveal style="--d:.32s">
+        <p class="stat__num"><span class="count" data-to="24">0</span><i>h</i></p>
+        <p class="stat__lbl">Tiempo de respuesta</p>
+      </div>
     </div>
-    <div class="stat" data-reveal style="--d:.1s">
-      <p class="stat__num"><span class="count" data-to="820">0</span><i>+</i></p>
-      <p class="stat__lbl">Casos atendidos</p>
-    </div>
-    <div class="stat" data-reveal style="--d:.2s">
-      <p class="stat__num"><span class="count" data-to="8">0</span></p>
-      <p class="stat__lbl">Áreas de práctica</p>
-    </div>
-    <div class="stat" data-reveal style="--d:.3s">
-      <p class="stat__num"><span class="count" data-to="24">0</span><i>h</i></p>
-      <p class="stat__lbl">Tiempo de respuesta</p>
+
+    <div class="trust__cta" data-reveal>
+      <div class="trust__cta-head">
+        <h2>¿Prefiere que lo llamemos?</h2>
+        <p>Déjenos sus datos y un abogado de la firma se comunica con usted.</p>
+      </div>
+
+      <form class="callback" id="miniForm" novalidate>
+        <div class="field field--dark">
+          <input type="text" id="mf-nombre" name="nombre" placeholder=" " required autocomplete="name">
+          <label for="mf-nombre">Nombre completo</label>
+          <span class="field__err"></span>
+        </div>
+        <div class="field field--dark">
+          <input type="tel" id="mf-tel" name="telefono" placeholder=" " required autocomplete="tel" inputmode="tel">
+          <label for="mf-tel">Teléfono / WhatsApp</label>
+          <span class="field__err"></span>
+        </div>
+        <div class="field field--dark">
+          <select id="mf-area" name="area" required>
+            <option value="" selected disabled>Área de su consulta</option>
+            <option>Derecho laboral y seguridad social</option>
+            <option>Derecho civil y contractual</option>
+            <option>Derecho de familia</option>
+            <option>Derecho penal</option>
+            <option>Derecho comercial y societario</option>
+            <option>Derecho administrativo</option>
+            <option>Inmobiliario y propiedad horizontal</option>
+            <option>Insolvencia de persona natural</option>
+            <option>Otra</option>
+          </select>
+          <label for="mf-area" class="label--static">Área de su consulta</label>
+          <svg class="field__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          <span class="field__err"></span>
+        </div>
+        <button type="submit" class="btn btn--solid">Solicitar llamada</button>
+      </form>
+
+      <p class="callback__legal">
+        Al enviar acepta la <a href="#politica">política de tratamiento de datos</a> (Ley 1581 de 2012).
+      </p>
+      <p class="form-msg" id="miniMsg" role="status" aria-live="polite"></p>
     </div>
   </div>
 </section>
@@ -223,44 +287,21 @@
 <!-- ============ LA FIRMA ============ -->
 <section class="section firma" id="firma">
   <div class="shell firma__grid">
-    <div class="firma__visual" data-reveal>
+    <div class="firma__visual">
       <div class="frame">
         <!-- PLACEHOLDER: sustituya por una fotografía real de la oficina o del equipo -->
-        <div class="frame__img" role="img" aria-label="Oficina de la firma en Barranquilla">
-          <svg viewBox="0 0 400 560" class="frame__art" aria-hidden="true">
-            <defs>
-              <linearGradient id="fg" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#1A2B45"/><stop offset="100%" stop-color="#080E1A"/>
-              </linearGradient>
-              <pattern id="fhatch" width="9" height="9" patternTransform="rotate(38)" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="0" y2="9" stroke="#B08B4F" stroke-opacity=".12" stroke-width="1"/>
-              </pattern>
-            </defs>
-            <rect width="400" height="560" fill="url(#fg)"/>
-            <rect width="400" height="560" fill="url(#fhatch)"/>
-
-            <!-- Balanza -->
-            <g stroke="#D2B078" stroke-opacity=".7" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M200 96v56"/>
-              <path d="M152 110h96"/>
-              <circle cx="200" cy="100" r="5"/>
-              <path d="M152 110l-15 26h30zM248 110l-15 26h30z"/>
-              <path d="M182 152h36"/>
-            </g>
-
-            <!-- Frontispicio -->
-            <g stroke="#B08B4F" stroke-opacity=".5" fill="none" stroke-width="1.3" stroke-linejoin="round">
-              <path d="M60 250 200 182 340 250Z"/>
-              <path d="M66 250h268v18H66z"/>
-              <path d="M84 268v122M137 268v122M190 268v122M243 268v122M296 268v122"/>
-              <path d="M94 268v122M147 268v122M200 268v122M253 268v122M306 268v122"/>
-              <path d="M76 268h248"/>
-              <rect x="56" y="390" width="288" height="12"/>
-              <rect x="42" y="402" width="316" height="12"/>
-              <rect x="28" y="414" width="344" height="13"/>
-            </g>
-          </svg>
+        <div class="frame__img" data-unveil>
+          <img src="assets/img/firma-principal.svg"
+               alt="Oficina de Johana Duque &amp; Consultores en Barranquilla"
+               width="1000" height="1250" loading="lazy">
         </div>
+
+        <div class="frame__inset" data-unveil style="--d:.18s">
+          <img src="assets/img/firma-detalle.svg"
+               alt="Abogada de la firma atendiendo a un cliente en la sala de juntas"
+               width="700" height="700" loading="lazy">
+        </div>
+
         <div class="frame__badge">
           <span class="frame__badge-num">S.A.S</span>
           <span class="frame__badge-txt">Sociedad legalmente constituida ante Cámara de Comercio de Barranquilla</span>
@@ -409,6 +450,67 @@
   </div>
 </section>
 
+<!-- ============ LA OFICINA (GALERÍA) ============ -->
+<!-- PLACEHOLDER: reemplace cada src por fotografías reales de la oficina.
+     Publique fotos de clientes solo con autorización escrita de imagen. -->
+<section class="section oficina" id="oficina">
+  <div class="shell">
+    <header class="sec-head">
+      <div>
+        <p class="eyebrow" data-reveal><span class="eyebrow__dot"></span> La oficina</p>
+        <h2 class="h2" data-reveal style="--d:.08s">Aquí lo <em>atendemos</em></h2>
+      </div>
+      <p class="sec-head__aside" data-reveal style="--d:.14s">
+        Oficina 704 en el norte de Barranquilla. Sala de juntas para reuniones
+        privadas, parqueadero para visitantes y atención por videollamada para
+        quienes están fuera de la ciudad.
+      </p>
+    </header>
+
+    <div class="bento" id="bento">
+      <button class="shot shot--lg" data-unveil type="button"
+              data-caption="Recepción de la firma — Cra. 53 # 79-01, Oficina 704, Barranquilla.">
+        <img src="assets/img/oficina-fachada.svg" alt="Recepción de la oficina de la firma en Barranquilla"
+             width="1200" height="1200" loading="lazy">
+        <span class="shot__veil" aria-hidden="true"></span>
+        <span class="shot__cap"><em>01</em> Recepción</span>
+      </button>
+
+      <button class="shot" data-unveil style="--d:.08s" type="button"
+              data-caption="Primera consulta: revisamos los documentos con el cliente antes de dar cualquier concepto.">
+        <img src="assets/img/oficina-atencion.svg" alt="Abogada atendiendo a un cliente en la sala de juntas"
+             width="900" height="900" loading="lazy">
+        <span class="shot__veil" aria-hidden="true"></span>
+        <span class="shot__cap"><em>02</em> Atención al cliente</span>
+      </button>
+
+      <button class="shot" data-unveil style="--d:.16s" type="button"
+              data-caption="Estudio del expediente en equipo antes de fijar la estrategia del caso.">
+        <img src="assets/img/oficina-equipo.svg" alt="Equipo de la firma revisando un expediente en la sala de juntas"
+             width="900" height="900" loading="lazy">
+        <span class="shot__veil" aria-hidden="true"></span>
+        <span class="shot__cap"><em>03</em> Estudio del caso</span>
+      </button>
+
+      <button class="shot" data-unveil style="--d:.24s" type="button"
+              data-caption="Firma del contrato de prestación de servicios: alcance y honorarios quedan por escrito.">
+        <img src="assets/img/oficina-firma.svg" alt="Cliente firmando el contrato de prestación de servicios"
+             width="900" height="900" loading="lazy">
+        <span class="shot__veil" aria-hidden="true"></span>
+        <span class="shot__cap"><em>04</em> Todo por escrito</span>
+      </button>
+
+      <button class="shot" data-unveil style="--d:.32s" type="button"
+              data-caption="Asesoría por videollamada para clientes fuera de Barranquilla y audiencias virtuales.">
+        <img src="assets/img/oficina-virtual.svg" alt="Abogada atendiendo una asesoría por videollamada"
+             width="900" height="900" loading="lazy">
+        <span class="shot__veil" aria-hidden="true"></span>
+        <span class="shot__cap"><em>05</em> Atención virtual</span>
+      </button>
+    </div>
+  </div>
+</section>
+
 <!-- ============ PROCESO ============ -->
 <section class="section proceso" id="proceso">
   <div class="shell">
@@ -463,19 +565,9 @@
     <!-- PLACEHOLDER: reemplace fotos, nombres y credenciales por los reales del equipo -->
     <div class="team">
       <article class="member member--lead" data-reveal>
-        <div class="member__photo">
-          <svg viewBox="0 0 300 375" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <defs>
-              <linearGradient id="pg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1E2F4B"/><stop offset="100%" stop-color="#080E1A"/></linearGradient>
-              <pattern id="ph1" width="8" height="8" patternTransform="rotate(38)" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="0" y2="8" stroke="#B08B4F" stroke-opacity=".14" stroke-width="1"/>
-              </pattern>
-            </defs>
-            <rect width="300" height="375" fill="url(#pg1)"/>
-            <rect width="300" height="375" fill="url(#ph1)"/>
-            <rect x="17" y="17" width="266" height="341" fill="none" stroke="#B08B4F" stroke-opacity=".38"/>
-            <text x="150" y="212" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="104" font-weight="600" letter-spacing="6" fill="#D2B078" fill-opacity=".62">JD</text>
-          </svg>
+        <div class="member__photo" data-unveil>
+          <img src="assets/img/equipo-01.svg" alt="Johana Duque, abogada y socia fundadora de la firma"
+               width="1200" height="1500" loading="lazy">
           <span class="member__badge">Socia fundadora</span>
         </div>
         <div class="member__body">
@@ -494,18 +586,9 @@
       </article>
 
       <article class="member" data-reveal style="--d:.1s">
-        <div class="member__photo">
-          <svg viewBox="0 0 300 375" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <defs>
-              <pattern id="ph2" width="8" height="8" patternTransform="rotate(38)" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="0" y2="8" stroke="#B08B4F" stroke-opacity=".12" stroke-width="1"/>
-              </pattern>
-            </defs>
-            <rect width="300" height="375" fill="#101A2C"/>
-            <rect width="300" height="375" fill="url(#ph2)"/>
-            <rect x="17" y="17" width="266" height="341" fill="none" stroke="#B08B4F" stroke-opacity=".3"/>
-            <text x="150" y="212" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="104" font-weight="600" letter-spacing="6" fill="#B08B4F" fill-opacity=".42">JD</text>
-          </svg>
+        <div class="member__photo" data-unveil>
+          <img src="assets/img/equipo-02.svg" alt="Abogado del área civil y comercial de la firma"
+               width="1200" height="1500" loading="lazy">
         </div>
         <div class="member__body">
           <h3>Nombre del abogado</h3>
@@ -515,18 +598,9 @@
       </article>
 
       <article class="member" data-reveal style="--d:.2s">
-        <div class="member__photo">
-          <svg viewBox="0 0 300 375" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <defs>
-              <pattern id="ph3" width="8" height="8" patternTransform="rotate(38)" patternUnits="userSpaceOnUse">
-                <line x1="0" y1="0" x2="0" y2="8" stroke="#B08B4F" stroke-opacity=".12" stroke-width="1"/>
-              </pattern>
-            </defs>
-            <rect width="300" height="375" fill="#101A2C"/>
-            <rect width="300" height="375" fill="url(#ph3)"/>
-            <rect x="17" y="17" width="266" height="341" fill="none" stroke="#B08B4F" stroke-opacity=".3"/>
-            <text x="150" y="212" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="104" font-weight="600" letter-spacing="6" fill="#B08B4F" fill-opacity=".42">JD</text>
-          </svg>
+        <div class="member__photo" data-unveil>
+          <img src="assets/img/equipo-03.svg" alt="Abogado del área penal y administrativa de la firma"
+               width="1200" height="1500" loading="lazy">
         </div>
         <div class="member__body">
           <h3>Nombre del abogado</h3>
@@ -678,6 +752,14 @@
           <span class="contact-list__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5l3 1.8"/></svg></span>
           <div><h3>Horario</h3><p>Lunes a viernes, 8:00 a. m. – 6:00 p. m.<br>Sábados, 9:00 a. m. – 12:00 m.</p></div>
         </li>
+        <li data-reveal style="--d:.44s">
+          <span class="contact-list__ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17.5V7l5-2.5 6 3 5-2.5v10.5l-5 2.5-6-3-5 2.5Z"/><path d="M9 4.5v11M15 7.5v11"/></svg></span>
+          <div>
+            <h3>Cómo llegar</h3>
+            <p>Edificio con parqueadero para visitantes, sobre la Cra. 53.<br>
+            <a href="https://maps.google.com/?q=Carrera+53+%2379-01+Barranquilla" target="_blank" rel="noopener">Ver ruta en Google Maps</a></p>
+          </div>
+        </li>
       </ul>
     </div>
 
@@ -792,6 +874,7 @@
       <h3>La firma</h3>
       <ul>
         <li><a href="#firma">Quiénes somos</a></li>
+        <li><a href="#oficina">La oficina</a></li>
         <li><a href="#proceso">Cómo trabajamos</a></li>
         <li><a href="#equipo">Equipo</a></li>
         <li><a href="#testimonios">Clientes</a></li>
@@ -830,6 +913,40 @@
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.9 7L4 20l1.6-3.9A8 8 0 1 1 20 11.5Z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>
   <span>Escríbanos</span>
 </a>
+
+<!-- Visor de fotografías -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Galería de la oficina" hidden>
+  <div class="lightbox__bg" data-close></div>
+  <button class="lightbox__close" id="lbClose" aria-label="Cerrar galería">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+  </button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Foto anterior">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+  <figure class="lightbox__fig">
+    <img id="lbImg" src="" alt="">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Foto siguiente">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+</div>
+
+<!-- Barra de acción en móvil -->
+<nav class="mobile-bar" id="mobileBar" aria-label="Acciones rápidas">
+  <a href="tel:+576050000000">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h3l1.6 4-2 1.4a12 12 0 0 0 6 6l1.4-2 4 1.6v3c0 1-.8 1.8-1.8 1.7C10.6 19.6 4.4 13.4 3.8 5.3 3.7 4.3 4.5 3.5 5.5 3.5Z"/></svg>
+    Llamar
+  </a>
+  <a href="https://wa.me/573000000000" target="_blank" rel="noopener" class="mobile-bar__wa">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-11.9 7L4 20l1.6-3.9A8 8 0 1 1 20 11.5Z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5"/></svg>
+    WhatsApp
+  </a>
+  <a href="#contacto">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="1.6"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>
+    Agendar
+  </a>
+</nav>
 
 <button class="to-top" id="toTop" aria-label="Volver arriba">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14 6-6 6 6"/></svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 820" width="620" height="820"
+     role="img" aria-label="Espacio reservado para la fotografía de Johana Duque, recortada sin fondo">
+  <!--
+    MARCADOR DE POSICIÓN — reemplazar por la fotografía real.
+    Debe ser un PNG o WebP con fondo transparente (recorte), en vertical.
+    Medida recomendada: 1240 x 1640 px. Ver assets/img/README.md.
+
+    El fondo de este archivo es transparente a propósito: así se ve
+    exactamente cómo quedará el recorte sobre el escenario del hero,
+    y basta con cambiar el `src` en index.html para reemplazarlo.
+  -->
+  <defs>
+    <linearGradient id="silueta" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0"   stop-color="#D2B078" stop-opacity=".30"/>
+      <stop offset="0.55" stop-color="#B08B4F" stop-opacity=".17"/>
+      <stop offset="1"   stop-color="#B08B4F" stop-opacity=".06"/>
+    </linearGradient>
+  </defs>
+
+  <g fill="url(#silueta)" stroke="#D2B078" stroke-opacity=".42" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cabeza -->
+    <ellipse cx="310" cy="250" rx="97" ry="116"/>
+    <!-- Hombros y torso, recortado al borde inferior -->
+    <path d="M310 384c-104 0-186 62-212 168-14 57-22 128-24 268h472c-2-140-10-211-24-268-26-106-108-168-212-168Z"/>
+  </g>
+
+  <!-- Insinuación del saco: solapas y abertura central -->
+  <g fill="none" stroke="#D2B078" stroke-opacity=".34" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round">
+    <path d="M247 402l63 96 63-96"/>
+    <path d="M310 498v322"/>
+  </g>
+</svg>
