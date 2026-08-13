@@ -33,7 +33,9 @@
       header.classList.remove('is-hidden');
     }
 
-    if (bar) bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
+    // Si motion-enhance.js tomó el control, la barra la mueve la
+    // línea de tiempo del scroll y aquí no se toca.
+    if (bar && !bar.dataset.motion) bar.style.width = (max > 0 ? (y / max) * 100 : 0) + '%';
     if (toTop) toTop.classList.toggle('is-on', y > 700);
 
     lastY = y;
@@ -469,12 +471,14 @@
     var raf = null, tx = 0, ty = 0;
 
     stage.addEventListener('mousemove', function (e) {
+      if (stage.dataset.motion) return;   // lo maneja motion-enhance.js con resorte
       var r = stage.getBoundingClientRect();
       tx = ((e.clientX - r.left) / r.width - 0.5) * 16;
       ty = ((e.clientY - r.top) / r.height - 0.5) * 12;
       if (!raf) raf = requestAnimationFrame(apply);
     });
     stage.addEventListener('mouseleave', function () {
+      if (stage.dataset.motion) return;
       tx = 0; ty = 0;
       if (!raf) raf = requestAnimationFrame(apply);
     });

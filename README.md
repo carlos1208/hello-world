@@ -26,9 +26,11 @@ Luego visite <http://localhost:8080>.
 .
 ├── index.html              Marcado completo de la página
 └── assets/
-    ├── css/styles.css      Estilos (tokens, componentes, responsive)
-    ├── js/main.js          Interacciones y animaciones
-    └── img/                Fotografías — ver assets/img/README.md
+    ├── css/styles.css          Estilos (tokens, componentes, responsive)
+    ├── js/main.js              Interacciones y animaciones base
+    ├── js/motion-enhance.js    Capa opcional: scroll ligado y resortes
+    ├── js/vendor/motion.js     Librería Motion (MIT) — ver su README
+    └── img/                    Fotografías — ver assets/img/README.md
 ```
 
 ## Secciones
@@ -66,8 +68,30 @@ apenas el visitante pasa el hero.
 - Barra de progreso de lectura, marquesina infinita, resaltado de la sección
   activa en el menú y microinteracciones en botones, tarjetas e iconos.
 
+### Capa opcional con Motion
+
+`assets/js/motion-enhance.js` agrega, sobre lo anterior, lo que CSS no puede
+hacer de forma portable hoy:
+
+- **Profundidad del hero ligada al scroll.** Resplandores, líneas, texto y
+  retrato avanzan a distinta velocidad. Las animaciones dirigidas por scroll de
+  CSS aún no están en Safari ni Firefox estables.
+- **Barra de progreso sobre la línea de tiempo del scroll**, en vez de
+  recalcular el ancho en cada evento.
+- **Resortes con física real** en el seguimiento del puntero sobre el retrato y
+  en la respuesta al pulsar de la galería y los botones del carrusel.
+
+Usa [Motion](https://motion.dev) —la librería que en React se llama Framer
+Motion— en su API para JavaScript nativo, copiada en el repositorio
+(25 KB gzip, licencia MIT). Se carga como módulo diferido.
+
+**Es estrictamente opcional.** Verificado bloqueando la petición del módulo: el
+sitio sigue funcionando con las animaciones CSS y la barra de progreso vuelve al
+cálculo por ancho.
+
 Todo el movimiento respeta `prefers-reduced-motion: reduce`: si el usuario pide
-menos animación, el contenido aparece de inmediato y los bucles se detienen.
+menos animación, el contenido aparece de inmediato, los bucles se detienen y la
+capa de Motion no se activa en absoluto.
 
 ---
 

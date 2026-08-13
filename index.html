@@ -36,7 +36,7 @@
   .site-header::after { opacity: 1; }
   .site-header:not(.is-stuck) .brand__txt strong { color: #0C1524; }
   .site-header:not(.is-stuck) .brand__mark text { fill: #0C1524; }
-  .site-header:not(.is-stuck) .brand__txt em { color: #8F6F3B; }
+  .site-header:not(.is-stuck) .brand__txt em { color: #806230; }
   .site-header:not(.is-stuck) .menu__a { color: #2B3344; }
   .site-header:not(.is-stuck) .burger span { background: #0C1524; }
 </style></noscript>
@@ -953,5 +953,8 @@
 </button>
 
 <script src="assets/js/main.js"></script>
+<!-- Capa opcional: scroll ligado y resortes físicos. Si no carga, quedan
+     las animaciones CSS. Los navegadores sin módulos ES la ignoran. -->
+<script type="module" src="assets/js/motion-enhance.js"></script>
 </body>
 </html>
