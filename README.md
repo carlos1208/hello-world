@@ -176,4 +176,12 @@ animaciones y el carrusel.
 - Enlace «Saltar al contenido», foco visible en todos los controles y
   `aria-expanded` en menú y acordeón.
 - Mensajes de estado del formulario anunciados con `role="status"`.
-- Contraste verificado sobre los fondos oscuros de la paleta.
+- Visor de la galería con foco atrapado, cierre con `Esc` y navegación por flechas.
+- **Contraste medido, no estimado.** Se recorrió la página completa componiendo
+  el alfa de cada capa de fondo: todo el texto cumple WCAG AA (4.5:1 normal,
+  3:1 grande). Por eso los botones de latón llevan texto tinta y no blanco
+  (5.79:1 frente a 3.16:1) y `--brass-dk` es `#806230`.
+- Áreas táctiles de 44×44 px como mínimo. Quedan tres excepciones deliberadas:
+  los enlaces dentro de un párrafo (excepción expresa de WCAG 2.5.5), los
+  puntos del carrusel (26×44, cumplen el mínimo 24×24 de WCAG 2.5.8) y la
+  casilla de habeas data, cuyo objetivo real es la etiqueta que la envuelve.
