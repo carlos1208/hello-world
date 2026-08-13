@@ -20,6 +20,70 @@ python3 -m http.server 8080
 
 Luego visite <http://localhost:8080>.
 
+## Identidad de marca
+
+La paleta y la tipografía salen del logo de la firma. Los valores están
+centralizados como variables CSS al inicio de `styles.css`.
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--navy` | `#1E3A62` | Azul del logo: rombo, logotipo, texto destacado |
+| `--ink` | `#132340` | Navy profundo: hero y pie |
+| `--ink-2` | `#16294A` | Navy medio: bandas oscuras |
+| `--gold` | `#E0A72E` | Dorado del logo: rellenos, filetes, iconos, botones |
+| `--gold-lt` | `#F0C46A` | Dorado sobre navy |
+| `--gold-mid` | `#A17913` | Titulares grandes sobre marfil |
+| `--gold-dk` | `#87600C` | Texto pequeño sobre marfil |
+| `--silver` | `#9BA1A6` | Gris del relieve del rombo |
+| `--ivory` | `#F7F4EF` | Fondo claro |
+
+**Los tres tonos de dorado no son un capricho.** El dorado de marca sobre
+marfil da 1.97:1: es ilegible como texto y no pasa ni el umbral de 3:1 de
+los titulares grandes. Por eso `--gold` se reserva para rellenos, filetes e
+iconos, y el texto dorado sobre fondo claro usa `--gold-mid` (3.64:1) o
+`--gold-dk` (5.16:1) según su tamaño. Sobre navy sí se puede usar el dorado
+de marca directamente: da 5.30:1.
+
+Por lo mismo, los botones dorados llevan texto navy y no blanco: navy sobre
+dorado da 5.30:1, blanco da 2.16:1.
+
+> Estos valores están **leídos del archivo del logo**, no tomados de un
+> manual de marca. Si la firma tiene los códigos exactos, reemplácelos en el
+> bloque de variables y vuelva a verificar los contrastes.
+
+### Tipografía
+
+- **Poppins** (600/700) en titulares, marca y etiquetas, para acompañar el
+  logotipo, que usa una geométrica del mismo carácter.
+- **Inter** en el texto corrido: una geométrica es poco legible en párrafos
+  largos y tamaños pequeños.
+
+No se usan cursivas: la cursiva de una geométrica es una inclinación
+mecánica, no un trazo dibujado. Los acentos se resuelven con peso y color,
+igual que en el logo.
+
+Ambas fuentes están **alojadas en `assets/fonts`** (84 KB en total). No hay
+llamadas a Google Fonts: una petición externa menos, sin exponer la IP de
+los visitantes a un tercero y sin depender de que ese servicio responda.
+Para regenerarlas:
+
+```bash
+npm install @fontsource/poppins @fontsource-variable/inter
+cp node_modules/@fontsource/poppins/files/poppins-latin-{400,500,600,700}-normal.woff2 assets/fonts/
+cp node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2 assets/fonts/
+```
+
+### El logo
+
+La cabecera y el pie reconstruyen el bloque de marca en SVG —rombo con
+relieve, filete dorado y logotipo— para que se vea nítido en cualquier
+pantalla y se adapte a fondo claro u oscuro. Sobre fondo oscuro el rombo se
+mantiene navy y se separa con un filete dorado, en vez de invertirse.
+
+Si tiene el archivo original del logo en SVG, es preferible: reemplace el
+bloque `<svg>` dentro de `.brand__mark` en `index.html` (aparece dos veces,
+cabecera y pie).
+
 ## Estructura
 
 ```
@@ -27,6 +91,7 @@ Luego visite <http://localhost:8080>.
 ├── index.html              Marcado completo de la página
 └── assets/
     ├── css/styles.css          Estilos (tokens, componentes, responsive)
+    ├── fonts/                  Poppins e Inter alojadas localmente
     ├── js/main.js              Interacciones y animaciones base
     ├── js/motion-enhance.js    Capa opcional: scroll ligado y resortes
     ├── js/vendor/motion.js     Librería Motion (MIT) — ver su README

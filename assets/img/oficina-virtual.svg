@@ -1,19 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" width="900" height="900" role="img" aria-label="ASESORÍA VIRTUAL">
   <defs>
     <linearGradient id="bge" x1="0" y1="0" x2="0.4" y2="1">
-      <stop offset="0" stop-color="#1D2E4A"/><stop offset="1" stop-color="#080E1A"/>
+      <stop offset="0" stop-color="#22406B"/><stop offset="1" stop-color="#0E1B33"/>
     </linearGradient>
     <pattern id="hte" width="9" height="9" patternTransform="rotate(38)" patternUnits="userSpaceOnUse">
-      <line x1="0" y1="0" x2="0" y2="9" stroke="#B08B4F" stroke-opacity=".13" stroke-width="1"/>
+      <line x1="0" y1="0" x2="0" y2="9" stroke="#E0A72E" stroke-opacity=".13" stroke-width="1"/>
     </pattern>
   </defs>
   <rect width="900" height="900" fill="url(#bge)"/>
   <rect width="900" height="900" fill="url(#hte)"/>
-  <rect x="14" y="14" width="872" height="872" fill="none" stroke="#B08B4F" stroke-opacity=".34"/>
-  <g transform="translate(393.1578947368421 352.6578947368421) scale(4.7368421052631575)" fill="none" stroke="#D2B078" stroke-opacity=".5"
+  <rect x="14" y="14" width="872" height="872" fill="none" stroke="#E0A72E" stroke-opacity=".34"/>
+  <g transform="translate(393.1578947368421 352.6578947368421) scale(4.7368421052631575)" fill="none" stroke="#F0C46A" stroke-opacity=".5"
      stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
     <path d="M2.5 6.5h13a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1ZM16.5 11l5-3v8l-5-3"/>
   </g>
   <text x="450.0" y="558.0" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif"
-        font-size="34.6" letter-spacing="5.54" fill="#B08B4F" fill-opacity=".72">ASESORÍA VIRTUAL</text>
+        font-size="34.6" letter-spacing="5.54" fill="#E0A72E" fill-opacity=".72">ASESORÍA VIRTUAL</text>
 </svg>
