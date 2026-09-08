@@ -1,0 +1,629 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Los Guerreros del Mundo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --bg:#E9E6DE;          /* piedra / washi frío */
+  --bg-2:#F4F2EC;
+  --bg-3:#DCD8CD;
+  --line:#C6C1B3;
+  --line-soft:#D6D2C6;
+  --text:#151824;
+  --text-2:#585D6C;
+  --text-3:#7C8191;
+  --accent:#B3262F;      /* hachimaki */
+  --accent-ink:#8E1D25;
+  --psycho:#5636BE;      /* Psycho Power */
+  --brass:#8E6B10;       /* torneos / eras */
+  --halo:rgba(179,38,47,.12);
+  --shadow:0 1px 2px rgba(21,24,36,.07), 0 8px 24px rgba(21,24,36,.06);
+  --grid:rgba(21,24,36,.055);
+
+  --f-display:"Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hud:"Barlow Condensed", "Oswald", Impact, sans-serif;
+
+  --step-hero:clamp(2.4rem,7.2vw,4.5rem);
+  --step-h2:clamp(1.6rem,3.4vw,2.35rem);
+  --step-h3:clamp(1.12rem,1.7vw,1.32rem);
+  --wrap:1140px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D17;
+    --bg-2:#131828;
+    --bg-3:#1B2133;
+    --line:#2A3145;
+    --line-soft:#212739;
+    --text:#EBE7DC;
+    --text-2:#98A0B4;
+    --text-3:#7A8296;
+    --accent:#E2515B;
+    --accent-ink:#F0838A;
+    --psycho:#9679FF;
+    --brass:#D7AE44;
+    --halo:rgba(226,81,91,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+    --grid:rgba(235,231,220,.05);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D17;
+  --bg-2:#131828;
+  --bg-3:#1B2133;
+  --line:#2A3145;
+  --line-soft:#212739;
+  --text:#EBE7DC;
+  --text-2:#98A0B4;
+  --text-3:#7A8296;
+  --accent:#E2515B;
+  --accent-ink:#F0838A;
+  --psycho:#9679FF;
+  --brass:#D7AE44;
+  --halo:rgba(226,81,91,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+  --grid:rgba(235,231,220,.05);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:1.0425rem;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem)}
+.prose{max-width:66ch}
+
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:var(--step-h2); line-height:1.15}
+h3{font-size:var(--step-h3); line-height:1.3; font-weight:600}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+
+.eyebrow{
+  font-family:var(--f-hud); font-weight:600; text-transform:uppercase;
+  letter-spacing:.19em; font-size:.775rem; color:var(--text-3); margin:0;
+}
+.hud{font-family:var(--f-hud); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+
+/* ---------- chapter page ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);
+}
+.topbar-in{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:52px}
+.back{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:600;
+  text-decoration:none; color:var(--text-2); display:inline-flex; align-items:center; gap:.5rem;
+}
+.back:hover{color:var(--accent)}
+.progress{font-family:var(--f-hud); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3)}
+
+.chead{border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+.chead-in{padding:clamp(2.6rem,6vw,4.6rem) 0 clamp(2rem,4vw,3rem); display:grid; gap:clamp(1.8rem,4vw,3rem); grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .chead-in{grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr); align-items:end} }
+.chead .num{font-family:var(--f-hud); font-weight:700; letter-spacing:.22em; text-transform:uppercase; font-size:.82rem; color:var(--accent)}
+.chead h1{font-size:clamp(2.1rem,5.6vw,3.7rem); line-height:1.02; margin:.7rem 0 0; letter-spacing:-.02em}
+.chead .sub{color:var(--text-2); margin-top:1.2rem; font-size:1.08rem; max-width:52ch}
+.meta{border-left:2px solid var(--brass); padding-left:1.2rem; display:grid; gap:.9rem}
+.meta div{display:grid; gap:.15rem}
+.meta dt, .meta .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; color:var(--text-3); font-weight:700}
+.meta .v{font-size:.94rem; color:var(--text-2); line-height:1.5}
+.meta .v b{color:var(--text); font-weight:700}
+
+.body{padding:clamp(2.6rem,6vw,4.4rem) 0}
+.body .prose{font-size:1.085rem; line-height:1.78}
+.body .prose > h2{margin:2.8rem 0 1rem; font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.body .prose > h2:first-child{margin-top:0}
+.body .prose em{color:var(--text)}
+.body .prose strong{font-weight:700}
+.lead{font-size:1.2rem; line-height:1.65; color:var(--text); border-left:2px solid var(--accent); padding-left:1.2rem}
+
+.pull{
+  margin:2.4rem 0; font-family:var(--f-display); font-weight:600; font-size:clamp(1.25rem,2.6vw,1.6rem);
+  line-height:1.35; color:var(--text); text-wrap:balance; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:1.4rem 0;
+}
+.note{
+  margin:2rem 0; border:1px dashed var(--line); padding:1.15rem 1.3rem; background:transparent;
+  font-size:.95rem; color:var(--text-2); line-height:1.65;
+}
+.note .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:700; color:var(--brass); display:block; margin-bottom:.4rem}
+.note b{color:var(--text)}
+.note.warn .k{color:var(--psycho)}
+
+.outro{border-top:1px solid var(--line-soft); background:var(--bg-2)}
+.outro-in{padding:clamp(2.6rem,6vw,4.2rem) 0; display:grid; gap:2.8rem}
+.block h2{font-size:1.32rem; margin-bottom:1rem}
+.keyev{list-style:none; margin:0; padding:0; display:grid; gap:.85rem; counter-reset:k}
+.keyev li{
+  display:grid; grid-template-columns:2.1rem minmax(0,1fr); gap:.8rem; align-items:start;
+  font-size:.985rem; color:var(--text-2); line-height:1.6;
+}
+.keyev li > span{grid-column:2}
+.keyev li::before{
+  counter-increment:k; content:counter(k,decimal-leading-zero);
+  font-family:var(--f-hud); font-weight:700; color:var(--accent); font-size:.95rem; padding-top:.12rem;
+}
+.keyev li b{color:var(--text)}
+
+.who{display:grid; gap:0; border-top:1px solid var(--line)}
+.who div{display:grid; grid-template-columns:minmax(120px,auto) 1fr; gap:.4rem 1.4rem; padding:.85rem 0; border-bottom:1px solid var(--line-soft); align-items:baseline}
+.who .n{font-family:var(--f-display); font-weight:800; font-size:1rem}
+.who .r{font-size:.94rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .who div{grid-template-columns:1fr; gap:.15rem} }
+
+.tl{display:grid; gap:0; margin-top:.4rem}
+.tl div{display:grid; grid-template-columns:minmax(150px,auto) 1fr; gap:.3rem 1.4rem; padding:.75rem 0; border-top:1px solid var(--line-soft); align-items:baseline}
+.tl .w{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; font-size:.78rem; color:var(--brass); font-weight:600}
+.tl .e{font-size:.96rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .tl div{grid-template-columns:1fr; gap:.1rem} }
+
+.remember{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+.remember article{background:var(--bg); padding:1.1rem 1.2rem; display:grid; grid-template-columns:2rem 1fr; gap:.9rem; align-items:start}
+.remember .n{font-family:var(--f-hud); font-weight:700; font-size:1.35rem; color:var(--brass); line-height:1.1}
+.remember p{margin:0; font-size:.96rem; color:var(--text-2); line-height:1.6}
+.remember p b{color:var(--text)}
+
+.next{border-top:1px solid var(--line-soft); padding:clamp(2.4rem,5vw,3.6rem) 0 clamp(3rem,6vw,4.4rem)}
+.next h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+.next p{color:var(--text-2); max-width:62ch; margin-top:1rem}
+.next .ask{font-family:var(--f-display); font-weight:800; color:var(--accent); font-size:clamp(1.1rem,2.2vw,1.35rem); margin-top:2rem}
+.foot{padding:0 0 3rem; color:var(--text-3); font-size:.85rem}
+.foot p{max-width:74ch}
+/* ---------- color de la Era I y movimiento ---------- */
+:root{--era:#C9954A}
+.meter{position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent}
+.meter span{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--era), var(--accent));
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);}
+.topbar{position:sticky}
+
+.vig{width:100%; height:auto; display:block; border-radius:3px; max-width:230px}
+.vig .sky{fill:color-mix(in srgb, var(--era) 16%, var(--bg-2))}
+.chead-art{display:grid; gap:1.4rem; justify-items:start}
+
+.back{transition:color .2s ease, gap .2s ease}
+.back:hover{gap:.85rem}
+.meta{border-left-color:var(--era)}
+.note .k{color:var(--era)}
+.keyev li{transition:transform .2s ease}
+.keyev li:hover{transform:translateX(4px)}
+.keyev li:hover::before{color:var(--era)}
+.who div{transition:background .2s ease, padding-left .2s ease}
+.who div:hover{background:color-mix(in srgb, var(--era) 8%, transparent); padding-left:.5rem}
+.remember article{transition:transform .26s cubic-bezier(.2,.7,.3,1), background .26s ease}
+.remember article:hover{transform:translateY(-2px); background:color-mix(in srgb, var(--era) 7%, var(--bg))}
+.tl div{transition:padding-left .2s ease}
+.tl div:hover{padding-left:.4rem}
+.pull{position:relative}
+.pull::before{content:""; position:absolute; left:0; top:-1px; width:0; height:2px; background:var(--accent); transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.pull:hover::before{width:100%}
+
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes breathe{0%,100%{transform:scale(1); opacity:.9}50%{transform:scale(1.05); opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion: no-preference){
+  .chead-in > div > *{animation:riseIn .6s cubic-bezier(.2,.7,.3,1) both}
+  .chead-in > div > h1{animation-delay:.08s}
+  .chead-in > div > .sub{animation-delay:.18s}
+  .chead-art{animation:riseIn .7s cubic-bezier(.2,.7,.3,1) both .1s}
+  .vig .float{animation:drift 6s ease-in-out infinite}
+  .vig .glow{animation:breathe 4.2s ease-in-out infinite; transform-origin:50% 50%}
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ---------- dossier ---------- */
+.dgroup{margin-top:clamp(2.8rem,6vw,4.2rem)}
+.dgroup:first-of-type{margin-top:0}
+.dghead{display:flex; align-items:baseline; gap:.9rem; flex-wrap:wrap; padding-bottom:.7rem;
+  border-bottom:2px solid var(--gc,var(--accent)); margin-bottom:.4rem}
+.dgtag{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.18em; font-size:.72rem;
+  font-weight:700; color:var(--bg); background:var(--gc,var(--accent)); padding:.16rem .6rem}
+.dghead h2{font-size:clamp(1.3rem,2.6vw,1.7rem)}
+.dgnote{color:var(--text-2); font-size:.96rem; margin:.9rem 0 0; max-width:70ch}
+
+.fighter{
+  --fc:var(--accent);
+  padding:1.6rem 0 1.7rem; border-bottom:1px solid var(--line-soft);
+  display:grid; gap:1rem 1.6rem; grid-template-columns:1fr;
+}
+@media (min-width:820px){ .fighter{grid-template-columns:minmax(0,16rem) minmax(0,1fr)} }
+.fid{display:grid; gap:.7rem; align-content:start}
+.fid .top{display:flex; align-items:center; gap:.85rem}
+.fcrest{width:46px; height:46px; flex:none}
+.fid h3{font-size:1.24rem; line-height:1.15}
+.fid .alias{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.73rem;
+  font-weight:700; color:color-mix(in srgb, var(--fc) 68%, var(--text))}
+.fid dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:.25rem .8rem; font-size:.83rem}
+.fid dt{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; color:var(--text-3); font-weight:700; white-space:nowrap}
+.fid dd{margin:0; color:var(--text-2)}
+.ftext{font-size:1.015rem; line-height:1.75; color:var(--text-2)}
+.ftext p{margin:0 0 .9rem}
+.ftext p:last-child{margin-bottom:0}
+.ftext b{color:var(--text); font-weight:700}
+.ftext em{color:var(--text)}
+.why{
+  margin-top:1rem; padding-left:1rem; border-left:2px solid var(--fc);
+  font-family:var(--f-display); font-size:1.04rem; line-height:1.5; color:var(--text); font-weight:600;
+}
+.fighter:hover{background:linear-gradient(90deg, color-mix(in srgb,var(--fc) 5%, transparent), transparent 70%)}
+.fighter{transition:background .3s ease}
+</style>
+
+
+
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
+    <span class="progress">Dossier · Fuera de la numeración</span>
+  </div>
+  <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
+</div>
+
+<header class="chead">
+  <div class="wrap chead-in">
+    <div>
+      <p class="num">Dossier</p>
+      <h1>Los guerreros del mundo</h1>
+      <p class="sub">El sumo, el hombre verde, el ruso de la Siberia y el yogui que estira los brazos. Diez luchadores que usted lleva conociendo desde niño y de los que probablemente no sepa casi nada.</p>
+    </div>
+    <div class="chead-art">
+      <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un globo terráqueo rodeado de ocho marcas, una por cada luchador">
+        <rect class="sky" width="120" height="72" rx="3"></rect>
+        <circle cx="60" cy="36" r="21" fill="none" stroke="var(--era)" stroke-width="2.2"></circle>
+        <ellipse cx="60" cy="36" rx="8.5" ry="21" fill="none" stroke="var(--era)" stroke-width="1.3" opacity=".65"></ellipse>
+        <path d="M39,36 H81" stroke="var(--era)" stroke-width="1.3" opacity=".65"></path>
+        <g class="orbit">
+          <circle cx="90" cy="36" r="3" fill="var(--era)"></circle>
+          <circle cx="81.2" cy="57.2" r="3" fill="var(--era)"></circle>
+          <circle cx="60" cy="66" r="3" fill="var(--era)"></circle>
+          <circle cx="38.8" cy="57.2" r="3" fill="var(--era)"></circle>
+          <circle cx="30" cy="36" r="3" fill="var(--era)"></circle>
+          <circle cx="38.8" cy="14.8" r="3" fill="var(--era)"></circle>
+          <circle cx="60" cy="6" r="3" fill="var(--era)"></circle>
+          <circle cx="81.2" cy="14.8" r="3" fill="var(--era)"></circle>
+        </g>
+      </svg>
+    <div class="meta">
+      <div><span class="k">Qué es esto</span><span class="v">Una <b>ficha complementaria</b>, no un capítulo. No altera el orden de lectura ni ocupa número.</span></div>
+      <div><span class="k">Dónde encaja</span><span class="v">Estos personajes protagonizan el <b>Capítulo 24</b>, dentro de la Parte III. Cuando lleguemos, sus historias se contarán entrelazadas con el segundo torneo</span></div>
+      <div><span class="k">Aviso</span><span class="v">Contiene información de la <b>era Street Fighter II</b>. Nada posterior a ella</span></div>
+    </div>
+    </div>
+  </div>
+</header>
+
+<main class="body">
+  <div class="wrap">
+
+    <div class="prose">
+      <p class="lead">Hay una idea equivocada sobre <em>Street Fighter II</em> que conviene desmontar antes de empezar: la de que aquello era un desfile de estereotipos nacionales sin más fondo que el color de la ropa. No lo era. Cada uno de estos diez entró al torneo por un motivo privado y perfectamente humano, y en la mayoría de los casos ese motivo no tenía absolutamente nada que ver con ganar.</p>
+
+      <p>Los he agrupado por eso mismo: por <strong>la razón por la que pelean</strong>. Es la mejor forma de entenderlos, y también la mejor prueba de que aquel juego tenía mucha más cabeza de la que se le reconoce.</p>
+    </div>
+
+    <div class="dgroup" style="--gc:#B4863C">
+      <div class="dghead"><span class="dgtag">Grupo I</span><h2>Los que pelean por orgullo</h2></div>
+      <p class="dgnote">No quieren dinero ni venganza. Quieren demostrar algo: que su disciplina, su país o su oficio valen lo que ellos creen que valen. Son los más limpios del cuadro.</p>
+
+      <article class="fighter" style="--fc:#C0392B">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#C0392B" stroke-width="1.3" opacity=".4"></circle>
+              <circle cx="24" cy="19" r="9" fill="#C0392B"></circle>
+              <path d="M8,36 Q24,26 40,36" fill="none" stroke="#C0392B" stroke-width="3.4" stroke-linecap="round"></path>
+            </svg>
+            <div><h3>E. Honda</h3><span class="alias">Edmond Honda · Japón</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+            <dt>Estilo</dt><dd>Sumo</dd>
+            <dt>Oficio</dt><dd>Luchador de rango <em>ozeki</em>; regenta una casa de baños</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>Honda es un profesional consagrado con un problema muy concreto: <b>fuera de Japón, nadie se toma el sumo en serio</b>. Para el resto del mundo son hombres gordos empujándose en un círculo, un espectáculo folclórico, cualquier cosa menos un arte marcial.</p>
+          <p>A él eso le hierve por dentro. El sumo es una disciplina milenaria, con ritual, con jerarquía y con un entrenamiento brutal, y ver cómo se la despacha con una broma le parece una injusticia que hay que corregir peleando. Así que se apunta a un torneo mundial no para ganarlo, sino <em>para que se vea</em>.</p>
+          <p>Fuera del ring es probablemente el hombre más normal del reparto: tiene un negocio, un <em>sento</em> —casa de baños pública—, y una vida ordenada a la que vuelve cuando termina. No arrastra ningún trauma, no busca venganza, no le persigue ningún demonio. Es, sencillamente, un embajador cabreado.</p>
+          <p class="why">Pelea para que el mundo deje de reírse de su disciplina.</p>
+        </div>
+      </article>
+
+      <article class="fighter" style="--fc:#C0761E">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#C0761E" stroke-width="1.3" opacity=".4"></circle>
+              <path d="M12,32 L28,14 M18,36 L34,18 M24,40 L40,22" stroke="#C0761E" stroke-width="3.6" stroke-linecap="round"></path>
+            </svg>
+            <div><h3>Fei Long</h3><span class="alias">Hong Kong</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Super Street Fighter II (1993)</dd>
+            <dt>Estilo</dt><dd>Kung-fu de cine, propio</dd>
+            <dt>Oficio</dt><dd>Estrella del cine de acción</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>Fei Long es un homenaje transparente a Bruce Lee, y Capcom le dio el conflicto exacto que ese homenaje pedía: es <b>una estrella de cine que ya no soporta que sus combates sean mentira</b>.</p>
+          <p>Se pasa la vida rodando peleas coreografiadas donde todo el mundo sabe quién gana antes de empezar, con la cámara puesta en el ángulo correcto y el golpe frenado a dos centímetros de la cara. Es rico, es famoso y es, técnicamente, un artista marcial de primer nivel al que nadie ha puesto nunca a prueba de verdad.</p>
+          <p>Entra al torneo por eso: para averiguar si lo que hace delante de una cámara sirve de algo cuando nadie ha escrito el final.</p>
+          <p class="why">Pelea para saber si es un luchador o solo un actor que se mueve muy bien.</p>
+        </div>
+      </article>
+
+      <article class="fighter" style="--fc:#B03A3A">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#B03A3A" stroke-width="1.3" opacity=".4"></circle>
+              <path d="M24,9 L28,20 L39.5,20 L30.5,27 L34,38 L24,31 L14,38 L17.5,27 L8.5,20 L20,20 Z" fill="#B03A3A"></path>
+            </svg>
+            <div><h3>Zangief</h3><span class="alias">El Ciclón Rojo · Rusia</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+            <dt>Estilo</dt><dd>Lucha libre y <em>sambo</em></dd>
+            <dt>Detalle</dt><dd>Entrena luchando contra osos en Siberia</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>Sí: el ruso enorme del calzón rojo <b>entrena peleando contra osos</b>, y eso es canon, no una broma de la afición. Es la primera cosa que todo el mundo sabe de él y también la que hace que se le subestime.</p>
+          <p>Porque Zangief no es un bruto. Es un <b>patriota</b>, y de los sinceros. Pelea representando a su país, con la bandera encima, convencido de que ganar un torneo mundial es un servicio que le presta a su gente. En una franquicia llena de vengadores, huérfanos y dictadores, él es el único que compite por algo tan poco cínico como el orgullo nacional.</p>
+          <p>Esa devoción produce además la escena más desconcertante de todo <em>Street Fighter II</em>: en su final, Zangief celebra su victoria <em>bailando con el máximo dirigente de su país</em>. Es absurdo, es entrañable y resume perfectamente al personaje.</p>
+          <p class="why">Pelea por su país, y lo dice en serio.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="dgroup" style="--gc:#34B3A2">
+      <div class="dghead"><span class="dgtag">Grupo II</span><h2>Los que pelean por necesidad</h2></div>
+      <p class="dgnote">Estos dos no querrían estar aquí. Uno pelea contra sus propias convicciones; el otro ni siquiera sabía que existía un mundo al que volver. Son los dos casos más tristes del cuadro.</p>
+
+      <article class="fighter" style="--fc:#C97B1E">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#C97B1E" stroke-width="1.3" opacity=".4"></circle>
+              <path d="M24,8 C31,18 33,23 33,28 A9,9 0 0,1 15,28 C15,23 20,18 24,8 Z" fill="#C97B1E"></path>
+              <circle cx="24" cy="38" r="2.6" fill="#C97B1E"></circle>
+            </svg>
+            <div><h3>Dhalsim</h3><span class="alias">Kerala, India</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+            <dt>Estilo</dt><dd>Yoga</dd>
+            <dt>Familia</dt><dd>Esposa e hijo, en su aldea</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>Dhalsim es un <b>pacifista</b>. Esa es la primera cosa que hay que saber de él, y lo cambia todo.</p>
+          <p>Es un maestro de yoga de una aldea de Kerala, un asceta que ha llevado la disciplina hasta un punto en que su cuerpo hace cosas que no deberían ser posibles: estira los miembros más allá de lo humano y produce fuego. Nada de eso lo aprendió para pelear.</p>
+          <p>Pero su aldea es pobre, y él tiene una habilidad por la que el mundo paga. Así que hace lo único que puede hacer: <b>usa un don espiritual para ganar dinero repartiendo golpes</b>, sabiendo perfectamente que cada combate contradice aquello en lo que cree. No disfruta ni uno solo. Los gana, cobra, y vuelve a casa a meditar sobre lo que acaba de hacer.</p>
+          <p>Tiene mujer e hijo esperándole allí, y ese detalle —que la franquicia fue ampliando en juegos posteriores— es exactamente lo que hace que su sacrificio duela: no pelea por una idea abstracta de su pueblo, pelea por gente concreta que come gracias a ello.</p>
+          <p class="why">Pelea por dinero, y ese dinero es comida para su aldea. Cada victoria es una pequeña derrota personal.</p>
+        </div>
+      </article>
+
+      <article class="fighter" style="--fc:#3F8E4A">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#3F8E4A" stroke-width="1.3" opacity=".4"></circle>
+              <circle cx="24" cy="24" r="17" fill="#3F8E4A" opacity=".18"></circle>
+              <path d="M27,8 L14,26 L22,26 L19,40 L33,21 L25,21 Z" fill="#3F8E4A"></path>
+            </svg>
+            <div><h3>Blanka</h3><span class="alias">Jimmy · Brasil</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+            <dt>Estilo</dt><dd>Instinto de supervivencia</dd>
+            <dt>Nombre real</dt><dd><b>Jimmy</b></dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>Esta es, con diferencia, la mejor historia del grupo, y casi nadie la conoce entera.</p>
+          <p>Blanka <b>no es un monstruo. Es un hombre, y se llama Jimmy.</b></p>
+          <p>Siendo un niño pequeño viajaba en un avión que se estrelló en la selva brasileña. Sobrevivió al accidente y quedó solo, con pocos años, en el Amazonas. No había nadie que lo buscara donde él estaba y nadie a quien pedir ayuda: creció allí, aprendiendo a sobrevivir como sobrevive un animal, y su cuerpo se transformó en el proceso hasta volverse verde y capaz de producir descargas eléctricas.</p>
+          <p>Perdió el idioma. Perdió el nombre. Perdió el recuerdo de haber sido otra cosa. Cuando el mundo vuelve a encontrárselo, décadas después, lo que ve es una criatura salvaje, y le pone un apodo.</p>
+          <p>Y entonces llega el detalle que convierte todo esto en otra cosa. Su madre nunca dejó de buscarlo. Se llama <b>Samantha</b>, y lo reconoce al verlo en televisión durante los combates del torneo — no por la cara, que ya no es la de su hijo, sino <b>por los tobilleras que ella misma le puso antes de aquel vuelo</b>, y que él ha llevado todos estos años sin saber por qué no se las quitaba.</p>
+          <p class="why">No pelea por nada. Pelear es lo único que sabe hacer delante de otras personas. Lo que estaba buscando, sin poder formularlo, era volver a casa.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="dgroup" style="--gc:#8368E8">
+      <div class="dghead"><span class="dgtag">Grupo III</span><h2>Los que pelean por dinero o por placer</h2></div>
+      <p class="dgnote">Aquí están los dos hombres de Shadaloo y, por contraste, el único personaje de toda la franquicia que se lo está pasando bien.</p>
+
+      <article class="fighter" style="--fc:#9B5B2A">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#9B5B2A" stroke-width="1.3" opacity=".4"></circle>
+              <rect x="12" y="16" width="24" height="18" rx="8" fill="#9B5B2A"></rect>
+              <rect x="18" y="32" width="12" height="7" rx="2" fill="#9B5B2A" opacity=".6"></rect>
+            </svg>
+            <div><h3>Balrog</h3><span class="alias">M. Bison en Japón · Estados Unidos</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+            <dt>Estilo</dt><dd>Boxeo</dd>
+            <dt>Situación</dt><dd>Expulsado del boxeo profesional</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>Balrog fue boxeador profesional y llegó lejos. Lo echaron del deporte por lo que era: <b>brutalidad excesiva dentro del ring y corrupción fuera de él</b>. No fue un error puntual ni una injusticia; era su forma de trabajar.</p>
+          <p>Cuando Shadaloo le ofreció un sueldo, no hubo ningún dilema moral que resolver. Balrog es <b>el personaje más honestamente mercenario de la saga</b>: no cree en el dictador, no comparte ninguna causa, no tiene una tragedia detrás. Pega a quien le digan porque le pagan bien, y si mañana le pagaran más en otro sitio, se iría.</p>
+          <p>Recuerde el cruce de nombres: en Japón este hombre se llama <b>M. Bison</b>, en un guiño evidente a Mike Tyson. Capcom USA rotó los nombres precisamente para evitar el problema legal que eso planteaba.</p>
+          <p class="why">Pelea por dinero. No hay capa número dos.</p>
+        </div>
+      </article>
+
+      <article class="fighter" style="--fc:#A34F8C">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#A34F8C" stroke-width="1.3" opacity=".4"></circle>
+              <path d="M14,12 C20,20 20,30 16,38 M24,10 C30,19 30,29 26,38 M34,12 C40,20 40,30 36,38" fill="none" stroke="#A34F8C" stroke-width="2.8" stroke-linecap="round"></path>
+            </svg>
+            <div><h3>Vega</h3><span class="alias">Balrog en Japón · España</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+            <dt>Estilo</dt><dd>Ninjutsu combinado con tauromaquia</dd>
+            <dt>Arma</dt><dd>Una garra de acero</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>Aristócrata español, de familia acomodada, con una obsesión que lo organiza todo: <b>la belleza</b>.</p>
+          <p>Vega divide el mundo en lo hermoso y lo feo, y considera que lo segundo no tiene derecho a existir. Lleva máscara no para ocultarse, sino <em>para protegerse la cara</em>: la posibilidad de una cicatriz en su propio rostro le resulta más insoportable que cualquier cosa que pueda hacerle a otro.</p>
+          <p>El origen de esa fijación está en una tragedia familiar: su madre, a la que adoraba, murió a manos de su padrastro. Vega lo mató, y de aquel episodio salió convertido en algo que asocia la belleza con lo que hay que salvar y la fealdad con lo que hay que eliminar.</p>
+          <p>Sirve a Shadaloo porque el trabajo le conviene: es una plaza donde matar está permitido y además pagado. La lealtad, igual que en Balrog, es cero.</p>
+          <p class="why">Pelea porque le gusta matar, y porque le han dado un sitio donde hacerlo sin consecuencias.</p>
+        </div>
+      </article>
+
+      <article class="fighter" style="--fc:#1FA3A8">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#1FA3A8" stroke-width="1.3" opacity=".4"></circle>
+              <path d="M8,24 Q14,10 20,24 T32,24 T44,24" fill="none" stroke="#1FA3A8" stroke-width="3" stroke-linecap="round"></path>
+              <circle cx="24" cy="36" r="3" fill="#1FA3A8"></circle>
+            </svg>
+            <div><h3>Dee Jay</h3><span class="alias">Jamaica</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Super Street Fighter II (1993)</dd>
+            <dt>Estilo</dt><dd>Kickboxing</dd>
+            <dt>Oficio</dt><dd>Músico</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>Dee Jay es músico de éxito y campeón de kickboxing a la vez, y no encuentra ninguna contradicción entre las dos cosas. Al contrario: para él son lo mismo. Un combate tiene ritmo, tiene compás y tiene un tempo que hay que encontrar, exactamente igual que una canción.</p>
+          <p>Entra al torneo <b>buscando material</b>. Quiere que el choque con los mejores luchadores del planeta le dé la inspiración para su siguiente disco, y lo dice sin ninguna ironía.</p>
+          <p>En un cuadro lleno de gente rota, vengativa o directamente homicida, Dee Jay es el único que se lo está pasando bien de principio a fin. Merece la pena señalarlo, porque a veces se olvida que esta saga también tiene sitio para eso.</p>
+          <p class="why">Pelea porque el combate suena bien y quiere ponerlo en una canción.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="dgroup" style="--gc:#D24A40">
+      <div class="dghead"><span class="dgtag">Grupo IV</span><h2>Los que pelean contra Shadaloo</h2></div>
+      <p class="dgnote">El grupo que convierte el torneo en algo más que un campeonato. Guile y Chun-Li pertenecen también aquí, y por eso tienen su propio espacio en el índice principal.</p>
+
+      <article class="fighter" style="--fc:#B4622A">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#B4622A" stroke-width="1.3" opacity=".4"></circle>
+              <path d="M8,20 L24,30 L40,20" fill="none" stroke="#B4622A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12,30 L24,38 L36,30" fill="none" stroke="#B4622A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" opacity=".6"></path>
+            </svg>
+            <div><h3>T. Hawk</h3><span class="alias">Thunder Hawk · Pueblo Thunderfoot</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Super Street Fighter II (1993)</dd>
+            <dt>Estilo</dt><dd>Lucha tradicional de su pueblo</dd>
+            <dt>Estatura</dt><dd>2,20 m</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>T. Hawk es el jefe de un pueblo indígena, los <b>Thunderfoot</b>, al que Shadaloo expulsó de sus tierras ancestrales. No fue una expropiación legal ni una disputa administrativa: la organización de Bison quería el territorio y lo tomó.</p>
+          <p>En aquel despojo murió su padre, <b>Arroyo Hawk</b>, que intentó defenderlo.</p>
+          <p>Así que T. Hawk entra al torneo con dos objetivos que para él son el mismo: encontrar al responsable y recuperar la tierra de su gente. Es, junto a Guile y Chun-Li, uno de los tres que están allí por Shadaloo y no por el trofeo — y el único de los tres que además representa a toda una comunidad desplazada.</p>
+          <p>Si le suena el nombre del pueblo, es porque volverá: décadas después, en <em>Street Fighter 6</em>, una joven llamada <b>Lily</b> aparecerá presentándose como Thunderfoot.</p>
+          <p class="why">Pelea para recuperar la tierra de su pueblo y para cobrarse a quien mató a su padre.</p>
+        </div>
+      </article>
+
+      <article class="fighter" style="--fc:#2FA07A">
+        <div class="fid">
+          <div class="top">
+            <svg class="fcrest" viewBox="0 0 48 48" aria-hidden="true">
+              <circle cx="24" cy="24" r="21" fill="none" stroke="#2FA07A" stroke-width="1.3" opacity=".4"></circle>
+              <path d="M24,9 L36,16 L36,32 L24,39 L12,32 L12,16 Z" fill="none" stroke="#2FA07A" stroke-width="2.2" stroke-linejoin="round"></path>
+              <path d="M24,18 L30,21.5 L30,28.5 L24,32 L18,28.5 L18,21.5 Z" fill="#2FA07A"></path>
+            </svg>
+            <div><h3>Cammy</h3><span class="alias">Killer Bee · Reino Unido</span></div>
+          </div>
+          <dl>
+            <dt>Debut</dt><dd>Super Street Fighter II (1993)</dd>
+            <dt>Estilo</dt><dd>Combate militar</dd>
+            <dt>Ficha</dt><dd>Agente de una unidad especial británica</dd>
+          </dl>
+        </div>
+        <div class="ftext">
+          <p>La incluyo aquí solo para situarla, porque su historia es demasiado importante para resumirla en una ficha: Cammy es uno de los quince personajes principales de la guía y su verdadero origen constituye <b>uno de los mayores retcones de la franquicia</b>.</p>
+          <p>Lo que en <em>Super Street Fighter II</em> era una agente de operaciones especiales con amnesia y un vínculo inexplicable con el dictador, resultó ser algo bastante peor. Esa revelación pertenece a la era Alpha y la contaremos en el <b>Capítulo 12</b>, donde le corresponde.</p>
+          <p class="why">Pelea contra Shadaloo por razones que ni ella misma conoce todavía.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="prose" style="margin-top:clamp(2.6rem,6vw,4rem)">
+      <div class="note">
+        <span class="k">Nota de rigor</span>
+        Casi todo lo que acaba de leer procede de los <b>perfiles oficiales de personaje</b> y de los finales individuales de <em>Street Fighter II</em> y <em>Super Street Fighter II</em>, ampliados después en la era Alpha y en juegos posteriores. Conviene recordar lo que ya señalamos en el índice: los finales arcade se contradicen entre sí por diseño, y Capcom escoge cuáles sostiene sin decirlo. Estos trasfondos —el origen de Blanka, la aldea de Dhalsim, la tierra de T. Hawk— sí los ha sostenido de forma consistente durante treinta años.<br><br>
+        Dos matices honestos: los nombres concretos de la familia de Dhalsim proceden de material posterior a <em>Street Fighter II</em> y no de aquel juego; y la explicación técnica que a veces se da del fuego de Dhalsim —que quema su propia grasa corporal, de ahí su delgadez— circula mucho pero procede de material secundario, no de una declaración central de Capcom. La señalo como lo que es.
+      </div>
+
+      <p>Cuando lleguemos al <strong>Capítulo 24</strong>, estas diez historias no se contarán en fila como aquí: se contarán entrelazadas, dentro del segundo torneo, y entonces se verá lo que este dossier todavía no puede mostrar — <em>que casi ninguno de ellos sabía en qué se estaba metiendo al aceptar la invitación</em>.</p>
+    </div>
+
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. Ficha complementaria fuera de la numeración de capítulos. Los emblemas son marcas geométricas originales creadas para esta guía; no reproducen arte oficial de la franquicia.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var fill = document.getElementById('meterfill');
+  if (!fill) return;
+  var q = 0;
+  function meter(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+  }
+  addEventListener('scroll', function(){
+    if (!q) q = requestAnimationFrame(function(){ q = 0; meter(); });
+  }, { passive: true });
+  addEventListener('resize', meter, { passive: true });
+  meter();
+})();
+</script>
