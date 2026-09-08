@@ -1,0 +1,554 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Emperador del Muay Thai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --bg:#E9E6DE;          /* piedra / washi frío */
+  --bg-2:#F4F2EC;
+  --bg-3:#DCD8CD;
+  --line:#C6C1B3;
+  --line-soft:#D6D2C6;
+  --text:#151824;
+  --text-2:#585D6C;
+  --text-3:#7C8191;
+  --accent:#B3262F;      /* hachimaki */
+  --accent-ink:#8E1D25;
+  --psycho:#5636BE;      /* Psycho Power */
+  --brass:#8E6B10;       /* torneos / eras */
+  --halo:rgba(179,38,47,.12);
+  --shadow:0 1px 2px rgba(21,24,36,.07), 0 8px 24px rgba(21,24,36,.06);
+  --grid:rgba(21,24,36,.055);
+
+  --f-display:"Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hud:"Barlow Condensed", "Oswald", Impact, sans-serif;
+
+  --step-hero:clamp(2.4rem,7.2vw,4.5rem);
+  --step-h2:clamp(1.6rem,3.4vw,2.35rem);
+  --step-h3:clamp(1.12rem,1.7vw,1.32rem);
+  --wrap:1140px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D17;
+    --bg-2:#131828;
+    --bg-3:#1B2133;
+    --line:#2A3145;
+    --line-soft:#212739;
+    --text:#EBE7DC;
+    --text-2:#98A0B4;
+    --text-3:#7A8296;
+    --accent:#E2515B;
+    --accent-ink:#F0838A;
+    --psycho:#9679FF;
+    --brass:#D7AE44;
+    --halo:rgba(226,81,91,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+    --grid:rgba(235,231,220,.05);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D17;
+  --bg-2:#131828;
+  --bg-3:#1B2133;
+  --line:#2A3145;
+  --line-soft:#212739;
+  --text:#EBE7DC;
+  --text-2:#98A0B4;
+  --text-3:#7A8296;
+  --accent:#E2515B;
+  --accent-ink:#F0838A;
+  --psycho:#9679FF;
+  --brass:#D7AE44;
+  --halo:rgba(226,81,91,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+  --grid:rgba(235,231,220,.05);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:1.0425rem;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem)}
+.prose{max-width:66ch}
+
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:var(--step-h2); line-height:1.15}
+h3{font-size:var(--step-h3); line-height:1.3; font-weight:600}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+
+.eyebrow{
+  font-family:var(--f-hud); font-weight:600; text-transform:uppercase;
+  letter-spacing:.19em; font-size:.775rem; color:var(--text-3); margin:0;
+}
+.hud{font-family:var(--f-hud); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+
+/* ---------- chapter page ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);
+}
+.topbar-in{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:52px}
+.back{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:600;
+  text-decoration:none; color:var(--text-2); display:inline-flex; align-items:center; gap:.5rem;
+}
+.back:hover{color:var(--accent)}
+.progress{font-family:var(--f-hud); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3)}
+
+.chead{border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+.chead-in{padding:clamp(2.6rem,6vw,4.6rem) 0 clamp(2rem,4vw,3rem); display:grid; gap:clamp(1.8rem,4vw,3rem); grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .chead-in{grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr); align-items:end} }
+.chead .num{font-family:var(--f-hud); font-weight:700; letter-spacing:.22em; text-transform:uppercase; font-size:.82rem; color:var(--accent)}
+.chead h1{font-size:clamp(2.1rem,5.6vw,3.7rem); line-height:1.02; margin:.7rem 0 0; letter-spacing:-.02em}
+.chead .sub{color:var(--text-2); margin-top:1.2rem; font-size:1.08rem; max-width:52ch}
+.meta{border-left:2px solid var(--brass); padding-left:1.2rem; display:grid; gap:.9rem}
+.meta div{display:grid; gap:.15rem}
+.meta dt, .meta .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; color:var(--text-3); font-weight:700}
+.meta .v{font-size:.94rem; color:var(--text-2); line-height:1.5}
+.meta .v b{color:var(--text); font-weight:700}
+
+.body{padding:clamp(2.6rem,6vw,4.4rem) 0}
+.body .prose{font-size:1.085rem; line-height:1.78}
+.body .prose > h2{margin:2.8rem 0 1rem; font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.body .prose > h2:first-child{margin-top:0}
+.body .prose em{color:var(--text)}
+.body .prose strong{font-weight:700}
+.lead{font-size:1.2rem; line-height:1.65; color:var(--text); border-left:2px solid var(--accent); padding-left:1.2rem}
+
+.pull{
+  margin:2.4rem 0; font-family:var(--f-display); font-weight:600; font-size:clamp(1.25rem,2.6vw,1.6rem);
+  line-height:1.35; color:var(--text); text-wrap:balance; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:1.4rem 0;
+}
+.note{
+  margin:2rem 0; border:1px dashed var(--line); padding:1.15rem 1.3rem; background:transparent;
+  font-size:.95rem; color:var(--text-2); line-height:1.65;
+}
+.note .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:700; color:var(--brass); display:block; margin-bottom:.4rem}
+.note b{color:var(--text)}
+.note.warn .k{color:var(--psycho)}
+
+.outro{border-top:1px solid var(--line-soft); background:var(--bg-2)}
+.outro-in{padding:clamp(2.6rem,6vw,4.2rem) 0; display:grid; gap:2.8rem}
+.block h2{font-size:1.32rem; margin-bottom:1rem}
+.keyev{list-style:none; margin:0; padding:0; display:grid; gap:.85rem; counter-reset:k}
+.keyev li{
+  display:grid; grid-template-columns:2.1rem minmax(0,1fr); gap:.8rem; align-items:start;
+  font-size:.985rem; color:var(--text-2); line-height:1.6;
+}
+.keyev li > span{grid-column:2}
+.keyev li::before{
+  counter-increment:k; content:counter(k,decimal-leading-zero);
+  font-family:var(--f-hud); font-weight:700; color:var(--accent); font-size:.95rem; padding-top:.12rem;
+}
+.keyev li b{color:var(--text)}
+
+.who{display:grid; gap:0; border-top:1px solid var(--line)}
+.who div{display:grid; grid-template-columns:minmax(120px,auto) 1fr; gap:.4rem 1.4rem; padding:.85rem 0; border-bottom:1px solid var(--line-soft); align-items:baseline}
+.who .n{font-family:var(--f-display); font-weight:800; font-size:1rem}
+.who .r{font-size:.94rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .who div{grid-template-columns:1fr; gap:.15rem} }
+
+.tl{display:grid; gap:0; margin-top:.4rem}
+.tl div{display:grid; grid-template-columns:minmax(150px,auto) 1fr; gap:.3rem 1.4rem; padding:.75rem 0; border-top:1px solid var(--line-soft); align-items:baseline}
+.tl .w{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; font-size:.78rem; color:var(--brass); font-weight:600}
+.tl .e{font-size:.96rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .tl div{grid-template-columns:1fr; gap:.1rem} }
+
+.remember{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+.remember article{background:var(--bg); padding:1.1rem 1.2rem; display:grid; grid-template-columns:2rem 1fr; gap:.9rem; align-items:start}
+.remember .n{font-family:var(--f-hud); font-weight:700; font-size:1.35rem; color:var(--brass); line-height:1.1}
+.remember p{margin:0; font-size:.96rem; color:var(--text-2); line-height:1.6}
+.remember p b{color:var(--text)}
+
+.next{border-top:1px solid var(--line-soft); padding:clamp(2.4rem,5vw,3.6rem) 0 clamp(3rem,6vw,4.4rem)}
+.next h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+.next p{color:var(--text-2); max-width:62ch; margin-top:1rem}
+.next .ask{font-family:var(--f-display); font-weight:800; color:var(--accent); font-size:clamp(1.1rem,2.2vw,1.35rem); margin-top:2rem}
+.foot{padding:0 0 3rem; color:var(--text-3); font-size:.85rem}
+.foot p{max-width:74ch}
+/* ---------- color de la Era I y movimiento ---------- */
+:root{--era:#C9954A; --tiger:#B4611A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--tiger:#E08A3C}}
+:root[data-theme="dark"]{--tiger:#E08A3C}
+.meter{position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent}
+.meter span{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--era), var(--accent));
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);}
+.topbar{position:sticky}
+
+.vig{width:100%; height:auto; display:block; border-radius:3px; max-width:230px}
+.vig .sky{fill:color-mix(in srgb, var(--era) 16%, var(--bg-2))}
+.chead-art{display:grid; gap:1.4rem; justify-items:start}
+
+.back{transition:color .2s ease, gap .2s ease}
+.back:hover{gap:.85rem}
+.meta{border-left-color:var(--era)}
+.note .k{color:var(--era)}
+.keyev li{transition:transform .2s ease}
+.keyev li:hover{transform:translateX(4px)}
+.keyev li:hover::before{color:var(--era)}
+.who div{transition:background .2s ease, padding-left .2s ease}
+.who div:hover{background:color-mix(in srgb, var(--era) 8%, transparent); padding-left:.5rem}
+.remember article{transition:transform .26s cubic-bezier(.2,.7,.3,1), background .26s ease}
+.remember article:hover{transform:translateY(-2px); background:color-mix(in srgb, var(--era) 7%, var(--bg))}
+.tl div{transition:padding-left .2s ease}
+.tl div:hover{padding-left:.4rem}
+.pull{position:relative}
+.pull::before{content:""; position:absolute; left:0; top:-1px; width:0; height:2px; background:var(--accent); transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.pull:hover::before{width:100%}
+
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes breathe{0%,100%{transform:scale(1); opacity:.9}50%{transform:scale(1.05); opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion: no-preference){
+  .chead-in > div > *{animation:riseIn .6s cubic-bezier(.2,.7,.3,1) both}
+  .chead-in > div > h1{animation-delay:.08s}
+  .chead-in > div > .sub{animation-delay:.18s}
+  .chead-art{animation:riseIn .7s cubic-bezier(.2,.7,.3,1) both .1s}
+  .vig .float{animation:drift 6s ease-in-out infinite}
+  .vig .glow{animation:breathe 4.2s ease-in-out infinite; transform-origin:50% 50%}
+}
+
+
+
+
+.lead{border-left-color:var(--tiger)}
+.pull::before{background:var(--tiger)}
+.note.ring .k{color:var(--tiger)}
+.fact{
+  margin:2.2rem 0; display:grid; gap:0; border:1px solid var(--line);
+  border-left:3px solid var(--tiger); background:color-mix(in srgb, var(--tiger) 5%, transparent);
+}
+.fact div{display:grid; grid-template-columns:minmax(130px,auto) 1fr; gap:.3rem 1.3rem;
+  padding:.75rem 1.3rem; border-top:1px solid var(--line-soft); align-items:baseline}
+.fact div:first-child{border-top:0}
+.fact .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.72rem; color:var(--text-3); font-weight:700}
+.fact .v{font-size:.95rem; color:var(--text-2); line-height:1.55}
+.fact .v b{color:var(--text); font-weight:700}
+@media (max-width:560px){ .fact div{grid-template-columns:1fr; gap:.1rem} }
+
+/* chrome:css */
+.tt{
+  flex:none; display:inline-flex; align-items:center; gap:.45rem;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.72rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:.26rem .65rem; cursor:pointer; transition:color .2s ease, border-color .2s ease;
+}
+.tt:hover{color:var(--text); border-color:var(--text-3)}
+.tt svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round}
+.topbar-right{display:flex; align-items:center; gap:.9rem}
+.chead-in{align-items:start !important}
+.skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--bg); padding:.6rem 1rem; z-index:60}
+.skip:focus{left:.5rem; top:.5rem}
+
+.chnav{border-top:1px solid var(--line-soft); padding:2.2rem 0 3.4rem}
+.chnav-in{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:720px){ .chnav-in{grid-template-columns:1fr 1fr} }
+.chnav a, .chnav span.off{
+  background:var(--bg-2); padding:1.1rem 1.3rem; text-decoration:none; display:grid; gap:.25rem;
+  transition:background .22s ease;
+}
+.chnav a:hover{background:color-mix(in srgb, var(--era) 8%, var(--bg-2))}
+.chnav .dir{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; font-weight:700; color:var(--era)}
+.chnav .ttl{font-family:var(--f-display); font-weight:800; font-size:1.05rem; color:var(--text)}
+.chnav span.off{opacity:.55}
+.chnav span.off .dir{color:var(--text-3)}
+.chnav .right{text-align:right}
+
+.readbtn{
+  display:inline-flex; align-items:center; gap:.6rem; margin-top:1.6rem; cursor:pointer;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.8rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); padding:.7rem 1.2rem;
+  transition:all .2s ease;
+}
+.readbtn svg{width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round}
+.readbtn:hover{border-color:var(--era); color:var(--text)}
+.readbtn[aria-pressed="true"]{background:var(--era); border-color:var(--era); color:var(--bg)}
+/* /chrome:css */
+
+</style>
+
+
+
+<script id="sf-theme-boot">
+(function(){try{var t=localStorage.getItem('sf-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
+    <span class="topbar-right"><span class="topbar-right"><span class="progress">Parte I · Capítulo 4 de 54</span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span>
+  </div>
+  <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
+</div>
+
+<header class="chead">
+  <div class="wrap chead-in">
+    <div>
+      <p class="num">Capítulo 4</p>
+      <h1>El ascenso de Sagat</h1>
+      <p class="sub">Dejamos Japón. Al otro lado del continente, un hombre de dos metros veintiséis lleva años sin perder un combate y está a punto de descubrir que ganar también se paga.</p>
+    </div>
+    <div class="chead-art">
+      <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Las agujas de un templo bajo un disco solar atravesado por una cicatriz diagonal">
+        <rect class="sky" width="120" height="72" rx="3"></rect>
+        <circle class="glow" cx="60" cy="26" r="15" fill="var(--tiger)" opacity=".8"></circle>
+        <path d="M14,72 L26,34 L38,72 Z" fill="var(--tiger)" opacity=".45"></path>
+        <path d="M82,72 L94,34 L106,72 Z" fill="var(--tiger)" opacity=".45"></path>
+        <path d="M40,72 L60,20 L80,72 Z" fill="var(--tiger)" opacity=".9"></path>
+        <path class="float" d="M22,52 L98,8" stroke="var(--bg-2)" stroke-width="4.5" stroke-linecap="round"></path>
+      </svg>
+    <div class="meta">
+      <div><span class="k">Período</span><span class="v">Era I — los años inmediatamente anteriores al primer torneo</span></div>
+      <div><span class="k">Juegos relacionados</span><span class="v">Sagat debuta en <b>Street Fighter</b> (1987). Todo este trasfondo se escribió después, en la era <b>Alpha</b></span></div>
+      <div><span class="k">Personajes principales</span><span class="v"><b>Sagat</b>, <b>Go Hibiki</b>, <b>Dan Hibiki</b>, <b>Adon</b></span></div>
+      <div><span class="k">Importancia</span><span class="v">Presenta al primer gran adversario de la saga y establece que ganar sin freno también deja cicatrices</span></div>
+    </div>
+    </div>
+  </div>
+</header>
+
+<main class="body">
+  <div class="wrap prose">
+
+    <p class="lead">Hasta ahora hemos seguido un linaje secreto de tres personas. Este capítulo se mueve a un mundo completamente distinto: uno con reglas, jueces, títulos y público. Y sin embargo aquí va a morir alguien, igual que en la montaña, y el hombre que lo mate tampoco encontrará la manera de deshacerlo.</p>
+
+    <h2>Un arte con reglas</h2>
+
+    <p>El Muay Thai no es un linaje oculto. Es una disciplina nacional tailandesa con siglos de historia, con circuito profesional, con estadios y con campeones reconocidos. Se pelea con puños, codos, rodillas y espinillas, y se pelea <em>en público</em>.</p>
+
+    <p>Esa diferencia con el capítulo anterior no es un detalle de ambientación: es la columna del personaje. Ryu creció sin público y sin marcador. Sagat creció con las dos cosas. Su identidad entera está construida sobre un título que otros le reconocen, y ese es exactamente el punto por el que va a romperse.</p>
+
+    <p>El título que alcanzó se traduce habitualmente como <strong>Emperador del Muay Thai</strong>. No es un apodo cariñoso: es el reconocimiento de que nadie en su categoría podía con él.</p>
+
+    <div class="fact">
+      <div><span class="k">Estatura</span><span class="v"><b>2,26 m</b>. En un deporte de contacto, esa envergadura no es una ventaja: es un problema para todos los demás</span></div>
+      <div><span class="k">Récord</span><span class="v">Invicto durante toda su carrera previa al primer torneo</span></div>
+      <div><span class="k">Repertorio</span><span class="v"><b>Tiger Shot</b>, <b>Tiger Uppercut</b>, <b>Tiger Knee</b>. Su marca es el tigre, y no por decoración: es el animal que da nombre a todo lo que hace</span></div>
+      <div><span class="k">Debut</span><span class="v">Jefe final de <b>Street Fighter</b> (1987). Todo lo que cuenta este capítulo se escribió ocho años después</span></div>
+    </div>
+
+    <p>Conviene decir aquí que Sagat es, dentro de la ficción, <strong>el luchador más fuerte del mundo</strong> en este momento. No un aspirante prometedor, no una promesa regional. El mejor. Y llevaba tiempo siéndolo cuando ocurrió lo que ocurrió.</p>
+
+    <h2>El combate que le costó un ojo</h2>
+
+    <p>El adversario se llamaba <strong>Go Hibiki</strong>, era japonés y practicaba un estilo propio. Se enfrentaron con el título en juego, en un combate reglado, ante público.</p>
+
+    <p>Durante el asalto, Go le <strong>arrancó el ojo derecho</strong>.</p>
+
+    <p>Lo que pasó a continuación es lo que define al personaje durante los siguientes veinte años de franquicia. Sagat no se retiró, ni pidió la interrupción, ni ganó por descalificación. <strong>Lo mató a golpes.</strong></p>
+
+    <div class="pull">Ganó el combate. Conservó el título. Y salió del estadio siendo otra persona.</div>
+
+    <p>Hay que ser preciso con lo que la ficción afirma y lo que no. Capcom establece el hecho —Go le saca el ojo, Sagat lo mata a golpes— pero <em>no</em> dice si hubo intención de matar o si fue la reacción de un hombre al que acaban de mutilar en público. La saga deja ese hueco abierto a propósito, y Sagat vivirá dentro de él el resto de su vida.</p>
+
+    <div class="note ring">
+      <span class="k">Nota de rigor</span>
+      Esto no aparece en <em>Street Fighter</em> (1987). En aquel juego Sagat era simplemente el jefe final, sin historia. Todo lo que acaba de leer se construyó en la era <b>Alpha</b>, casi una década después, cuando Capcom decidió que su villano más recordado necesitaba un motivo para estar tan roto. Es otro caso de reconstrucción retroactiva, y de los mejores que ha hecho la franquicia.
+    </div>
+
+    <h2>El niño que lo vio</h2>
+
+    <p>Go Hibiki tenía un hijo, y ese hijo estaba allí.</p>
+
+    <p>Se llama <strong>Dan Hibiki</strong>, y aquí conviene sacudirse una idea previa. En los juegos, Dan es el chiste: el personaje deliberadamente malo, fanfarrón, con una pose ridícula y un repertorio de técnicas fallidas. Capcom lo creó como parodia. Pero su origen no tiene ninguna gracia: <strong>Dan es un crío que vio a un gigante matar a su padre a puñetazos</strong> y decidió, allí mismo, dedicar su vida a devolvérselo.</p>
+
+    <p>Y aquí es donde este capítulo se cruza con el anterior de una forma que mucha gente desconoce.</p>
+
+    <p>Dan fue a entrenar al dojo de Gouken.</p>
+
+    <p>El mismo dojo, el mismo maestro, el mismo arte depurado que aprendieron Ryu y Ken. Duró poco: <strong>cuando Gouken descubrió que su alumno entrenaba movido por la venganza, lo expulsó.</strong></p>
+
+    <div class="pull">Aceptó a un huérfano sin origen. Aceptó a un niño rico y malcriado. Al que echó fue al que quería matar a alguien.</div>
+
+    <p>Piense en lo que eso nos dice del maestro del Capítulo 2. Gouken vio en Dan exactamente lo que había visto en su hermano —un hombre dispuesto a usar la técnica como instrumento de muerte— y cerró la puerta sin dudarlo. Fue coherente. Fue, incluso, sabio.</p>
+
+    <p>Pero también significa que <strong>Gouken sí sabía cómo detectar ese peligro y sí sabía nombrarlo cuando le convenía</strong>. Podía identificarlo en un desconocido y expulsarlo por ello. Simplemente decidió no explicárselo nunca a los dos alumnos que se quedaron.</p>
+
+    <p>Dan siguió por su cuenta, con lo poco que le había dado tiempo a aprender, y construyó a partir de ahí un estilo propio incompleto y a menudo ridículo. Su historia con Sagat no termina aquí, pero lo que ocurra después pertenece a otro capítulo.</p>
+
+    <h2>Un campeón sin nada que ganar</h2>
+
+    <p>Sagat quedó con un parche, un título intacto y un problema que ningún cinturón resuelve.</p>
+
+    <p>Había llegado a la cima de una disciplina reglada y allí arriba no había nadie. Los rivales que le quedaban no podían con él. El combate que sí le había dolido de verdad le había costado un ojo y le había puesto encima una muerte. Y no había ningún adversario a la vista capaz de darle otra cosa que trámite.</p>
+
+    <p>Ese vacío es el estado exacto en que la saga lo encuentra: <strong>invicto, célebre y profundamente vacío</strong>, esperando a alguien que le obligue a pelear de verdad otra vez. Es un deseo peligroso, y se le va a conceder.</p>
+
+    <p>Por esa época tomó también un discípulo, un joven tailandés llamado <strong>Adon</strong>, brillante, agresivo y con una devoción por su maestro que solo dura mientras el maestro sea invencible. Guárdelo en la memoria; volverá.</p>
+
+    <h2>Dos hombres caminando hacia el mismo sitio</h2>
+
+    <p>Recapitulemos, porque los dos hilos de esta primera parte están a punto de tocarse.</p>
+
+    <p>Por un lado, un japonés de veintitantos años sin apellido, con una cinta blanca, entrenado en un arte al que le falta la mitad y al que su maestro no le explicó nunca de qué se defendía. Va buscando adversarios fuertes.</p>
+
+    <p>Por otro, un tailandés invicto, tuerto y hueco, que ya no encuentra a nadie capaz de hacerle sentir algo dentro del ring.</p>
+
+    <p>Uno busca a alguien que le supere. El otro busca a alguien que le resista. Es, sobre el papel, el encuentro perfecto.</p>
+
+    <p>Lo que ninguno de los dos sabe es que hay una tercera cosa esperando en ese combate. No estará en el cartel, no tendrá nombre en el programa, y sin embargo será lo único que de verdad importe de aquella noche.</p>
+
+  </div>
+</main>
+
+<section class="outro">
+  <div class="wrap outro-in">
+
+    <div class="block">
+      <h2>Acontecimientos clave</h2>
+      <ol class="keyev">
+        <li><span><b>Sagat asciende hasta lo más alto del Muay Thai</b> y se convierte en el mejor luchador del mundo, dentro de una disciplina pública y reglada: lo contrario del linaje secreto de los capítulos anteriores.</span></li>
+        <li><span><b>Se enfrenta a Go Hibiki con el título en juego</b> en un combate ante público.</span></li>
+        <li><span><b>Go le arranca el ojo derecho</b> durante el asalto. Sagat queda tuerto de por vida y adopta el parche con el que se le conoce.</span></li>
+        <li><span><b>Sagat lo mata a golpes.</b> Capcom establece el hecho pero no aclara si hubo intención; ese hueco define al personaje durante veinte años.</span></li>
+        <li><span><b>Dan Hibiki, hijo de Go, presencia la muerte de su padre</b> y jura vengarse. Su origen paródico en los juegos oculta uno de los trasfondos más sombríos del reparto.</span></li>
+        <li><span><b>Dan entra en el dojo de Gouken y es expulsado</b> en cuanto el maestro descubre que entrena movido por la venganza.</span></li>
+        <li><span><b>Sagat queda invicto y vacío,</b> sin rivales capaces de exigirle, esperando a alguien que le devuelva un combate verdadero.</span></li>
+        <li><span><b>Toma como discípulo a Adon,</b> cuya lealtad durará exactamente lo que dure la invencibilidad de su maestro.</span></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h2>Personajes que debemos recordar</h2>
+      <div class="who">
+        <div><span class="n">Sagat</span><span class="r">Debuta como jefe final de <em>Street Fighter</em> (1987); su trasfondo se escribió en la era Alpha. En este punto es el luchador más fuerte del mundo y también el más hueco. Todo lo que le pase a partir de ahora nace de ese vacío.</span></div>
+        <div><span class="n">Go Hibiki</span><span class="r">Aparece muerto en la práctica totalidad de la franquicia, pero su combate contra Sagat es uno de los sucesos fundacionales de la saga: le costó un ojo al campeón y le dejó encima una muerte que no sabe cargar.</span></div>
+        <div><span class="n">Dan Hibiki</span><span class="r">El personaje-parodia con el origen más oscuro del reparto. Testigo del asesinato de su padre, expulsado del dojo de Gouken por querer vengarlo. Debuta en <em>Street Fighter Alpha</em> (1995).</span></div>
+        <div><span class="n">Adon</span><span class="r">Discípulo de Sagat. Su devoción es real mientras el maestro sea invencible, lo que convierte su lealtad en una cuenta atrás. Debuta también en <em>Street Fighter</em> (1987).</span></div>
+        <div><span class="n">Gouken</span><span class="r">No aparece en escena, pero su decisión de expulsar a Dan demuestra que sabía detectar y nombrar el peligro perfectamente. Con sus dos alumnos, simplemente eligió callar.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Organizaciones</h2>
+      <div class="who">
+        <div><span class="n">El circuito del Muay Thai</span><span class="r">Federaciones, estadios, títulos y público. La primera estructura reconocible y legal que aparece en esta guía, y el mundo en el que Sagat construyó su identidad. Que una muerte ocurra dentro de ese marco es precisamente lo que la hace insoportable.</span></div>
+        <div><span class="n">El dojo de Gouken</span><span class="r">Reaparece brevemente: acepta a Dan y lo expulsa. Es la única vez que vemos al maestro aplicar un criterio de admisión, y lo aplica exactamente donde debía.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Cronología del capítulo</h2>
+      <div class="tl">
+        <div><span class="w">La carrera de Sagat</span><span class="e">Asciende en el circuito del Muay Thai hasta quedar invicto y ser reconocido como Emperador.</span></div>
+        <div><span class="w">El combate con Go Hibiki</span><span class="e">Con el título en juego. Go le arranca el ojo derecho; Sagat lo mata a golpes. Dan lo presencia.</span></div>
+        <div><span class="w">Después del combate</span><span class="e">Sagat adopta el parche. Conserva el título y queda sin rivales a su altura.</span></div>
+        <div><span class="w">En paralelo, en Japón</span><span class="e">Dan entra en el dojo de Gouken buscando el arte que le permita vengarse, y es expulsado en cuanto el maestro descubre su motivo.</span></div>
+        <div><span class="w">Final del capítulo</span><span class="e">Sagat espera un adversario de verdad. Ryu está en el camino. Va a convocarse un torneo.</span></div>
+      </div>
+      <div class="note" style="margin-top:1.6rem">
+        <span class="k">Sobre el orden</span>
+        Capcom no ha fijado en qué momento exacto pasó Dan por el dojo de Gouken respecto al entrenamiento de Ryu y Ken, ni cuánto tiempo separa el combate con Go Hibiki del primer torneo. Los sitúo en este capítulo por coherencia narrativa, no porque exista una fecha oficial.
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Lo que debes recordar</h2>
+      <div class="remember">
+        <article><span class="n">1</span><p><b>Sagat es el mejor luchador del mundo antes de que empiece nada.</b> No es un aspirante: es el techo. Todo lo que le ocurra será una caída desde arriba.</p></article>
+        <article><span class="n">2</span><p><b>Mató a un hombre dentro de un deporte reglado.</b> No en una montaña ni por filosofía marcial: en un estadio, con jueces y público. Esa es la herida que arrastra, y es distinta de la de Akuma.</p></article>
+        <article><span class="n">3</span><p><b>El parche no es estética.</b> Se lo debe a Go Hibiki, y cada vez que se mira al espejo tiene delante al hombre que mató.</p></article>
+        <article><span class="n">4</span><p><b>Dan Hibiki no es solo el chiste.</b> Es el hijo de aquel hombre, y la franquicia sostiene a la vez la parodia y la tragedia sin que ninguna anule a la otra.</p></article>
+        <article><span class="n">5</span><p><b>Gouken expulsó a Dan por querer vengarse.</b> Sabía identificar el peligro y sabía ponerle nombre. Con Ryu y Ken eligió el silencio de todas formas.</p></article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap">
+    <h2>Conexión con el Capítulo 5</h2>
+    <p>Nos queda una pieza antes de que empiece el primer torneo, y es la más grande de todas. Mientras un maestro guarda un secreto en una montaña y un campeón se consume en Tailandia, en otro sitio un hombre está haciendo algo que nadie más ha hecho: <em>trocear su propia alma</em> para poder usar un poder que, entero, lo habría destruido.</p>
+    <p>El siguiente capítulo cuenta el nacimiento de Shadaloo, qué es exactamente el Psycho Power y qué precio pagó M. Bison por dominarlo. También explicará por qué la mitad que se arrancó sigue viva y camina por Europa.</p>
+    <p class="ask">¿Continuamos con el Capítulo 5 — «El nacimiento de Shadaloo»?</p>
+    <p><button class="readbtn" id="readbtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"></path></svg><span class="readbtn-l">Marcar como leído</span></button></p>
+  </div>
+</section>
+
+
+<!--chrome:start-->
+<nav class="chnav" aria-label="Navegación entre capítulos">
+  <div class="wrap chnav-in">
+    <a class="" href="https://claude.ai/code/artifact/7b5ed02c-2697-477d-847c-705f66733ca7"><span class="dir">← Capítulo 03</span><span class="ttl">El dojo de Gouken</span></a>
+    <span class="off right"><span class="dir">Capítulo 05 →</span><span class="ttl">El nacimiento de Shadaloo · en preparación</span></span>
+  </div>
+</nav>
+<script>
+(function(){
+  var modes=['auto','light','dark'], names={auto:'Auto',light:'Claro',dark:'Oscuro'};
+  var btn=document.getElementById('themebtn'), lab=document.getElementById('themelab');
+  function read(){try{var t=localStorage.getItem('sf-theme');return (t==='light'||t==='dark')?t:'auto';}catch(e){return 'auto';}}
+  function apply(m){
+    if(m==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=m;
+    if(lab) lab.textContent=names[m];
+    try{ m==='auto'?localStorage.removeItem('sf-theme'):localStorage.setItem('sf-theme',m); }catch(e){}
+  }
+  apply(read());
+  if(btn) btn.addEventListener('click',function(){apply(modes[(modes.indexOf(read())+1)%modes.length]);});
+
+  var mark=document.getElementById('readbtn'); if(!mark) return;
+  var KEY='sf-read', NUM='04';
+  function list(){try{var v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function sync(){
+    var on=list().indexOf(NUM)!==-1;
+    mark.setAttribute('aria-pressed', on?'true':'false');
+    mark.querySelector('.readbtn-l').textContent = on ? 'Capítulo leído' : 'Marcar como leído';
+  }
+  mark.addEventListener('click',function(){
+    var l=list(), i=l.indexOf(NUM);
+    if(i===-1) l.push(NUM); else l.splice(i,1);
+    try{ localStorage.setItem(KEY, JSON.stringify(l)); }catch(e){}
+    sync();
+  });
+  sync();
+})();
+</script>
+<!--chrome:end-->
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. El trasfondo de Sagat, Go Hibiki y Dan procede de la era <em>Street Fighter Alpha</em> y de los perfiles oficiales de personaje; ninguno de estos hechos existía en el juego de 1987. Los puntos sin fecha oficial se señalan como tales.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var fill = document.getElementById('meterfill');
+  if (!fill) return;
+  var q = 0;
+  function meter(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+  }
+  addEventListener('scroll', function(){
+    if (!q) q = requestAnimationFrame(function(){ q = 0; meter(); });
+  }, { passive: true });
+  addEventListener('resize', meter, { passive: true });
+  meter();
+})();
+</script>

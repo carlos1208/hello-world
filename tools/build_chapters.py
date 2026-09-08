@@ -21,7 +21,9 @@ CHAPTERS = [
      "https://claude.ai/code/artifact/24c779ba-c17a-454f-a3cd-5ad1ec18dc37"),
     ("03", "cap-03.html", "El dojo de Gouken",
      "https://claude.ai/code/artifact/7b5ed02c-2697-477d-847c-705f66733ca7"),
-    ("04", None, "El ascenso de Sagat", None),
+    ("04", "cap-04.html", "El ascenso de Sagat",
+     "https://claude.ai/code/artifact/fe80f362-2ea6-4b4e-bb8b-616a27d11e9b"),
+    ("05", None, "El nacimiento de Shadaloo", None),
 ]
 
 CSS = """
