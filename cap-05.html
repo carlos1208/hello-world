@@ -1,0 +1,590 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Hombre Que Se Amputó el Alma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --bg:#E9E6DE;          /* piedra / washi frío */
+  --bg-2:#F4F2EC;
+  --bg-3:#DCD8CD;
+  --line:#C6C1B3;
+  --line-soft:#D6D2C6;
+  --text:#151824;
+  --text-2:#585D6C;
+  --text-3:#7C8191;
+  --accent:#B3262F;      /* hachimaki */
+  --accent-ink:#8E1D25;
+  --psycho:#5636BE;      /* Psycho Power */
+  --brass:#8E6B10;       /* torneos / eras */
+  --halo:rgba(179,38,47,.12);
+  --shadow:0 1px 2px rgba(21,24,36,.07), 0 8px 24px rgba(21,24,36,.06);
+  --grid:rgba(21,24,36,.055);
+
+  --f-display:"Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hud:"Barlow Condensed", "Oswald", Impact, sans-serif;
+
+  --step-hero:clamp(2.4rem,7.2vw,4.5rem);
+  --step-h2:clamp(1.6rem,3.4vw,2.35rem);
+  --step-h3:clamp(1.12rem,1.7vw,1.32rem);
+  --wrap:1140px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D17;
+    --bg-2:#131828;
+    --bg-3:#1B2133;
+    --line:#2A3145;
+    --line-soft:#212739;
+    --text:#EBE7DC;
+    --text-2:#98A0B4;
+    --text-3:#7A8296;
+    --accent:#E2515B;
+    --accent-ink:#F0838A;
+    --psycho:#9679FF;
+    --brass:#D7AE44;
+    --halo:rgba(226,81,91,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+    --grid:rgba(235,231,220,.05);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D17;
+  --bg-2:#131828;
+  --bg-3:#1B2133;
+  --line:#2A3145;
+  --line-soft:#212739;
+  --text:#EBE7DC;
+  --text-2:#98A0B4;
+  --text-3:#7A8296;
+  --accent:#E2515B;
+  --accent-ink:#F0838A;
+  --psycho:#9679FF;
+  --brass:#D7AE44;
+  --halo:rgba(226,81,91,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+  --grid:rgba(235,231,220,.05);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:1.0425rem;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem)}
+.prose{max-width:66ch}
+
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:var(--step-h2); line-height:1.15}
+h3{font-size:var(--step-h3); line-height:1.3; font-weight:600}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+
+.eyebrow{
+  font-family:var(--f-hud); font-weight:600; text-transform:uppercase;
+  letter-spacing:.19em; font-size:.775rem; color:var(--text-3); margin:0;
+}
+.hud{font-family:var(--f-hud); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+
+/* ---------- chapter page ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);
+}
+.topbar-in{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:52px}
+.back{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:600;
+  text-decoration:none; color:var(--text-2); display:inline-flex; align-items:center; gap:.5rem;
+}
+.back:hover{color:var(--accent)}
+.progress{font-family:var(--f-hud); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3)}
+
+.chead{border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+.chead-in{padding:clamp(2.6rem,6vw,4.6rem) 0 clamp(2rem,4vw,3rem); display:grid; gap:clamp(1.8rem,4vw,3rem); grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .chead-in{grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr); align-items:end} }
+.chead .num{font-family:var(--f-hud); font-weight:700; letter-spacing:.22em; text-transform:uppercase; font-size:.82rem; color:var(--accent)}
+.chead h1{font-size:clamp(2.1rem,5.6vw,3.7rem); line-height:1.02; margin:.7rem 0 0; letter-spacing:-.02em}
+.chead .sub{color:var(--text-2); margin-top:1.2rem; font-size:1.08rem; max-width:52ch}
+.meta{border-left:2px solid var(--brass); padding-left:1.2rem; display:grid; gap:.9rem}
+.meta div{display:grid; gap:.15rem}
+.meta dt, .meta .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; color:var(--text-3); font-weight:700}
+.meta .v{font-size:.94rem; color:var(--text-2); line-height:1.5}
+.meta .v b{color:var(--text); font-weight:700}
+
+.body{padding:clamp(2.6rem,6vw,4.4rem) 0}
+.body .prose{font-size:1.085rem; line-height:1.78}
+.body .prose > h2{margin:2.8rem 0 1rem; font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.body .prose > h2:first-child{margin-top:0}
+.body .prose em{color:var(--text)}
+.body .prose strong{font-weight:700}
+.lead{font-size:1.2rem; line-height:1.65; color:var(--text); border-left:2px solid var(--accent); padding-left:1.2rem}
+
+.pull{
+  margin:2.4rem 0; font-family:var(--f-display); font-weight:600; font-size:clamp(1.25rem,2.6vw,1.6rem);
+  line-height:1.35; color:var(--text); text-wrap:balance; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:1.4rem 0;
+}
+.note{
+  margin:2rem 0; border:1px dashed var(--line); padding:1.15rem 1.3rem; background:transparent;
+  font-size:.95rem; color:var(--text-2); line-height:1.65;
+}
+.note .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:700; color:var(--brass); display:block; margin-bottom:.4rem}
+.note b{color:var(--text)}
+.note.warn .k{color:var(--psycho)}
+
+.outro{border-top:1px solid var(--line-soft); background:var(--bg-2)}
+.outro-in{padding:clamp(2.6rem,6vw,4.2rem) 0; display:grid; gap:2.8rem}
+.block h2{font-size:1.32rem; margin-bottom:1rem}
+.keyev{list-style:none; margin:0; padding:0; display:grid; gap:.85rem; counter-reset:k}
+.keyev li{
+  display:grid; grid-template-columns:2.1rem minmax(0,1fr); gap:.8rem; align-items:start;
+  font-size:.985rem; color:var(--text-2); line-height:1.6;
+}
+.keyev li > span{grid-column:2}
+.keyev li::before{
+  counter-increment:k; content:counter(k,decimal-leading-zero);
+  font-family:var(--f-hud); font-weight:700; color:var(--accent); font-size:.95rem; padding-top:.12rem;
+}
+.keyev li b{color:var(--text)}
+
+.who{display:grid; gap:0; border-top:1px solid var(--line)}
+.who div{display:grid; grid-template-columns:minmax(120px,auto) 1fr; gap:.4rem 1.4rem; padding:.85rem 0; border-bottom:1px solid var(--line-soft); align-items:baseline}
+.who .n{font-family:var(--f-display); font-weight:800; font-size:1rem}
+.who .r{font-size:.94rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .who div{grid-template-columns:1fr; gap:.15rem} }
+
+.tl{display:grid; gap:0; margin-top:.4rem}
+.tl div{display:grid; grid-template-columns:minmax(150px,auto) 1fr; gap:.3rem 1.4rem; padding:.75rem 0; border-top:1px solid var(--line-soft); align-items:baseline}
+.tl .w{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; font-size:.78rem; color:var(--brass); font-weight:600}
+.tl .e{font-size:.96rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .tl div{grid-template-columns:1fr; gap:.1rem} }
+
+.remember{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+.remember article{background:var(--bg); padding:1.1rem 1.2rem; display:grid; grid-template-columns:2rem 1fr; gap:.9rem; align-items:start}
+.remember .n{font-family:var(--f-hud); font-weight:700; font-size:1.35rem; color:var(--brass); line-height:1.1}
+.remember p{margin:0; font-size:.96rem; color:var(--text-2); line-height:1.6}
+.remember p b{color:var(--text)}
+
+.next{border-top:1px solid var(--line-soft); padding:clamp(2.4rem,5vw,3.6rem) 0 clamp(3rem,6vw,4.4rem)}
+.next h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+.next p{color:var(--text-2); max-width:62ch; margin-top:1rem}
+.next .ask{font-family:var(--f-display); font-weight:800; color:var(--accent); font-size:clamp(1.1rem,2.2vw,1.35rem); margin-top:2rem}
+.foot{padding:0 0 3rem; color:var(--text-3); font-size:.85rem}
+.foot p{max-width:74ch}
+/* ---------- color de la Era I y movimiento ---------- */
+:root{--era:#C9954A}
+.meter{position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent}
+.meter span{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--era), var(--accent));
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);}
+.topbar{position:sticky}
+
+.vig{width:100%; height:auto; display:block; border-radius:3px; max-width:230px}
+.vig .sky{fill:color-mix(in srgb, var(--era) 16%, var(--bg-2))}
+.chead-art{display:grid; gap:1.4rem; justify-items:start}
+
+.back{transition:color .2s ease, gap .2s ease}
+.back:hover{gap:.85rem}
+.meta{border-left-color:var(--era)}
+.note .k{color:var(--era)}
+.keyev li{transition:transform .2s ease}
+.keyev li:hover{transform:translateX(4px)}
+.keyev li:hover::before{color:var(--era)}
+.who div{transition:background .2s ease, padding-left .2s ease}
+.who div:hover{background:color-mix(in srgb, var(--era) 8%, transparent); padding-left:.5rem}
+.remember article{transition:transform .26s cubic-bezier(.2,.7,.3,1), background .26s ease}
+.remember article:hover{transform:translateY(-2px); background:color-mix(in srgb, var(--era) 7%, var(--bg))}
+.tl div{transition:padding-left .2s ease}
+.tl div:hover{padding-left:.4rem}
+.pull{position:relative}
+.pull::before{content:""; position:absolute; left:0; top:-1px; width:0; height:2px; background:var(--accent); transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.pull:hover::before{width:100%}
+
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes breathe{0%,100%{transform:scale(1); opacity:.9}50%{transform:scale(1.05); opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion: no-preference){
+  .chead-in > div > *{animation:riseIn .6s cubic-bezier(.2,.7,.3,1) both}
+  .chead-in > div > h1{animation-delay:.08s}
+  .chead-in > div > .sub{animation-delay:.18s}
+  .chead-art{animation:riseIn .7s cubic-bezier(.2,.7,.3,1) both .1s}
+  .vig .float{animation:drift 6s ease-in-out infinite}
+  .vig .glow{animation:breathe 4.2s ease-in-out infinite; transform-origin:50% 50%}
+}
+
+
+
+
+
+
+.lead{border-left-color:var(--psycho)}
+.pull::before{background:var(--psycho)}
+.note.psy .k{color:var(--psycho)}
+.scene{
+  margin:2.4rem 0; padding:1.5rem 1.6rem; border:1px solid var(--line);
+  background:color-mix(in srgb, var(--psycho) 4%, transparent);
+  font-family:var(--f-display); font-size:1.06rem; line-height:1.72; color:var(--text-2);
+}
+.scene .k{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.7rem;
+  font-weight:700; color:var(--psycho); display:block; margin-bottom:.7rem;
+}
+.scene p{margin:0 0 .85rem}
+.scene p:last-child{margin-bottom:0}
+.scene em{color:var(--text)}
+
+/* chrome:css */
+.tt{
+  flex:none; display:inline-flex; align-items:center; gap:.45rem;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.72rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:.26rem .65rem; cursor:pointer; transition:color .2s ease, border-color .2s ease;
+}
+.tt:hover{color:var(--text); border-color:var(--text-3)}
+.tt svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round}
+.topbar-right{display:flex; align-items:center; gap:.9rem}
+.chead-in{align-items:start !important}
+.skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--bg); padding:.6rem 1rem; z-index:60}
+.skip:focus{left:.5rem; top:.5rem}
+
+.chnav{border-top:1px solid var(--line-soft); padding:2.2rem 0 3.4rem}
+.chnav-in{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:720px){ .chnav-in{grid-template-columns:1fr 1fr} }
+.chnav a, .chnav span.off{
+  background:var(--bg-2); padding:1.1rem 1.3rem; text-decoration:none; display:grid; gap:.25rem;
+  transition:background .22s ease;
+}
+.chnav a:hover{background:color-mix(in srgb, var(--era) 8%, var(--bg-2))}
+.chnav .dir{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; font-weight:700; color:var(--era)}
+.chnav .ttl{font-family:var(--f-display); font-weight:800; font-size:1.05rem; color:var(--text)}
+.chnav span.off{opacity:.55}
+.chnav span.off .dir{color:var(--text-3)}
+.chnav .right{text-align:right}
+
+.readbtn{
+  display:inline-flex; align-items:center; gap:.6rem; margin-top:1.6rem; cursor:pointer;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.8rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); padding:.7rem 1.2rem;
+  transition:all .2s ease;
+}
+.readbtn svg{width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round}
+.readbtn:hover{border-color:var(--era); color:var(--text)}
+.readbtn[aria-pressed="true"]{background:var(--era); border-color:var(--era); color:var(--bg)}
+/* /chrome:css */
+
+</style>
+
+
+
+<script id="sf-theme-boot">
+(function(){try{var t=localStorage.getItem('sf-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
+    <span class="topbar-right"><span class="topbar-right"><span class="progress">Parte I · Capítulo 5 de 54</span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span>
+  </div>
+  <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
+</div>
+
+<header class="chead">
+  <div class="wrap chead-in">
+    <div>
+      <p class="num">Capítulo 5</p>
+      <h1>El hombre que se amputó el alma</h1>
+      <p class="sub">Los otros aprendieron un arte. Este se sometió a una operación. Y lo que se extirpó a sí mismo no desapareció: se levantó, salió por la puerta y echó a andar hacia Europa.</p>
+    </div>
+    <div class="chead-art">
+      <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un disco oscuro al que le falta una porción; la porción extraída flota aparte, luminosa">
+        <rect class="sky" width="120" height="72" rx="3"></rect>
+        <path d="M46,36 m-22,0 a22,22 0 1,0 44,0 a22,22 0 1,0 -44,0" fill="var(--psycho)" opacity=".75"></path>
+        <path d="M46,36 L46,14 A22,22 0 0,1 65.5,25.5 Z" fill="var(--bg-2)"></path>
+        <path class="float" d="M92,22 L92,6 A16,16 0 0,1 106,14.5 Z" fill="var(--brass)"></path>
+        <circle class="glow" cx="46" cy="36" r="5" fill="var(--bg-2)" opacity=".55"></circle>
+      </svg>
+    <div class="meta">
+      <div><span class="k">Período</span><span class="v">Era I — la última pieza antes del primer torneo</span></div>
+      <div><span class="k">Juegos relacionados</span><span class="v">Bison debuta en <b>Street Fighter II</b> (1991); Rose y el trasfondo del Psycho Power llegan con la era <b>Alpha</b> (1995)</span></div>
+      <div><span class="k">Personajes principales</span><span class="v"><b>M. Bison</b>, <b>Rose</b></span></div>
+      <div><span class="k">Importancia</span><span class="v">Nace el antagonista de cuatro juegos y la organización que sostiene media franquicia</span></div>
+    </div>
+    </div>
+  </div>
+</header>
+
+<main class="body">
+  <div class="wrap prose">
+
+    <div class="note psy">
+      <span class="k">Un cambio de registro</span>
+      A partir de este capítulo la narración se cuenta más como una novela y menos como un ensayo. Eso no relaja el rigor: <b>todo lo que ocurre sigue siendo canon</b>, y allí donde dramatizo una escena que Capcom no llegó a mostrar, lo verá señalado en un recuadro como este o en un bloque marcado <em>Reconstrucción narrativa</em>. Los hechos van en la historia; las dudas, siempre visibles, van en los recuadros.
+    </div>
+
+    <p class="lead">De los cuatro hombres que importan en esta primera parte, tres tienen un pasado. Goutetsu tuvo un arte y dos discípulos. Sagat tuvo un país, un deporte y un campeonato. Gouken tuvo un hermano y una decisión que lamentar. Del cuarto no sabemos absolutamente nada, y no es un descuido.</p>
+
+    <h2>El hombre sin biografía</h2>
+
+    <p>No tiene nombre de nacimiento. No tiene país. No tiene maestro conocido, ni escuela, ni linaje, ni un pueblo que pueda señalarse en un mapa. La franquicia lleva más de treinta años usándolo como su villano central y jamás ha contado de dónde salió.</p>
+
+    <p>Al principio parece una carencia. Uno espera la infancia miserable, la humillación fundacional, el momento exacto en que un niño decide que el mundo le debe algo. Nada de eso existe. Cuando M. Bison entra en la historia, ya es lo que va a ser.</p>
+
+    <p>Y esa ausencia, si se la mira bien, es simétrica a otra. Ryu tampoco tiene origen. Los dos polos de la saga —el hombre que no quiere usar su poder y el hombre que se rehízo entero para usar el suyo— <em>comparten el mismo vacío en el expediente</em>. Uno lo llena caminando. El otro lo llenó tomando una decisión que nadie más en este universo ha tomado.</p>
+
+    <h2>Un fuego que se alimenta de otros</h2>
+
+    <p>Hay que entender qué encontró, porque no es una técnica marcial y confundirlo con eso es el error más común al leer esta saga.</p>
+
+    <p>El <strong>Psycho Power</strong> no se entrena. No se pule con repeticiones, no se hereda de un maestro, no está al fondo de ningún dojo. Es una energía que existe por su cuenta, de naturaleza inherentemente maligna, y tiene una particularidad que lo cambia todo:</p>
+
+    <div class="pull">No se alimenta de la rabia de quien la usa. Se alimenta del miedo, la ira y el odio de los demás.</div>
+
+    <p>Deténgase aquí un momento, porque de esta frase sale absolutamente todo lo que ocurrirá en los próximos treinta capítulos.</p>
+
+    <p>Si el combustible de un hombre es el terror ajeno, entonces ese hombre no necesita un dojo. Necesita <em>una población</em>. No necesita alumnos: necesita víctimas, y cuantas más, mejor. No necesita ganar torneos: necesita que el mundo tenga miedo, de forma sostenida, industrial, permanente.</p>
+
+    <p>Todos los criminales de esta historia quieren dinero, o territorio, o poder político. Bison también los querrá, pero por una razón distinta a la de ellos: son <strong>subproductos del proceso de refinado</strong>. El dinero compra armas, las armas producen miedo, el miedo lo alimenta a él. La organización que va a construir no es un negocio con un jefe siniestro. Es una <em>refinería</em>, y él es lo único que se quema dentro.</p>
+
+    <h2>La operación</h2>
+
+    <p>Aquí llega el momento del que depende el personaje entero, y conviene contarlo despacio.</p>
+
+    <p>El Psycho Power no se entrega sin más a quien lo encuentra. Exige un recipiente que no oponga resistencia, y todo ser humano opone resistencia, aunque no quiera. La compasión es resistencia. El remordimiento es resistencia. La duda, la piedad, la vergüenza: cada una de esas cosas es una válvula que se cierra sola cuando la presión sube demasiado, y el Psycho Power no admite válvulas.</p>
+
+    <p>Otro hombre habría aceptado el límite. Habría usado lo que pudiera y habría vivido con la mitad de la potencia.</p>
+
+    <p>Bison hizo lo otro. Localizó dentro de sí mismo todo aquello que le estorbaba —el remordimiento, la compasión, la humanidad entera— y <strong>lo expulsó</strong>. No lo reprimió, no lo silenció, no aprendió a ignorarlo. Se lo arrancó y lo puso fuera, como quien extirpa un órgano que ya no piensa usar.</p>
+
+    <div class="scene">
+      <span class="k">Reconstrucción narrativa</span>
+      <p>Capcom nunca ha mostrado esta escena. No sabemos dónde ocurrió, ni cuándo, ni si duró un instante o años. Lo que sigue es una dramatización de un hecho que sí es canon; léala como tal.</p>
+      <p>Imagine a un hombre solo, decidiendo con calma qué partes de sí mismo son prescindibles. No hay furia en ese momento: la furia habría sido humana, y lo humano es precisamente lo que está en la mesa de operaciones. Hay únicamente un cálculo, ejecutado con la frialdad de quien revisa un inventario.</p>
+      <p><em>Esto me frena. Fuera. Esto también. Fuera.</em></p>
+      <p>Y cuando terminó, el recipiente estaba limpio. Ya no había nada dentro capaz de decir «basta».</p>
+    </div>
+
+    <p>A partir de ese instante, el poder entró sin encontrar oposición. Le cambió el color de los ojos, le cambió el color de la piel, le reorganizó la mente. Se volvió, literalmente, otra cosa.</p>
+
+    <p>Pero una amputación tiene un residuo. Y esto es lo que nadie esperaba.</p>
+
+    <h2>Lo que salió por la puerta</h2>
+
+    <p>Lo que Bison expulsó de sí mismo <strong>no se disolvió en el aire</strong>. Todo aquel remordimiento, toda aquella compasión, toda aquella humanidad descartada tenía la suficiente entidad como para sostenerse por su cuenta.</p>
+
+    <p>Se levantó. Tomó forma. Y echó a andar.</p>
+
+    <p>Muy lejos de allí, en Europa, hay una mujer que lee el futuro con un mazo de cartas y a la que la gente acude para saber qué le espera. Se llama <strong>Rose</strong>. Va envuelta en una bufanda que se mueve como si tuviera voluntad propia, y maneja una energía a la que llaman <strong>Soul Power</strong>: la misma raíz que el Psycho Power, la misma corriente, girando en el sentido contrario.</p>
+
+    <p>Ella es la parte que él tiró.</p>
+
+    <div class="pull">No son enemigos que se buscaron. Son las dos mitades de la misma operación quirúrgica, caminando cada una por su lado.</div>
+
+    <p>Ese parentesco tiene consecuencias muy concretas que la saga irá desplegando: mientras una de las dos mitades siga en pie, la otra no termina de morir del todo. Cuando llegue el momento —y llegará— comprobaremos hasta qué punto eso complica la idea misma de derrotar a este villano. De momento basta con guardar la relación, que es la más extraña y la más importante de toda la franquicia.</p>
+
+    <div class="note psy">
+      <span class="k">Nota de rigor</span>
+      La naturaleza de Rose como mitad expulsada del alma de Bison se establece en la era <b>Alpha</b>, seis años después de que el dictador debutara en <em>Street Fighter II</em>. En 1991 Bison era, sencillamente, un jefe final con capa y poderes. Todo el aparato metafísico que acaba de leer se construyó a posteriori para explicarlo, igual que ocurrió con Sagat en el capítulo anterior. Es la costumbre de esta franquicia: primero el personaje, años después el alma.
+    </div>
+
+    <h2>Shadaloo</h2>
+
+    <p>Con el recipiente listo, quedaba montar la refinería.</p>
+
+    <p><strong>Shadaloo</strong> no es una banda ni un cartel. Es una estructura con alcance de Estado que opera exactamente donde los Estados no llegan: narcotráfico a escala continental, tráfico de armas, trata de personas, un ejército privado con uniforme propio y una red de funcionarios, jueces y ministros comprados en media docena de países.</p>
+
+    <p>Y aquí está la parte que la convierte en el enemigo más difícil de esta historia: <strong>ningún gobierno la reconoce oficialmente</strong>. No hay declaración de guerra posible contra algo que, sobre el papel, no existe. Las policías nacionales tropiezan con jurisdicciones. Los ejércitos no pueden desplegarse contra un fantasma. Los pocos que entienden la magnitud del problema descubren muy pronto que sus superiores no quieren oír hablar de él.</p>
+
+    <p>Por eso, cuando dentro de unos capítulos veamos a una inspectora de la Interpol y a un militar estadounidense intentando desmontar todo esto prácticamente solos y por su cuenta, no será una licencia narrativa. Será la única forma que existe de hacerlo.</p>
+
+    <p>Bajo Bison se organizan tres hombres que él llama sus reyes: un boxeador expulsado del deporte profesional por su brutalidad, un asesino español obsesionado con la belleza que mata con una garra, y —más adelante, cuando esté suficientemente roto— un tercero al que ya conocemos. En Japón se les llama <em>Shitennou</em>, los Cuatro Reyes Celestiales, contando al propio Bison.</p>
+
+    <p>Ninguno de los tres le es leal. Los tres le sirven porque les da lo que quieren: al primero, dinero; al segundo, permiso para matar; al tercero le prometerá algo mucho más caro. Bison lo sabe perfectamente y le da igual. No busca lealtad. Busca funcionamiento.</p>
+
+    <div class="note">
+      <span class="k">Nota de nomenclatura — los nombres cruzados</span>
+      Aquí hace falta una advertencia importante. En Japón, el dictador se llama <b>Vega</b>; el boxeador se llama <b>M. Bison</b>; y el asesino español de la garra se llama <b>Balrog</b>. Capcom USA rotó los tres nombres en la localización occidental —el motivo habitualmente citado es el temor a que un boxeador llamado «M. Bison» se pareciese demasiado a Mike Tyson—, de modo que en Occidente el dictador es <b>M. Bison</b>, el boxeador es <b>Balrog</b> y el asesino es <b>Vega</b>. Los tres nombres existen en ambas versiones; lo que cambia es a quién señalan. En esta guía uso siempre la nomenclatura occidental y le avisaré cuando la diferencia importe.
+    </div>
+
+    <h2>El precio que todavía no ha vencido</h2>
+
+    <p>Falta un detalle, y es el que convierte a este personaje en algo más interesante que un tirano con capa.</p>
+
+    <p>El Psycho Power no solo consume el miedo de los demás. También <strong>consume el cuerpo que lo alberga</strong>. Un recipiente humano no está diseñado para contener algo así indefinidamente: se desgasta, se agrieta, se agota. Bison lo sabe desde el principio y ha empezado a tomar medidas al respecto.</p>
+
+    <p>Ese problema —el del recipiente— es el motor secreto de casi todo lo que hará en los próximos treinta años. Cuando en su momento veamos aparecer proyectos científicos incomprensibles, laboratorios, cuerpos fabricados y niños criados en instalaciones sin ventanas, todos ellos responderán a esta única pregunta: <em>¿dónde va a meterse este hombre cuando el cuerpo que ocupa deje de servir?</em></p>
+
+    <p>Guarde la pregunta. Volverá muchas veces.</p>
+
+    <h2>Tres hilos y una convocatoria</h2>
+
+    <p>Cerremos la primera parte de esta historia poniendo las piezas sobre la mesa, porque a partir del próximo capítulo empiezan a chocar.</p>
+
+    <p>En algún camino de Asia hay un japonés de veintitantos años, sin apellido, con una cinta blanca en la cabeza y una técnica a la que le falta la mitad. No sabe que le falta. Busca gente fuerte porque es lo único que le enseñaron a buscar.</p>
+
+    <p>En Tailandia hay un campeón invicto, tuerto y hueco, con una muerte a la espalda que no sabe dónde poner, esperando a alguien capaz de hacerle sentir algo dentro de un ring.</p>
+
+    <p>En algún lugar sin nombre hay un hombre que ya no es del todo un hombre, sentado sobre una organización que fabrica miedo a escala industrial, y que ha empezado a interesarse por una pregunta muy concreta: dónde están los cuerpos más fuertes del planeta y cómo se consigue tenerlos a todos en la misma sala.</p>
+
+    <p>Y en una montaña de Japón hay un maestro solo, en un dojo vacío, que sabe más de lo que ha contado.</p>
+
+    <p>Alguien está a punto de convocar un torneo mundial. Los cuatro van a ir.</p>
+
+    <p>Tres de ellos van a salir de allí cambiados para siempre. El cuarto no va a salir.</p>
+
+  </div>
+</main>
+
+<section class="outro">
+  <div class="wrap outro-in">
+
+    <div class="block">
+      <h2>Acontecimientos clave</h2>
+      <ol class="keyev">
+        <li><span><b>Bison entra en la historia sin pasado.</b> Capcom nunca ha revelado su nombre de nacimiento, su país, su maestro ni su origen. El vacío es simétrico al de Ryu y es deliberado.</span></li>
+        <li><span><b>Descubre el Psycho Power,</b> una energía inherentemente maligna que no se entrena ni se hereda, y que se alimenta del miedo, la ira y el odio <em>de los demás</em>.</span></li>
+        <li><span><b>Se amputa el alma para poder usarlo.</b> Expulsa de sí mismo el remordimiento, la compasión y la humanidad, porque cada una de esas cosas era una válvula de seguridad que el poder no admite.</span></li>
+        <li><span><b>El poder lo transforma físicamente:</b> ojos, piel y mente. Deja de ser exactamente humano.</span></li>
+        <li><span><b>La mitad expulsada no se disuelve.</b> Toma forma propia y se convierte en Rose, que maneja el Soul Power: la misma corriente girando al revés.</span></li>
+        <li><span><b>Funda Shadaloo,</b> una estructura criminal con alcance de Estado —droga, armas, trata, ejército privado y gobiernos comprados— que ningún país reconoce oficialmente y contra la que, por tanto, ningún país puede declarar la guerra.</span></li>
+        <li><span><b>Organiza a sus lugartenientes,</b> los Cuatro Reyes Celestiales. Ninguno le es leal y a él no le importa: no busca lealtad, busca funcionamiento.</span></li>
+        <li><span><b>Aparece el problema del recipiente:</b> el Psycho Power también consume el cuerpo que lo alberga. Esa única pregunta será el motor secreto de los siguientes treinta años.</span></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h2>Personajes que debemos recordar</h2>
+      <div class="who">
+        <div><span class="n">M. Bison</span><span class="r">Debuta en <em>Street Fighter II</em> (1991); su trasfondo metafísico llega con la era Alpha. En Japón se llama <b>Vega</b>. No es un tirano que además tiene poderes: es un hombre que se rehízo entero para poder albergarlos.</span></div>
+        <div><span class="n">Rose</span><span class="r">Debuta en <em>Street Fighter Alpha</em> (1995). Adivina europea, manejadora del Soul Power, y literalmente la mitad buena que Bison se arrancó. Su existencia complica la idea misma de matarlo.</span></div>
+        <div><span class="n">Los Cuatro Reyes Celestiales</span><span class="r">La cúpula de Shadaloo: el dictador, un boxeador expulsado del deporte, un asesino español con una garra y —cuando llegue el momento— un cuarto al que ya conocemos. Ninguno se aprecia lo más mínimo.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Organizaciones</h2>
+      <div class="who">
+        <div><span class="n">Shadaloo</span><span class="r">La organización central de la franquicia. Narcotráfico, armas, trata de personas, ejército privado, control mental y funcionarios comprados en media docena de países. Su fuerza real no es militar: es que ningún gobierno la reconoce, y no se puede combatir oficialmente algo que oficialmente no existe.</span></div>
+        <div><span class="n">Los Shitennou</span><span class="r">Nombre japonés de los Cuatro Reyes Celestiales. Estructura de mando por conveniencia mutua, no por fidelidad. Bison la diseñó sabiendo perfectamente que ninguno de los tres daría la vida por él.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Cronología del capítulo</h2>
+      <div class="tl">
+        <div><span class="w">Origen</span><span class="e">Desconocido. Capcom no ha revelado nunca de dónde procede Bison ni bajo qué circunstancias encontró el Psycho Power.</span></div>
+        <div><span class="w">La amputación</span><span class="e">Expulsa de su alma el remordimiento, la compasión y la humanidad para convertirse en un recipiente sin resistencia.</span></div>
+        <div><span class="w">Inmediatamente después</span><span class="e">El Psycho Power lo transforma. La mitad expulsada toma forma propia y se convierte en Rose.</span></div>
+        <div><span class="w">Los años siguientes</span><span class="e">Construye Shadaloo hasta darle alcance internacional y organiza a sus lugartenientes.</span></div>
+        <div><span class="w">Final del capítulo</span><span class="e">El problema del recipiente ya está planteado. Bison empieza a buscar cuerpos fuertes, y se convoca un torneo mundial.</span></div>
+      </div>
+      <div class="note" style="margin-top:1.6rem">
+        <span class="k">Sobre las fechas</span>
+        Ninguno de estos acontecimientos tiene fecha oficial, y el orden interno entre la amputación, la aparición de Rose y la fundación de Shadaloo tampoco está fijado con precisión por Capcom. Lo presento en la secuencia que hace coherente el resto de la saga, y lo señalo para que no lo tome por dato firme.
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Lo que debes recordar</h2>
+      <div class="remember">
+        <article><span class="n">1</span><p><b>El Psycho Power se alimenta del miedo ajeno, no del propio.</b> Es la frase de la que sale toda la saga: convierte a Bison en alguien que necesita víctimas a escala industrial, no rivales.</p></article>
+        <article><span class="n">2</span><p><b>Bison se amputó el alma voluntariamente.</b> No fue corrompido ni poseído. Hizo un inventario de sí mismo y tiró lo que le estorbaba.</p></article>
+        <article><span class="n">3</span><p><b>Rose es esa mitad tirada.</b> No es una aliada que se le opone: es un trozo suyo. Mientras una siga en pie, la otra no muere del todo.</p></article>
+        <article><span class="n">4</span><p><b>Shadaloo es invencible por vía legal.</b> Ningún país la reconoce. Por eso quienes la combaten siempre acaban haciéndolo solos y fuera de las normas.</p></article>
+        <article><span class="n">5</span><p><b>El poder devora el cuerpo que lo alberga.</b> Anote la pregunta «¿dónde se meterá cuando este cuerpo falle?», porque explica casi todos los planes que veremos de aquí a Street Fighter 6.</p></article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap">
+    <h2>Conexión con el Capítulo 6</h2>
+    <p>Se acabó la preparación. El próximo capítulo es el primero que ocurre dentro de un videojuego: <em>Street Fighter</em>, 1987, el torneo del que sale todo lo demás.</p>
+    <p>Contaremos el combate entre Ryu y Sagat como merece contarse —qué buscaba cada uno, qué encontró y qué se rompió allí dentro— y explicaremos por fin qué es esa cicatriz que el Emperador del Muay Thai va a llevar en el pecho el resto de su vida, porque no se la hizo un hombre.</p>
+    <p>Y mientras eso ocurre en Tailandia, alguien sube a una montaña de Japón a visitar a un viejo conocido.</p>
+    <p class="ask">¿Continuamos con el Capítulo 6 — «El primer torneo»?</p>
+    <p><button class="readbtn" id="readbtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"></path></svg><span class="readbtn-l">Marcar como leído</span></button></p>
+  </div>
+</section>
+
+
+<!--chrome:start-->
+<nav class="chnav" aria-label="Navegación entre capítulos">
+  <div class="wrap chnav-in">
+    <a class="" href="https://claude.ai/code/artifact/fe80f362-2ea6-4b4e-bb8b-616a27d11e9b"><span class="dir">← Capítulo 04</span><span class="ttl">El ascenso de Sagat</span></a>
+    <span class="off right"><span class="dir">Capítulo 06 →</span><span class="ttl">El primer torneo · en preparación</span></span>
+  </div>
+</nav>
+<script>
+(function(){
+  var modes=['auto','light','dark'], names={auto:'Auto',light:'Claro',dark:'Oscuro'};
+  var btn=document.getElementById('themebtn'), lab=document.getElementById('themelab');
+  function read(){try{var t=localStorage.getItem('sf-theme');return (t==='light'||t==='dark')?t:'auto';}catch(e){return 'auto';}}
+  function apply(m){
+    if(m==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=m;
+    if(lab) lab.textContent=names[m];
+    try{ m==='auto'?localStorage.removeItem('sf-theme'):localStorage.setItem('sf-theme',m); }catch(e){}
+  }
+  apply(read());
+  if(btn) btn.addEventListener('click',function(){apply(modes[(modes.indexOf(read())+1)%modes.length]);});
+
+  var mark=document.getElementById('readbtn'); if(!mark) return;
+  var KEY='sf-read', NUM='05';
+  function list(){try{var v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function sync(){
+    var on=list().indexOf(NUM)!==-1;
+    mark.setAttribute('aria-pressed', on?'true':'false');
+    mark.querySelector('.readbtn-l').textContent = on ? 'Capítulo leído' : 'Marcar como leído';
+  }
+  mark.addEventListener('click',function(){
+    var l=list(), i=l.indexOf(NUM);
+    if(i===-1) l.push(NUM); else l.splice(i,1);
+    try{ localStorage.setItem(KEY, JSON.stringify(l)); }catch(e){}
+    sync();
+  });
+  sync();
+})();
+</script>
+<!--chrome:end-->
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. La naturaleza del Psycho Power, la amputación del alma de Bison y el origen de Rose proceden del material de la era <em>Street Fighter Alpha</em> y de los perfiles oficiales de personaje. La única escena dramatizada de este capítulo aparece marcada como reconstrucción narrativa; el resto son hechos establecidos, y los huecos que Capcom no ha rellenado se señalan como tales.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var fill = document.getElementById('meterfill');
+  if (!fill) return;
+  var q = 0;
+  function meter(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+  }
+  addEventListener('scroll', function(){
+    if (!q) q = requestAnimationFrame(function(){ q = 0; meter(); });
+  }, { passive: true });
+  addEventListener('resize', meter, { passive: true });
+  meter();
+})();
+</script>
