@@ -1,0 +1,518 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Dojo de Gouken</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --bg:#E9E6DE;          /* piedra / washi frío */
+  --bg-2:#F4F2EC;
+  --bg-3:#DCD8CD;
+  --line:#C6C1B3;
+  --line-soft:#D6D2C6;
+  --text:#151824;
+  --text-2:#585D6C;
+  --text-3:#7C8191;
+  --accent:#B3262F;      /* hachimaki */
+  --accent-ink:#8E1D25;
+  --psycho:#5636BE;      /* Psycho Power */
+  --brass:#8E6B10;       /* torneos / eras */
+  --halo:rgba(179,38,47,.12);
+  --shadow:0 1px 2px rgba(21,24,36,.07), 0 8px 24px rgba(21,24,36,.06);
+  --grid:rgba(21,24,36,.055);
+
+  --f-display:"Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hud:"Barlow Condensed", "Oswald", Impact, sans-serif;
+
+  --step-hero:clamp(2.4rem,7.2vw,4.5rem);
+  --step-h2:clamp(1.6rem,3.4vw,2.35rem);
+  --step-h3:clamp(1.12rem,1.7vw,1.32rem);
+  --wrap:1140px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D17;
+    --bg-2:#131828;
+    --bg-3:#1B2133;
+    --line:#2A3145;
+    --line-soft:#212739;
+    --text:#EBE7DC;
+    --text-2:#98A0B4;
+    --text-3:#7A8296;
+    --accent:#E2515B;
+    --accent-ink:#F0838A;
+    --psycho:#9679FF;
+    --brass:#D7AE44;
+    --halo:rgba(226,81,91,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+    --grid:rgba(235,231,220,.05);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D17;
+  --bg-2:#131828;
+  --bg-3:#1B2133;
+  --line:#2A3145;
+  --line-soft:#212739;
+  --text:#EBE7DC;
+  --text-2:#98A0B4;
+  --text-3:#7A8296;
+  --accent:#E2515B;
+  --accent-ink:#F0838A;
+  --psycho:#9679FF;
+  --brass:#D7AE44;
+  --halo:rgba(226,81,91,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+  --grid:rgba(235,231,220,.05);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:1.0425rem;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem)}
+.prose{max-width:66ch}
+
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:var(--step-h2); line-height:1.15}
+h3{font-size:var(--step-h3); line-height:1.3; font-weight:600}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+
+.eyebrow{
+  font-family:var(--f-hud); font-weight:600; text-transform:uppercase;
+  letter-spacing:.19em; font-size:.775rem; color:var(--text-3); margin:0;
+}
+.hud{font-family:var(--f-hud); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+
+/* ---------- chapter page ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);
+}
+.topbar-in{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:52px}
+.back{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:600;
+  text-decoration:none; color:var(--text-2); display:inline-flex; align-items:center; gap:.5rem;
+}
+.back:hover{color:var(--accent)}
+.progress{font-family:var(--f-hud); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3)}
+
+.chead{border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+.chead-in{padding:clamp(2.6rem,6vw,4.6rem) 0 clamp(2rem,4vw,3rem); display:grid; gap:clamp(1.8rem,4vw,3rem); grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .chead-in{grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr); align-items:end} }
+.chead .num{font-family:var(--f-hud); font-weight:700; letter-spacing:.22em; text-transform:uppercase; font-size:.82rem; color:var(--accent)}
+.chead h1{font-size:clamp(2.1rem,5.6vw,3.7rem); line-height:1.02; margin:.7rem 0 0; letter-spacing:-.02em}
+.chead .sub{color:var(--text-2); margin-top:1.2rem; font-size:1.08rem; max-width:52ch}
+.meta{border-left:2px solid var(--brass); padding-left:1.2rem; display:grid; gap:.9rem}
+.meta div{display:grid; gap:.15rem}
+.meta dt, .meta .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; color:var(--text-3); font-weight:700}
+.meta .v{font-size:.94rem; color:var(--text-2); line-height:1.5}
+.meta .v b{color:var(--text); font-weight:700}
+
+.body{padding:clamp(2.6rem,6vw,4.4rem) 0}
+.body .prose{font-size:1.085rem; line-height:1.78}
+.body .prose > h2{margin:2.8rem 0 1rem; font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.body .prose > h2:first-child{margin-top:0}
+.body .prose em{color:var(--text)}
+.body .prose strong{font-weight:700}
+.lead{font-size:1.2rem; line-height:1.65; color:var(--text); border-left:2px solid var(--accent); padding-left:1.2rem}
+
+.pull{
+  margin:2.4rem 0; font-family:var(--f-display); font-weight:600; font-size:clamp(1.25rem,2.6vw,1.6rem);
+  line-height:1.35; color:var(--text); text-wrap:balance; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:1.4rem 0;
+}
+.note{
+  margin:2rem 0; border:1px dashed var(--line); padding:1.15rem 1.3rem; background:transparent;
+  font-size:.95rem; color:var(--text-2); line-height:1.65;
+}
+.note .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:700; color:var(--brass); display:block; margin-bottom:.4rem}
+.note b{color:var(--text)}
+.note.warn .k{color:var(--psycho)}
+
+.outro{border-top:1px solid var(--line-soft); background:var(--bg-2)}
+.outro-in{padding:clamp(2.6rem,6vw,4.2rem) 0; display:grid; gap:2.8rem}
+.block h2{font-size:1.32rem; margin-bottom:1rem}
+.keyev{list-style:none; margin:0; padding:0; display:grid; gap:.85rem; counter-reset:k}
+.keyev li{
+  display:grid; grid-template-columns:2.1rem minmax(0,1fr); gap:.8rem; align-items:start;
+  font-size:.985rem; color:var(--text-2); line-height:1.6;
+}
+.keyev li > span{grid-column:2}
+.keyev li::before{
+  counter-increment:k; content:counter(k,decimal-leading-zero);
+  font-family:var(--f-hud); font-weight:700; color:var(--accent); font-size:.95rem; padding-top:.12rem;
+}
+.keyev li b{color:var(--text)}
+
+.who{display:grid; gap:0; border-top:1px solid var(--line)}
+.who div{display:grid; grid-template-columns:minmax(120px,auto) 1fr; gap:.4rem 1.4rem; padding:.85rem 0; border-bottom:1px solid var(--line-soft); align-items:baseline}
+.who .n{font-family:var(--f-display); font-weight:800; font-size:1rem}
+.who .r{font-size:.94rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .who div{grid-template-columns:1fr; gap:.15rem} }
+
+.tl{display:grid; gap:0; margin-top:.4rem}
+.tl div{display:grid; grid-template-columns:minmax(150px,auto) 1fr; gap:.3rem 1.4rem; padding:.75rem 0; border-top:1px solid var(--line-soft); align-items:baseline}
+.tl .w{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; font-size:.78rem; color:var(--brass); font-weight:600}
+.tl .e{font-size:.96rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .tl div{grid-template-columns:1fr; gap:.1rem} }
+
+.remember{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+.remember article{background:var(--bg); padding:1.1rem 1.2rem; display:grid; grid-template-columns:2rem 1fr; gap:.9rem; align-items:start}
+.remember .n{font-family:var(--f-hud); font-weight:700; font-size:1.35rem; color:var(--brass); line-height:1.1}
+.remember p{margin:0; font-size:.96rem; color:var(--text-2); line-height:1.6}
+.remember p b{color:var(--text)}
+
+.next{border-top:1px solid var(--line-soft); padding:clamp(2.4rem,5vw,3.6rem) 0 clamp(3rem,6vw,4.4rem)}
+.next h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+.next p{color:var(--text-2); max-width:62ch; margin-top:1rem}
+.next .ask{font-family:var(--f-display); font-weight:800; color:var(--accent); font-size:clamp(1.1rem,2.2vw,1.35rem); margin-top:2rem}
+.foot{padding:0 0 3rem; color:var(--text-3); font-size:.85rem}
+.foot p{max-width:74ch}
+/* ---------- color de la Era I y movimiento ---------- */
+:root{--era:#C9954A}
+.meter{position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent}
+.meter span{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--era), var(--accent));
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);}
+.topbar{position:sticky}
+
+.vig{width:100%; height:auto; display:block; border-radius:3px; max-width:230px}
+.vig .sky{fill:color-mix(in srgb, var(--era) 16%, var(--bg-2))}
+.chead-art{display:grid; gap:1.4rem; justify-items:start}
+
+.back{transition:color .2s ease, gap .2s ease}
+.back:hover{gap:.85rem}
+.meta{border-left-color:var(--era)}
+.note .k{color:var(--era)}
+.keyev li{transition:transform .2s ease}
+.keyev li:hover{transform:translateX(4px)}
+.keyev li:hover::before{color:var(--era)}
+.who div{transition:background .2s ease, padding-left .2s ease}
+.who div:hover{background:color-mix(in srgb, var(--era) 8%, transparent); padding-left:.5rem}
+.remember article{transition:transform .26s cubic-bezier(.2,.7,.3,1), background .26s ease}
+.remember article:hover{transform:translateY(-2px); background:color-mix(in srgb, var(--era) 7%, var(--bg))}
+.tl div{transition:padding-left .2s ease}
+.tl div:hover{padding-left:.4rem}
+.pull{position:relative}
+.pull::before{content:""; position:absolute; left:0; top:-1px; width:0; height:2px; background:var(--accent); transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.pull:hover::before{width:100%}
+
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes breathe{0%,100%{transform:scale(1); opacity:.9}50%{transform:scale(1.05); opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion: no-preference){
+  .chead-in > div > *{animation:riseIn .6s cubic-bezier(.2,.7,.3,1) both}
+  .chead-in > div > h1{animation-delay:.08s}
+  .chead-in > div > .sub{animation-delay:.18s}
+  .chead-art{animation:riseIn .7s cubic-bezier(.2,.7,.3,1) both .1s}
+  .vig .float{animation:drift 6s ease-in-out infinite}
+  .vig .glow{animation:breathe 4.2s ease-in-out infinite; transform-origin:50% 50%}
+}
+
+
+
+/* chrome:css */
+.tt{
+  flex:none; display:inline-flex; align-items:center; gap:.45rem;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.72rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:.26rem .65rem; cursor:pointer; transition:color .2s ease, border-color .2s ease;
+}
+.tt:hover{color:var(--text); border-color:var(--text-3)}
+.tt svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round}
+.topbar-right{display:flex; align-items:center; gap:.9rem}
+.chead-in{align-items:start !important}
+.skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--bg); padding:.6rem 1rem; z-index:60}
+.skip:focus{left:.5rem; top:.5rem}
+
+.chnav{border-top:1px solid var(--line-soft); padding:2.2rem 0 3.4rem}
+.chnav-in{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:720px){ .chnav-in{grid-template-columns:1fr 1fr} }
+.chnav a, .chnav span.off{
+  background:var(--bg-2); padding:1.1rem 1.3rem; text-decoration:none; display:grid; gap:.25rem;
+  transition:background .22s ease;
+}
+.chnav a:hover{background:color-mix(in srgb, var(--era) 8%, var(--bg-2))}
+.chnav .dir{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; font-weight:700; color:var(--era)}
+.chnav .ttl{font-family:var(--f-display); font-weight:800; font-size:1.05rem; color:var(--text)}
+.chnav span.off{opacity:.55}
+.chnav span.off .dir{color:var(--text-3)}
+.chnav .right{text-align:right}
+
+.readbtn{
+  display:inline-flex; align-items:center; gap:.6rem; margin-top:1.6rem; cursor:pointer;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.8rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); padding:.7rem 1.2rem;
+  transition:all .2s ease;
+}
+.readbtn svg{width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round}
+.readbtn:hover{border-color:var(--era); color:var(--text)}
+.readbtn[aria-pressed="true"]{background:var(--era); border-color:var(--era); color:var(--bg)}
+/* /chrome:css */
+
+</style>
+
+
+<script id="sf-theme-boot">
+(function(){try{var t=localStorage.getItem('sf-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
+    <span class="topbar-right"><span class="topbar-right"><span class="progress">Parte I · Capítulo 3 de 54</span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span>
+  </div>
+  <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
+</div>
+
+<header class="chead">
+  <div class="wrap chead-in">
+    <div>
+      <p class="num">Capítulo 3</p>
+      <h1>El dojo de Gouken</h1>
+      <p class="sub">Un maestro con un secreto, un niño sin apellido y un adolescente al que su padre no sabía dónde meter. De esa combinación sale el luchador más famoso de los videojuegos.</p>
+    </div>
+    <div class="chead-art">
+      <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="El tejado de un dojo en la montaña con dos discípulos debajo, uno lleno y otro perfilado">
+        <rect class="sky" width="120" height="72" rx="3"></rect>
+        <path d="M0,44 L22,22 L44,44 Z" fill="var(--era)" opacity=".28"></path>
+        <path d="M84,44 L104,26 L120,44 Z" fill="var(--era)" opacity=".28"></path>
+        <path d="M18,40 L60,18 L102,40 Z" fill="var(--era)" opacity=".85"></path>
+        <rect x="24" y="40" width="72" height="4" fill="var(--era)"></rect>
+        <circle class="glow" cx="47" cy="57" r="8" fill="var(--era)"></circle>
+        <circle cx="73" cy="57" r="8" fill="none" stroke="var(--era)" stroke-width="2.6"></circle>
+      </svg>
+    <div class="meta">
+      <div><span class="k">Período</span><span class="v">Era I — los años que preceden inmediatamente al primer torneo</span></div>
+      <div><span class="k">Juegos relacionados</span><span class="v">Trasfondo repartido entre <b>Street Fighter II</b>, la era <b>Alpha</b> y <b>Street Fighter IV</b>. Ningún juego lo dramatiza</span></div>
+      <div><span class="k">Personajes principales</span><span class="v"><b>Ryu</b>, <b>Ken Masters</b>, <b>Gouken</b></span></div>
+      <div><span class="k">Importancia</span><span class="v">Es la infancia de los dos protagonistas y el momento en que una misma técnica se bifurca en dos personas opuestas</span></div>
+    </div>
+    </div>
+  </div>
+</header>
+
+<main class="body">
+  <div class="wrap prose">
+
+    <p class="lead">Gouken tenía un arte reconstruido, un dojo apartado y una decisión tomada: no contar nunca lo que había quitado. Lo único que le faltaba para que ese silencio tuviera consecuencias eran alumnos. Los tuvo, y llegaron por caminos opuestos.</p>
+
+    <h2>Un niño sin apellido</h2>
+
+    <p>Ryu no tiene familia conocida. La saga es muy firme en esto y muy vaga en todo lo demás: fue recogido siendo un crío por Gouken, se crió en el dojo y no hay padre, madre, hermanos ni apellido en ninguna ficha oficial. <strong>Capcom nunca ha revelado su origen</strong>, y a estas alturas está claro que no piensa hacerlo: el vacío es funcional. Ryu es un hombre sin nada detrás, y eso importa cuando llegue el momento de preguntarse qué le queda si abandona el camino del guerrero.</p>
+
+    <div class="note warn">
+      <span class="k">Punto ambiguo — y una teoría que no es canon</span>
+      Existe una idea muy extendida entre la afición según la cual <b>Akuma sería el padre de Ryu</b>. Conviene decirlo sin rodeos: <b>Capcom no lo ha confirmado nunca</b>. La teoría se alimenta de material no canónico —sobre todo adaptaciones animadas— y de la lógica narrativa de que Akuma se interese tanto por él, que se explica perfectamente sin parentesco alguno. La trataré como lo que es, una lectura de aficionados, y avisaré si alguna vez cambia de estatus.
+    </div>
+
+    <p>Lo que sí conocemos es la textura de esa infancia, y no era acogedora. Un dojo aislado en la montaña, sin más contexto del mundo que el que entraba por la puerta. Ryu no creció compitiendo, ni con compañeros de clase, ni con la idea de que pelear fuera un deporte. Creció entendiendo el combate como <em>la única disciplina que existe</em>, porque literalmente era la única que tenía delante.</p>
+
+    <p>Eso explica al personaje adulto mucho mejor que cualquier trauma. Ryu no es hermético por herido: es hermético porque nadie le enseñó otra cosa que hacer.</p>
+
+    <h2>Un adolescente enviado desde el otro lado del mundo</h2>
+
+    <p>Ken Masters llegó por el motivo contrario. Su familia es estadounidense y rica —los Masters son un apellido con dinero, hoteles y negocios—, y su padre, incapaz de manejar a un chaval indisciplinado con demasiados recursos y ninguna razón para esforzarse, tomó una decisión de manual: mandarlo a Japón, a entrenar con un viejo conocido, a ver si aquello lo enderezaba.</p>
+
+    <p>Ken no quería ir. Ese detalle no es menor. Llegó al dojo resentido, arrancado de su vida y colocado bajo la autoridad de un desconocido en un país cuyo idioma no hablaba. Durante un tiempo, todo lo que hizo fue esperar a que lo dejaran volver.</p>
+
+    <div class="pull">Uno tenía el dojo porque no tenía nada más. El otro lo tenía porque le sobraba todo lo demás. Y aprendieron exactamente la misma técnica.</div>
+
+    <h2>Dos temperamentos, una misma técnica</h2>
+
+    <p>Lo que ocurrió después es la parte que la franquicia ha contado bien: se hicieron hermanos. No compañeros, no rivales de escuela. Hermanos, con la mezcla exacta de lealtad absoluta y necesidad constante de medirse que eso implica.</p>
+
+    <p>Y Gouken, que era buen maestro aunque guardase un secreto enorme, no intentó igualarlos. Los <strong>orientó en direcciones distintas</strong>.</p>
+
+    <p>A Ryu lo empujó hacia el <strong>Hadouken</strong>: la proyección del hado, que exige control, quietud interior y una precisión que solo se consigue con años de repetición sin público. A Ken lo empujó hacia el <strong>Shoryuken</strong>: explosivo, ascendente, físico, una técnica que premia el instinto y la confianza. Ken acabaría llevándolo más lejos que nadie, hasta convertirlo en su sello.</p>
+
+    <div class="note">
+      <span class="k">Nota de rigor</span>
+      Esta especialización cruzada nació antes en la mecánica de juego que en la ficción: en <em>Street Fighter II</em>, Ken se separó de Ryu con un Shoryuken en llamas por motivos de diseño, y Capcom convirtió después esa diferencia en rasgo de personaje. Es un caso claro de <b>jugabilidad que se vuelve canon</b>, y no el único que veremos. No lo digo para desmerecerlo: funciona narrativamente y Capcom lo ha sostenido durante treinta años.
+    </div>
+
+    <p>Fíjese en lo que Gouken está haciendo aquí, porque lo hace bien: le da a cada uno la herramienta que encaja con su carácter. Y fíjese también en lo que no está haciendo. <strong>Sigue sin decirles de dónde viene ese arte.</strong> Sigue sin explicarles que hay una versión más completa, ni por qué él decidió no enseñarla, ni que existe un hombre en el mundo convencido de que todo esto es un fraude.</p>
+
+    <p>Los está entrenando para un combate cuya naturaleza real les oculta.</p>
+
+    <h2>El detalle de la cinta</h2>
+
+    <p>Una cosa pequeña que conviene registrar ahora porque volverá. <strong>En esta época y durante todo el periodo siguiente, Ryu lleva una cinta blanca en la cabeza</strong>, no la roja con la que usted lo conoce. La roja llega bastante después, y no es suya: se la da Ken. Es uno de los pocos gestos íntimos que la franquicia se permite entre ellos, y lo contaremos cuando toque.</p>
+
+    <h2>La separación</h2>
+
+    <p>Con los años, Ken volvió a Estados Unidos. Ya no era el crío resentido: volvió con un arte, una disciplina y una ambición que su padre no había previsto. Se metió en el circuito competitivo estadounidense y ganó el campeonato nacional, que es el único título deportivo convencional que alguien consigue en toda esta saga. Ken es, en ese sentido, el más normal de los personajes principales: un atleta de élite con patrocinadores, con casa y con planes.</p>
+
+    <p>Ryu se quedó. Y en algún momento Gouken tomó la última decisión de este capítulo: <strong>lo mandó al mundo</strong>.</p>
+
+    <p>La forma tradicional se llama <em>musha shugyō</em>, el peregrinaje del guerrero: salir sin dinero ni destino, buscar adversarios, medirse, aprender de la derrota. En apariencia es el paso lógico para un alumno que ya no puede aprender más en casa.</p>
+
+    <p>Pero conviene mirarlo con el capítulo anterior en la mano. Gouken sabía que su arte estaba incompleto. Sabía que Ryu tenía un talento que él mismo no había alcanzado. Y sabía —tenía que saberlo— que en algún lugar del mundo había alguien esperando exactamente a un alumno así.</p>
+
+    <p>Aun así lo mandó fuera, con la mitad del manual y sin advertirle de nada.</p>
+
+    <div class="pull">Le enseñó a golpear durante toda su vida. No le enseñó nunca contra qué.</div>
+
+    <p>Ryu se marchó del dojo con una bolsa, una cinta blanca y ninguna pregunta pendiente, porque nadie le había dado motivos para tenerlas. Iba a buscar rivales fuertes. Encontraría uno tuerto, gigantesco e invicto, en Tailandia.</p>
+
+    <p>Y encontraría, aunque todavía no lo supiera, la otra cosa.</p>
+
+  </div>
+</main>
+
+<section class="outro">
+  <div class="wrap outro-in">
+
+    <div class="block">
+      <h2>Acontecimientos clave</h2>
+      <ol class="keyev">
+        <li><span><b>Gouken recoge a Ryu siendo un niño.</b> No hay familia, apellido ni origen conocido: Capcom nunca lo ha revelado, y el vacío es deliberado.</span></li>
+        <li><span><b>Ryu se cría aislado en el dojo,</b> sin escuela, sin competición y sin más idea del mundo que la que entra por la puerta. De ahí sale su carácter, no de ningún trauma.</span></li>
+        <li><span><b>Ken Masters llega desde Estados Unidos,</b> enviado por un padre adinerado que no sabe qué hacer con él. Llega en contra de su voluntad.</span></li>
+        <li><span><b>Los dos alumnos se hacen hermanos,</b> con la lealtad y la necesidad de medirse que eso implica. Es el vínculo más estable de toda la franquicia.</span></li>
+        <li><span><b>Gouken los orienta en direcciones distintas:</b> a Ryu hacia el control del Hadouken, a Ken hacia la explosividad del Shoryuken.</span></li>
+        <li><span><b>Sigue sin contarles nada del origen del arte,</b> de lo que él le quitó ni de que existe un hombre convencido de que su versión es un fraude.</span></li>
+        <li><span><b>Ken regresa a Estados Unidos</b> y gana el campeonato nacional, el único título deportivo convencional de toda la saga.</span></li>
+        <li><span><b>Gouken envía a Ryu al mundo</b> en un <em>musha shugyō</em>, el peregrinaje del guerrero, con la mitad del manual y sin una sola advertencia.</span></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h2>Personajes que debemos recordar</h2>
+      <div class="who">
+        <div><span class="n">Ryu</span><span class="r">Debuta en <em>Street Fighter</em> (1987), pero su historia empieza aquí. Un hombre sin nada detrás, entrenado para un combate cuya naturaleza real desconoce. Sale del dojo con una cinta <b>blanca</b>, no roja.</span></div>
+        <div><span class="n">Ken Masters</span><span class="r">El espejo: mismo maestro, misma técnica, vida opuesta. Dinero, familia, país y, muy pronto, un título nacional. Todo lo que la saga podrá quitarle más adelante se lo da en este capítulo.</span></div>
+        <div><span class="n">Gouken</span><span class="r">Buen maestro y hombre de un solo silencio. Adapta la enseñanza al carácter de cada alumno con enorme criterio, y les oculta lo único que de verdad necesitaban saber.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Organizaciones</h2>
+      <div class="who">
+        <div><span class="n">El dojo de Gouken</span><span class="r">Sin nombre oficial, sin alumnos más allá de estos dos y sin ninguna vinculación con federaciones ni escuelas reconocidas. Es la rama depurada del linaje del Capítulo 2, y en este momento la componen tres personas.</span></div>
+        <div><span class="n">La familia Masters</span><span class="r">Fortuna empresarial estadounidense. No es una organización de la trama, pero sí el motivo por el que Ken tiene una vida fuera del combate —y, décadas después, el blanco de la maniobra que se la arrebatará.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Cronología del capítulo</h2>
+      <div class="tl">
+        <div><span class="w">Infancia de Ryu</span><span class="e">Gouken lo recoge siendo un crío. Se cría en el dojo, aislado, sin contexto del mundo exterior.</span></div>
+        <div><span class="w">Adolescencia de Ken</span><span class="e">Su padre lo envía a Japón desde Estados Unidos. Llega a la fuerza y tarda en aceptar dónde está.</span></div>
+        <div><span class="w">Los años de entrenamiento</span><span class="e">Ambos aprenden la versión depurada del arte. Se hacen hermanos. Gouken orienta a cada uno hacia una técnica distinta.</span></div>
+        <div><span class="w">Ken se marcha</span><span class="e">Regresa a Estados Unidos, entra en el circuito competitivo y gana el campeonato nacional.</span></div>
+        <div><span class="w">Final del capítulo</span><span class="e">Gouken envía a Ryu de peregrinaje. Ryu sale del dojo con una cinta blanca y ninguna pregunta pendiente. Gouken se queda solo.</span></div>
+      </div>
+      <div class="note" style="margin-top:1.6rem">
+        <span class="k">Sobre las edades</span>
+        Las fichas oficiales han dado cifras distintas según la época, y Capcom no ha fijado nunca los años de este periodo ni ha aclarado del todo cuál de los dos es mayor. Prefiero no inventar precisión donde no la hay: lo importante es el orden de los hechos, no su fecha.
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Lo que debes recordar</h2>
+      <div class="remember">
+        <article><span class="n">1</span><p><b>Ryu no tiene origen y eso es intencionado.</b> Sin familia ni apellido, no tiene nada que perder ni nada a lo que volver. Cuando la saga le pregunte qué es sin el combate, la pregunta va en serio.</p></article>
+        <article><span class="n">2</span><p><b>Ken tiene exactamente lo que Ryu no tiene.</b> Dinero, familia, país, fama. La franquicia se lo dio en este capítulo para poder quitárselo cuarenta años después.</p></article>
+        <article><span class="n">3</span><p><b>Hadouken para Ryu, Shoryuken para Ken.</b> No es un capricho estético: es el maestro adaptando la herramienta al carácter, y explica cómo pelean ambos durante toda la serie.</p></article>
+        <article><span class="n">4</span><p><b>El silencio de Gouken se mantiene hasta el final.</b> Mandó a su mejor alumno al mundo con la mitad del manual y sin advertirle de la existencia del otro. Todo lo que le pase a Ryu a partir de ahora arranca de esa omisión.</p></article>
+        <article><span class="n">5</span><p><b>La cinta de Ryu es blanca en esta etapa.</b> La roja llega después y se la regala Ken. Si ve arte de este periodo con cinta roja, está fuera de la cronología.</p></article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap">
+    <h2>Conexión con el Capítulo 4</h2>
+    <p>Ryu ya está en el camino, buscando adversarios. El siguiente capítulo se aparta del linaje japonés para presentar al hombre que va a encontrarse: un tailandés que a esas alturas lleva años sin perder un combate, al que llaman Emperador del Muay Thai, y que ha llegado hasta ahí pagando un precio del que casi nadie habla.</p>
+    <p>También contaremos cómo perdió un ojo, y por qué el hombre que se lo arrancó tiene un hijo que aparecerá más adelante en esta guía con una fama muy distinta.</p>
+    <p class="ask">¿Continuamos con el Capítulo 4 — «El ascenso de Sagat»?</p>
+    <p><button class="readbtn" id="readbtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"></path></svg><span class="readbtn-l">Marcar como leído</span></button></p>
+  </div>
+</section>
+
+
+<!--chrome:start-->
+<nav class="chnav" aria-label="Navegación entre capítulos">
+  <div class="wrap chnav-in">
+    <a class="" href="https://claude.ai/code/artifact/24c779ba-c17a-454f-a3cd-5ad1ec18dc37"><span class="dir">← Capítulo 02</span><span class="ttl">Dos hermanos y una decisión</span></a>
+    <span class="off right"><span class="dir">Capítulo 04 →</span><span class="ttl">El ascenso de Sagat · en preparación</span></span>
+  </div>
+</nav>
+<script>
+(function(){
+  var modes=['auto','light','dark'], names={auto:'Auto',light:'Claro',dark:'Oscuro'};
+  var btn=document.getElementById('themebtn'), lab=document.getElementById('themelab');
+  function read(){try{var t=localStorage.getItem('sf-theme');return (t==='light'||t==='dark')?t:'auto';}catch(e){return 'auto';}}
+  function apply(m){
+    if(m==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=m;
+    if(lab) lab.textContent=names[m];
+    try{ m==='auto'?localStorage.removeItem('sf-theme'):localStorage.setItem('sf-theme',m); }catch(e){}
+  }
+  apply(read());
+  if(btn) btn.addEventListener('click',function(){apply(modes[(modes.indexOf(read())+1)%modes.length]);});
+
+  var mark=document.getElementById('readbtn'); if(!mark) return;
+  var KEY='sf-read', NUM='03';
+  function list(){try{var v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function sync(){
+    var on=list().indexOf(NUM)!==-1;
+    mark.setAttribute('aria-pressed', on?'true':'false');
+    mark.querySelector('.readbtn-l').textContent = on ? 'Capítulo leído' : 'Marcar como leído';
+  }
+  mark.addEventListener('click',function(){
+    var l=list(), i=l.indexOf(NUM);
+    if(i===-1) l.push(NUM); else l.splice(i,1);
+    try{ localStorage.setItem(KEY, JSON.stringify(l)); }catch(e){}
+    sync();
+  });
+  sync();
+})();
+</script>
+<!--chrome:end-->
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. Este capítulo reconstruye un periodo que ningún juego dramatiza: procede de perfiles oficiales de personaje y de material de trasfondo repartido entre <em>Street Fighter II</em>, la era <em>Alpha</em> y <em>Street Fighter IV</em>. La teoría sobre la paternidad de Ryu se señala expresamente como no confirmada.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var fill = document.getElementById('meterfill');
+  if (!fill) return;
+  var q = 0;
+  function meter(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+  }
+  addEventListener('scroll', function(){
+    if (!q) q = requestAnimationFrame(function(){ q = 0; meter(); });
+  }, { passive: true });
+  addEventListener('resize', meter, { passive: true });
+  meter();
+})();
+</script>

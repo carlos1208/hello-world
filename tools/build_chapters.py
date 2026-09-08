@@ -19,7 +19,9 @@ CHAPTERS = [
      "https://claude.ai/code/artifact/dd9b06a3-bd8c-4974-8e91-b9e4d22be648"),
     ("02", "cap-02.html", "Dos hermanos y una decisión",
      "https://claude.ai/code/artifact/24c779ba-c17a-454f-a3cd-5ad1ec18dc37"),
-    ("03", None, "El dojo de Gouken", None),
+    ("03", "cap-03.html", "El dojo de Gouken",
+     "https://claude.ai/code/artifact/7b5ed02c-2697-477d-847c-705f66733ca7"),
+    ("04", None, "El ascenso de Sagat", None),
 ]
 
 CSS = """
