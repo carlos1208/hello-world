@@ -1,0 +1,362 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Arte Sin Nombre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --bg:#E9E6DE;          /* piedra / washi frío */
+  --bg-2:#F4F2EC;
+  --bg-3:#DCD8CD;
+  --line:#C6C1B3;
+  --line-soft:#D6D2C6;
+  --text:#151824;
+  --text-2:#585D6C;
+  --text-3:#7C8191;
+  --accent:#B3262F;      /* hachimaki */
+  --accent-ink:#8E1D25;
+  --psycho:#5636BE;      /* Psycho Power */
+  --brass:#8E6B10;       /* torneos / eras */
+  --halo:rgba(179,38,47,.12);
+  --shadow:0 1px 2px rgba(21,24,36,.07), 0 8px 24px rgba(21,24,36,.06);
+  --grid:rgba(21,24,36,.055);
+
+  --f-display:"Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hud:"Barlow Condensed", "Oswald", Impact, sans-serif;
+
+  --step-hero:clamp(2.4rem,7.2vw,4.5rem);
+  --step-h2:clamp(1.6rem,3.4vw,2.35rem);
+  --step-h3:clamp(1.12rem,1.7vw,1.32rem);
+  --wrap:1140px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D17;
+    --bg-2:#131828;
+    --bg-3:#1B2133;
+    --line:#2A3145;
+    --line-soft:#212739;
+    --text:#EBE7DC;
+    --text-2:#98A0B4;
+    --text-3:#7A8296;
+    --accent:#E2515B;
+    --accent-ink:#F0838A;
+    --psycho:#9679FF;
+    --brass:#D7AE44;
+    --halo:rgba(226,81,91,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+    --grid:rgba(235,231,220,.05);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D17;
+  --bg-2:#131828;
+  --bg-3:#1B2133;
+  --line:#2A3145;
+  --line-soft:#212739;
+  --text:#EBE7DC;
+  --text-2:#98A0B4;
+  --text-3:#7A8296;
+  --accent:#E2515B;
+  --accent-ink:#F0838A;
+  --psycho:#9679FF;
+  --brass:#D7AE44;
+  --halo:rgba(226,81,91,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+  --grid:rgba(235,231,220,.05);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:1.0425rem;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem)}
+.prose{max-width:66ch}
+
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:var(--step-h2); line-height:1.15}
+h3{font-size:var(--step-h3); line-height:1.3; font-weight:600}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+
+.eyebrow{
+  font-family:var(--f-hud); font-weight:600; text-transform:uppercase;
+  letter-spacing:.19em; font-size:.775rem; color:var(--text-3); margin:0;
+}
+.hud{font-family:var(--f-hud); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+
+/* ---------- chapter page ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);
+}
+.topbar-in{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:52px}
+.back{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:600;
+  text-decoration:none; color:var(--text-2); display:inline-flex; align-items:center; gap:.5rem;
+}
+.back:hover{color:var(--accent)}
+.progress{font-family:var(--f-hud); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3)}
+
+.chead{border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+.chead-in{padding:clamp(2.6rem,6vw,4.6rem) 0 clamp(2rem,4vw,3rem); display:grid; gap:clamp(1.8rem,4vw,3rem); grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .chead-in{grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr); align-items:end} }
+.chead .num{font-family:var(--f-hud); font-weight:700; letter-spacing:.22em; text-transform:uppercase; font-size:.82rem; color:var(--accent)}
+.chead h1{font-size:clamp(2.1rem,5.6vw,3.7rem); line-height:1.02; margin:.7rem 0 0; letter-spacing:-.02em}
+.chead .sub{color:var(--text-2); margin-top:1.2rem; font-size:1.08rem; max-width:52ch}
+.meta{border-left:2px solid var(--brass); padding-left:1.2rem; display:grid; gap:.9rem}
+.meta div{display:grid; gap:.15rem}
+.meta dt, .meta .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; color:var(--text-3); font-weight:700}
+.meta .v{font-size:.94rem; color:var(--text-2); line-height:1.5}
+.meta .v b{color:var(--text); font-weight:700}
+
+.body{padding:clamp(2.6rem,6vw,4.4rem) 0}
+.body .prose{font-size:1.085rem; line-height:1.78}
+.body .prose > h2{margin:2.8rem 0 1rem; font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.body .prose > h2:first-child{margin-top:0}
+.body .prose em{color:var(--text)}
+.body .prose strong{font-weight:700}
+.lead{font-size:1.2rem; line-height:1.65; color:var(--text); border-left:2px solid var(--accent); padding-left:1.2rem}
+
+.pull{
+  margin:2.4rem 0; font-family:var(--f-display); font-weight:600; font-size:clamp(1.25rem,2.6vw,1.6rem);
+  line-height:1.35; color:var(--text); text-wrap:balance; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:1.4rem 0;
+}
+.note{
+  margin:2rem 0; border:1px dashed var(--line); padding:1.15rem 1.3rem; background:transparent;
+  font-size:.95rem; color:var(--text-2); line-height:1.65;
+}
+.note .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:700; color:var(--brass); display:block; margin-bottom:.4rem}
+.note b{color:var(--text)}
+.note.warn .k{color:var(--psycho)}
+
+.outro{border-top:1px solid var(--line-soft); background:var(--bg-2)}
+.outro-in{padding:clamp(2.6rem,6vw,4.2rem) 0; display:grid; gap:2.8rem}
+.block h2{font-size:1.32rem; margin-bottom:1rem}
+.keyev{list-style:none; margin:0; padding:0; display:grid; gap:.85rem; counter-reset:k}
+.keyev li{
+  display:grid; grid-template-columns:2.1rem 1fr; gap:.8rem; align-items:start;
+  font-size:.985rem; color:var(--text-2); line-height:1.6;
+}
+.keyev li::before{
+  counter-increment:k; content:counter(k,decimal-leading-zero);
+  font-family:var(--f-hud); font-weight:700; color:var(--accent); font-size:.95rem; padding-top:.12rem;
+}
+.keyev li b{color:var(--text)}
+
+.who{display:grid; gap:0; border-top:1px solid var(--line)}
+.who div{display:grid; grid-template-columns:minmax(120px,auto) 1fr; gap:.4rem 1.4rem; padding:.85rem 0; border-bottom:1px solid var(--line-soft); align-items:baseline}
+.who .n{font-family:var(--f-display); font-weight:800; font-size:1rem}
+.who .r{font-size:.94rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .who div{grid-template-columns:1fr; gap:.15rem} }
+
+.tl{display:grid; gap:0; margin-top:.4rem}
+.tl div{display:grid; grid-template-columns:minmax(150px,auto) 1fr; gap:.3rem 1.4rem; padding:.75rem 0; border-top:1px solid var(--line-soft); align-items:baseline}
+.tl .w{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; font-size:.78rem; color:var(--brass); font-weight:600}
+.tl .e{font-size:.96rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .tl div{grid-template-columns:1fr; gap:.1rem} }
+
+.remember{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+.remember article{background:var(--bg); padding:1.1rem 1.2rem; display:grid; grid-template-columns:2rem 1fr; gap:.9rem; align-items:start}
+.remember .n{font-family:var(--f-hud); font-weight:700; font-size:1.35rem; color:var(--brass); line-height:1.1}
+.remember p{margin:0; font-size:.96rem; color:var(--text-2); line-height:1.6}
+.remember p b{color:var(--text)}
+
+.next{border-top:1px solid var(--line-soft); padding:clamp(2.4rem,5vw,3.6rem) 0 clamp(3rem,6vw,4.4rem)}
+.next h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+.next p{color:var(--text-2); max-width:62ch; margin-top:1rem}
+.next .ask{font-family:var(--f-display); font-weight:800; color:var(--accent); font-size:clamp(1.1rem,2.2vw,1.35rem); margin-top:2rem}
+.foot{padding:0 0 3rem; color:var(--text-3); font-size:.85rem}
+.foot p{max-width:74ch}
+</style>
+
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
+    <span class="progress">Parte I · Capítulo 1 de 54</span>
+  </div>
+</div>
+
+<header class="chead">
+  <div class="wrap chead-in">
+    <div>
+      <p class="num">Capítulo 1</p>
+      <h1>El arte que no tenía nombre</h1>
+      <p class="sub">Antes del primer torneo, antes de Ryu, antes incluso de que existiera algo llamado Street Fighter, hubo un maestro en una montaña enseñando a dos discípulos una técnica que no debía enseñarse a nadie.</p>
+    </div>
+    <div class="meta">
+      <div><span class="k">Período</span><span class="v">Era I — desde el Japón feudal hasta unas décadas antes del primer torneo</span></div>
+      <div><span class="k">Juegos relacionados</span><span class="v">Ninguno de forma directa. El material procede del trasfondo de <b>Super Street Fighter II Turbo</b> (1994), la era <b>Alpha</b> y, sobre todo, <b>Street Fighter IV</b> (2008)</span></div>
+      <div><span class="k">Personajes principales</span><span class="v"><b>Goutetsu</b>, <b>Gouken</b>, <b>Gouki</b></span></div>
+      <div><span class="k">Importancia</span><span class="v">Aquí se instala el conflicto que sostiene los cuarenta años siguientes: un arte marcial que solo se domina del todo si aceptas matar</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="body">
+  <div class="wrap prose">
+
+    <p class="lead">Conviene empezar con una advertencia de honestidad: en 1987, cuando Street Fighter llegó a los salones recreativos, nada de este capítulo existía. Ryu no tenía maestro, no había hermanos enfrentados y desde luego no había ninguna filosofía sobre la intención de matar. Todo lo que va a leer aquí se escribió <em>después</em>, hacia atrás, a lo largo de veinte años, para dar sentido a un personaje que originalmente solo era un karateka con una cinta roja.</p>
+
+    <p>Y sin embargo funciona. Funciona tan bien que hoy es imposible entender Street Fighter sin él.</p>
+
+    <h2>Un arte hecho para matar</h2>
+
+    <p>La versión que Capcom ha mantenido de forma más consistente sitúa el origen en el <strong>Japón feudal</strong>. Allí, entre las muchas escuelas de combate que florecieron y desaparecieron, se desarrolló una que no perseguía la competición, ni la salud, ni la formación del carácter. Perseguía una sola cosa: <em>terminar un combate acabando con el adversario</em>.</p>
+
+    <p>Ese arte, según el propio relato oficial de Capcom, <strong>no tenía nombre</strong>. El detalle parece menor y no lo es. Las escuelas japonesas tradicionales se nombran con orgullo: el nombre es el linaje, el nombre es la firma del fundador. Un arte anónimo es un arte que no quiere ser rastreado. Nadie lo enseñaba en público. Nadie colgaba un cartel.</p>
+
+    <p>Con el tiempo, ese conjunto de técnicas —una mezcla de karate, judo y <em>koppō</em>, el golpeo dirigido a la estructura ósea— acabó recibiendo del exterior una etiqueta descriptiva más que un nombre propio: <strong>Ansatsuken</strong> (暗殺拳), literalmente «puño de asesinato». No es el nombre de una escuela. Es lo que hace.</p>
+
+    <div class="note">
+      <span class="k">Nota de nomenclatura</span>
+      Durante años, los manuales occidentales de Capcom describieron el estilo de Ryu y Ken como <b>«Shotokan»</b>, un karate real y perfectamente respetable con el que la técnica de Ryu tiene poco que ver. Fue una simplificación comercial de Capcom USA, y de ahí viene que la afición siga llamando «shotos» a Ryu, Ken y Akuma. Los materiales japoneses —entre ellos las fichas de <b>Street Fighter IV</b>— lo describen como un arte de asesinato. Usaré <b>Ansatsuken</b> a lo largo de toda la guía, y le avisaré cuando el término aparezca de otro modo en alguna fuente.
+    </div>
+
+    <h2>Hado: la palabra que lo explica todo</h2>
+
+    <p>Para seguir el resto de la saga hay que asimilar un solo concepto, y es este: <strong>hado</strong> (波動), que puede traducirse como «onda» o «pulso». Es la energía interna del luchador puesta en movimiento. No es magia; en la ficción de Street Fighter es la consecuencia natural de llevar el entrenamiento del cuerpo y la voluntad hasta un extremo que casi nadie alcanza.</p>
+
+    <p>El <strong>Hadouken</strong> —el proyectil que todo el mundo reconoce— no es más que la punta visible de eso. Lo mismo el <strong>Shoryuken</strong>, el puño ascendente. Las fuentes secundarias atribuyen a Goutetsu el haber perfeccionado ambas técnicas y haber dado forma sistemática a lo que hasta entonces era un repertorio disperso; conviene tomarlo como material de apoyo y no como dogma, porque Capcom nunca lo ha detallado con precisión.</p>
+
+    <p>Ahora bien: el hado no es neutro. Depende íntegramente de qué lo empuja. Y el arte sin nombre fue construido, desde su origen, para ser empujado por una cosa concreta.</p>
+
+    <div class="pull">La intención de matar no es una emoción pasajera dentro de este arte. Es un combustible. Y quien lo usa descubre, casi siempre demasiado tarde, que arde mucho mejor que cualquier otro.</div>
+
+    <p>A esa vía se la llama <strong>Satsui no Hado</strong> (殺意の波動): la onda de la intención homicida. No es rabia. No es odio. La rabia se agota y el odio se administra. El Satsui no Hado es más frío que eso: es la disposición absoluta y sostenida a acabar con quien tienes delante, sin conflicto interno, sin freno, sin la milésima de segundo de vacilación que separa al luchador del asesino. Quien la elimina de sí mismo accede a una potencia que los demás no pueden igualar. Y quien la elimina de sí mismo, deja de ser exactamente una persona.</p>
+
+    <p>Ese es el trato. Todo Street Fighter, durante cuarenta años, girará alrededor de ese trato.</p>
+
+    <h2>Goutetsu</h2>
+
+    <p>De <strong>Goutetsu</strong> sabemos poco, y esa escasez es deliberada: es una figura mítica dentro de la ficción, no un personaje desarrollado. Su versión canónica se introdujo en el trasfondo de <em>Super Street Fighter II Turbo</em> (1994), cuando Capcom necesitó explicar de dónde salía el jefe oculto que acababa de añadir al juego, y Capcom la ha ampliado después en material oficial de perfiles.</p>
+
+    <p>Lo que importa de él es esto: <strong>Goutetsu conocía el arte completo</strong>. No una versión pedagógica, no una adaptación deportiva. El arte entero, con su mitad luminosa y su mitad homicida, incluida la técnica que lo corona y de la que hablaremos en el siguiente capítulo. Vivía apartado, entrenaba en soledad y aceptó a dos discípulos.</p>
+
+    <p>Y aquí está el nudo, el punto exacto donde nace todo lo demás: Goutetsu <em>no escogió por ellos</em>. Les enseñó lo que sabía y les dejó la decisión.</p>
+
+    <p>Puede leerse como generosidad de maestro: no mutilar el conocimiento, entregarlo íntegro y confiar en el criterio del alumno. Puede leerse también como una irresponsabilidad monumental. La saga nunca se pronuncia del todo, y esa ambigüedad es probablemente lo mejor que tiene el personaje.</p>
+
+    <h2>Dos discípulos</h2>
+
+    <p>Los dos alumnos de Goutetsu se llamaban <strong>Gouken</strong> y <strong>Gouki</strong>. Los materiales oficiales los presentan como hermanos.</p>
+
+    <div class="note warn">
+      <span class="k">Punto ambiguo</span>
+      Existe discusión razonable sobre si el parentesco es de sangre o de escuela: en japonés, <b>兄弟弟子</b> (<i>kyōdai-deshi</i>) significa «hermanos de discipulado», compañeros bajo un mismo maestro, y no implica familia. Las traducciones y adaptaciones han oscilado entre las dos lecturas. Capcom los ha tratado habitualmente como hermanos y así los trataré yo, pero no es un punto tan firme como suele afirmarse. Lo señalo porque en esta guía prefiero decirle dónde piso terreno blando.
+    </div>
+
+    <p>Fueran hermanos de sangre o de escuela, eran opuestos. <strong>Gouken</strong> era el mayor en temperamento: metódico, paciente, incómodo con lo que estaba aprendiendo. Entendía la potencia que el Satsui no Hado ponía a su alcance y entendía también qué le costaría. <strong>Gouki</strong> era el otro extremo: no le interesaba el equilibrio, ni la longevidad, ni la respetabilidad. Le interesaba una sola pregunta, la más peligrosa que puede hacerse un artista marcial —<em>¿hasta dónde llega esto?</em>— y estaba dispuesto a pagar lo que hiciera falta por la respuesta.</p>
+
+    <p>No eran, atención, un alumno bueno y un alumno malo. Eran dos lecturas coherentes del mismo texto. Gouken creía que un arte de asesinato podía separarse de su finalidad y convertirse en un camino. Gouki creía que eso era autoengaño: que un arte hecho para matar solo se domina de verdad cuando aceptas matar, y que todo lo demás es practicar a medias.</p>
+
+    <div class="pull">Los dos tenían razón. Ese es exactamente el problema.</div>
+
+    <h2>Lo que Goutetsu no resolvió</h2>
+
+    <p>El maestro murió sin haber dado una respuesta a esa pregunta, y las circunstancias de esa muerte son el asunto del próximo capítulo. Baste decir, por ahora, que fue el propio arte quien la provocó: no un enemigo externo, no una guerra, no la vejez. La contradicción interna de lo que enseñaba.</p>
+
+    <p>Después de él, el linaje se partió en dos ramas que ya nunca volverán a juntarse. Una de ellas se dedicará a enseñar una versión amputada del arte, sin su mitad homicida, a chicos que nunca sabrán del todo qué se les está ocultando. La otra caminará por el mundo demostrando, combate tras combate, que la versión amputada no es el arte verdadero.</p>
+
+    <p>Cuando dentro de unos capítulos vea a un joven con una cinta roja lanzando un Hadouken en un torneo, recuerde esto: <strong>ese muchacho está usando un arma cuya naturaleza real nadie le ha explicado</strong>. Su maestro tomó una decisión por él antes de que naciera. Y hay alguien, muy lejos, esperando pacientemente a que la decisión se le venga abajo.</p>
+
+    <p>Pero eso todavía no puede comprenderlo. Ni él, ni nosotros.</p>
+
+  </div>
+</main>
+
+<section class="outro">
+  <div class="wrap outro-in">
+
+    <div class="block">
+      <h2>Acontecimientos clave</h2>
+      <ol class="keyev">
+        <li><b>Nace, en el Japón feudal, un arte marcial concebido para matar.</b> Carece de nombre propio; con el tiempo se lo describirá como Ansatsuken, «puño de asesinato».</li>
+        <li><b>El arte incorpora dos vías opuestas.</b> El hado puede canalizarse por disciplina o alimentarse con la intención homicida —el Satsui no Hado—, que multiplica la potencia a cambio de la humanidad de quien la usa.</li>
+        <li><b>Goutetsu domina el arte completo</b> y lo mantiene vivo lejos de cualquier escuela pública. Se le atribuye haber dado forma sistemática al Hadouken y al Shoryuken.</li>
+        <li><b>Goutetsu acepta dos discípulos, Gouken y Gouki,</b> y toma la decisión que lo define: enseñarles el arte íntegro, sin ocultarles su mitad homicida.</li>
+        <li><b>Los dos discípulos llegan a conclusiones incompatibles.</b> Gouken sostiene que el arte puede separarse de su finalidad; Gouki, que solo se domina aceptándola.</li>
+        <li><b>La contradicción queda sin resolver a la muerte del maestro,</b> y el linaje se parte en dos ramas enfrentadas que llegarán intactas hasta el presente de la saga.</li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h2>Personajes que debemos recordar</h2>
+      <div class="who">
+        <div><span class="n">Goutetsu</span><span class="r">El maestro. Último poseedor conocido del arte completo. Su decisión de no escoger por sus alumnos es la causa remota de todo lo que vendrá. Aparece por primera vez en el trasfondo de <em>Super Street Fighter II Turbo</em> (1994).</span></div>
+        <div><span class="n">Gouken</span><span class="r">El discípulo que quiere salvar el arte de sí mismo. Debutará jugablemente muchísimo después, en <em>Street Fighter IV</em> (2008), pero cronológicamente su historia empieza aquí.</span></div>
+        <div><span class="n">Gouki</span><span class="r">El discípulo que quiere el arte entero, con su precio incluido. Todavía se llama por su nombre. Todavía es un hombre. En Occidente lo conocerá usted por otro nombre, y no tardará.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Organizaciones</h2>
+      <div class="who">
+        <div><span class="n">Ninguna</span><span class="r">Este capítulo es anterior a cualquier estructura de poder de la saga. No hay Shadaloo, no hay Interpol, no hay Illuminati, no hay torneos. Solo hay un linaje: la escuela sin nombre de Goutetsu, que a efectos prácticos es la única «organización» existente y consta de tres personas.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Cronología del capítulo</h2>
+      <div class="tl">
+        <div><span class="w">Japón feudal</span><span class="e">Se desarrolla un arte marcial sin nombre, concebido para matar, que mezcla karate, judo y koppō.</span></div>
+        <div><span class="w">Generaciones después</span><span class="e">El arte sobrevive en transmisión privada, fuera de las escuelas reconocidas. Nadie lo enseña en público.</span></div>
+        <div><span class="w">≈ décadas antes del primer torneo</span><span class="e">Goutetsu domina el arte íntegro y vive apartado. Se le atribuye la sistematización del Hadouken y el Shoryuken.</span></div>
+        <div><span class="w">Juventud de los discípulos</span><span class="e">Gouken y Gouki entrenan bajo Goutetsu y alcanzan un nivel excepcional. Se les enseña el arte completo, mitad homicida incluida.</span></div>
+        <div><span class="w">Final del capítulo</span><span class="e">Ambos han comprendido el trato que ofrece el Satsui no Hado. Ninguno lo ha aceptado todavía. Uno de los dos está a punto de hacerlo.</span></div>
+      </div>
+      <div class="note" style="margin-top:1.6rem">
+        <span class="k">Sobre las fechas</span>
+        Capcom nunca ha fijado años para este período. Las referencias temporales de arriba son <b>relativas</b>, ancladas al primer torneo, y así se mantendrán durante toda la guía salvo cuando exista una fecha oficial explícita.
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Lo que debes recordar</h2>
+      <div class="remember">
+        <article><span class="n">1</span><p><b>El arte es el villano de fondo de toda la saga.</b> No Bison, no Shadaloo. El Ansatsuken lleva dentro su propia condena, y todos los que lo practican la heredan quieran o no.</p></article>
+        <article><span class="n">2</span><p><b>Satsui no Hado no significa «enfadarse mucho».</b> Es la aceptación fría y total de la intención de matar. Da un poder que nadie más alcanza y cobra la humanidad como precio. Memorice el término: lo va a oír durante cuarenta años.</p></article>
+        <article><span class="n">3</span><p><b>Goutetsu no escogió por sus alumnos.</b> Entregó el arte entero y dejó la decisión en sus manos. Todo lo que ocurre después es consecuencia de esa renuncia a decidir.</p></article>
+        <article><span class="n">4</span><p><b>Gouken y Gouki no son bueno y malo.</b> Son dos interpretaciones defendibles del mismo arte. La saga los trata con más respeto del que suele reconocérsele a un juego de lucha.</p></article>
+        <article><span class="n">5</span><p><b>Nada de esto existía en 1987.</b> Es material construido retroactivamente entre 1994 y 2008. Saberlo no lo debilita: le permite entender por qué la franquicia se pasó veinte años viajando hacia su propio pasado.</p></article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap">
+    <h2>Conexión con el Capítulo 2</h2>
+    <p>Hemos dejado a dos hombres delante de la misma puerta. El siguiente capítulo cuenta quién la abrió, qué encontró al otro lado y qué le hizo a su maestro para poder cruzarla. También cuenta la reacción del que se quedó fuera: una renuncia que no fue cobardía, sino la decisión técnica más importante de la historia de Street Fighter, porque de ella nace el estilo que aprenderán Ryu y Ken.</p>
+    <p>Y cuenta el momento en que Gouki deja de llamarse Gouki.</p>
+    <p class="ask">¿Continuamos con el Capítulo 2 — «Dos hermanos y una decisión»?</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. Fuentes principales de este capítulo: el trasfondo introducido en <em>Super Street Fighter II Turbo</em>, los perfiles oficiales de Capcom y las fichas de personaje de <em>Street Fighter IV</em>. El material señalado como secundario procede de guías y enciclopedias licenciadas, no de declaraciones directas de Capcom.</p>
+  </div>
+</footer>
