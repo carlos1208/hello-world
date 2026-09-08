@@ -231,12 +231,54 @@ p:last-child{margin-bottom:0}
   .vig .glow{animation:breathe 4.2s ease-in-out infinite; transform-origin:50% 50%}
 }
 
+/* chrome:css */
+.tt{
+  flex:none; display:inline-flex; align-items:center; gap:.45rem;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.72rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:.26rem .65rem; cursor:pointer; transition:color .2s ease, border-color .2s ease;
+}
+.tt:hover{color:var(--text); border-color:var(--text-3)}
+.tt svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round}
+.topbar-right{display:flex; align-items:center; gap:.9rem}
+.chead-in{align-items:start !important}
+.skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--bg); padding:.6rem 1rem; z-index:60}
+.skip:focus{left:.5rem; top:.5rem}
+
+.chnav{border-top:1px solid var(--line-soft); padding:2.2rem 0 3.4rem}
+.chnav-in{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:720px){ .chnav-in{grid-template-columns:1fr 1fr} }
+.chnav a, .chnav span.off{
+  background:var(--bg-2); padding:1.1rem 1.3rem; text-decoration:none; display:grid; gap:.25rem;
+  transition:background .22s ease;
+}
+.chnav a:hover{background:color-mix(in srgb, var(--era) 8%, var(--bg-2))}
+.chnav .dir{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; font-weight:700; color:var(--era)}
+.chnav .ttl{font-family:var(--f-display); font-weight:800; font-size:1.05rem; color:var(--text)}
+.chnav span.off{opacity:.55}
+.chnav span.off .dir{color:var(--text-3)}
+.chnav .right{text-align:right}
+
+.readbtn{
+  display:inline-flex; align-items:center; gap:.6rem; margin-top:1.6rem; cursor:pointer;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.8rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); padding:.7rem 1.2rem;
+  transition:all .2s ease;
+}
+.readbtn svg{width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round}
+.readbtn:hover{border-color:var(--era); color:var(--text)}
+.readbtn[aria-pressed="true"]{background:var(--era); border-color:var(--era); color:var(--bg)}
+/* /chrome:css */
+
 </style>
 
+<script id="sf-theme-boot">
+(function(){try{var t=localStorage.getItem('sf-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
 <div class="topbar">
   <div class="wrap topbar-in">
     <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
-    <span class="progress">Parte I · Capítulo 1 de 54</span>
+    <span class="topbar-right"><span class="progress">Parte I · Capítulo 1 de 54</span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span>
   </div>
   <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
 </div>
@@ -403,8 +445,48 @@ p:last-child{margin-bottom:0}
     <p>Hemos dejado a dos hombres delante de la misma puerta. El siguiente capítulo cuenta quién la abrió, qué encontró al otro lado y qué le hizo a su maestro para poder cruzarla. También cuenta la reacción del que se quedó fuera: una renuncia que no fue cobardía, sino la decisión técnica más importante de la historia de Street Fighter, porque de ella nace el estilo que aprenderán Ryu y Ken.</p>
     <p>Y cuenta el momento en que Gouki deja de llamarse Gouki.</p>
     <p class="ask">¿Continuamos con el Capítulo 2 — «Dos hermanos y una decisión»?</p>
+    <p><button class="readbtn" id="readbtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"></path></svg><span class="readbtn-l">Marcar como leído</span></button></p>
   </div>
 </section>
+
+<!--chrome:start-->
+<nav class="chnav" aria-label="Navegación entre capítulos">
+  <div class="wrap chnav-in">
+    <a href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623"><span class="dir">← Volver</span><span class="ttl">El Puño y la Sombra</span></a>
+    <a class="right" href="https://claude.ai/code/artifact/24c779ba-c17a-454f-a3cd-5ad1ec18dc37"><span class="dir">Capítulo 02 →</span><span class="ttl">Dos hermanos y una decisión</span></a>
+  </div>
+</nav>
+<script>
+(function(){
+  var modes=['auto','light','dark'], names={auto:'Auto',light:'Claro',dark:'Oscuro'};
+  var btn=document.getElementById('themebtn'), lab=document.getElementById('themelab');
+  function read(){try{var t=localStorage.getItem('sf-theme');return (t==='light'||t==='dark')?t:'auto';}catch(e){return 'auto';}}
+  function apply(m){
+    if(m==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=m;
+    if(lab) lab.textContent=names[m];
+    try{ m==='auto'?localStorage.removeItem('sf-theme'):localStorage.setItem('sf-theme',m); }catch(e){}
+  }
+  apply(read());
+  if(btn) btn.addEventListener('click',function(){apply(modes[(modes.indexOf(read())+1)%modes.length]);});
+
+  var mark=document.getElementById('readbtn'); if(!mark) return;
+  var KEY='sf-read', NUM='01';
+  function list(){try{var v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function sync(){
+    var on=list().indexOf(NUM)!==-1;
+    mark.setAttribute('aria-pressed', on?'true':'false');
+    mark.querySelector('.readbtn-l').textContent = on ? 'Capítulo leído' : 'Marcar como leído';
+  }
+  mark.addEventListener('click',function(){
+    var l=list(), i=l.indexOf(NUM);
+    if(i===-1) l.push(NUM); else l.splice(i,1);
+    try{ localStorage.setItem(KEY, JSON.stringify(l)); }catch(e){}
+    sync();
+  });
+  sync();
+})();
+</script>
+<!--chrome:end-->
 
 <footer class="foot">
   <div class="wrap">

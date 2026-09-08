@@ -372,7 +372,76 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
   .vig .glow{animation:breathe 3.4s ease-in-out infinite; transform-origin:50% 50%}
 }
 
+/* ---------- selector de tema ---------- */
+.tt{
+  margin-left:auto; flex:none; display:inline-flex; align-items:center; gap:.45rem;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.74rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:.3rem .7rem; cursor:pointer; transition:color .2s ease, border-color .2s ease;
+}
+.tt:hover{color:var(--text); border-color:var(--text-3)}
+.tt svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round}
+
+/* ---------- progreso de lectura ---------- */
+.readbar{display:flex; align-items:center; gap:.9rem; flex-wrap:wrap; margin-top:1rem}
+.readbar .track{flex:1; min-width:140px; max-width:22rem; height:6px; background:var(--bg-3); border-radius:99px; overflow:hidden}
+.readbar .track i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--brass),var(--accent)); transition:width .4s ease}
+.readbar .lab{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; font-size:.78rem; color:var(--text-3); font-weight:600}
+.ch{position:relative}
+.mark{
+  grid-column:1; justify-self:start; margin-top:.1rem;
+  width:1.6rem; height:1.6rem; padding:0; cursor:pointer; border-radius:50%;
+  border:1.5px solid var(--line); background:transparent; color:var(--text-3);
+  display:inline-flex; align-items:center; justify-content:center; transition:all .2s ease;
+}
+.mark svg{width:11px; height:11px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round; opacity:0; transition:opacity .2s ease}
+.mark:hover{border-color:var(--accent); color:var(--accent)}
+.ch.done .mark{background:var(--accent); border-color:var(--accent); color:var(--bg)}
+.ch.done .mark svg{opacity:1}
+.ch.done .ch-t a{border-bottom-color:var(--line)}
+.ch.done .ch-t{color:var(--text-2)}
+.ch.marked .ch-n{display:none}
+
+/* ---------- relaciones ---------- */
+.relgroup{margin-top:2.4rem}
+.relgroup:first-child{margin-top:0}
+.relhead{display:flex; align-items:baseline; gap:.8rem; flex-wrap:wrap; margin-bottom:1rem}
+.relhead h3{font-size:1.06rem}
+.reltag{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.7rem; font-weight:700;
+  color:var(--bg); background:var(--rc,var(--accent)); padding:.16rem .55rem; border-radius:2px;
+}
+.rels{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:760px){ .rels{grid-template-columns:1fr 1fr} }
+.rel{background:var(--bg-2); padding:1.05rem 1.2rem; display:grid; gap:.45rem; transition:background .22s ease}
+.rel:hover{background:color-mix(in srgb, var(--rc,var(--accent)) 6%, var(--bg-2))}
+.rel .pair{display:flex; align-items:center; gap:.55rem; flex-wrap:wrap; font-family:var(--f-display); font-weight:800; font-size:1rem}
+.rel .arw{color:var(--rc,var(--accent)); font-family:var(--f-hud); font-size:1.05rem; font-weight:700}
+.rel p{margin:0; font-size:.93rem; color:var(--text-2); line-height:1.55}
+.rel .when{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.12em; font-size:.7rem; color:var(--text-3); font-weight:600}
+
+/* ---------- glosario ---------- */
+.gloss{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:820px){ .gloss{grid-template-columns:1fr 1fr} }
+.term{background:var(--bg-2); padding:1.1rem 1.25rem; display:grid; gap:.3rem; transition:background .22s ease}
+.term:hover{background:color-mix(in srgb, var(--accent) 5%, var(--bg-2))}
+.term .top{display:flex; align-items:baseline; gap:.6rem; flex-wrap:wrap}
+.term .jp{font-family:var(--f-display); font-weight:800; font-size:1.12rem; color:var(--text)}
+.term .kana{font-family:var(--f-display); font-size:1rem; color:var(--accent); font-weight:600}
+.term .lit{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.12em; font-size:.7rem; color:var(--text-3); font-weight:600}
+.term p{margin:0; font-size:.93rem; color:var(--text-2); line-height:1.55}
+.term p b{color:var(--text)}
+.term .src{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.12em; font-size:.68rem; color:var(--brass); font-weight:700}
+
+.skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--bg); padding:.6rem 1rem; z-index:60}
+.skip:focus{left:.5rem; top:.5rem}
+
 </style>
+
+<script>
+(function(){try{var t=localStorage.getItem('sf-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
+<a class="skip" href="#eras">Saltar al contenido</a>
 
 <nav class="nav">
   <div class="wrap nav-in">
@@ -381,7 +450,13 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
     <a href="#orden">Orden real</a>
     <a href="#canon">Canon</a>
     <a href="#personajes">15 claves</a>
+    <a href="#relaciones">Relaciones</a>
+    <a href="#glosario">Glosario</a>
     <a href="#indice">Índice</a>
+    <button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg>
+      <span id="themelab">Auto</span>
+    </button>
   </div>
   <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
 </nav>
@@ -1056,10 +1131,103 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
   </div>
 </section>
 
-<section class="sec" id="indice">
+<section class="sec" id="relaciones">
   <div class="wrap">
     <div class="sec-head">
       <span class="sec-num">05</span>
+      <h2>El mapa de las relaciones</h2>
+    </div>
+    <p class="sec-intro prose">Street Fighter no se sostiene sobre un argumento, sino sobre una red de vínculos. Casi ningún personaje pelea por el trofeo: pelea contra alguien concreto, por un motivo concreto. Estos son los lazos que hay que tener presentes; cada uno se desarrolla en el capítulo que se indica.</p>
+
+    <div class="sec-body">
+
+      <div class="relgroup" style="--rc:#B4863C">
+        <div class="relhead"><span class="reltag">Maestro y discípulo</span><h3>La transmisión del arte</h3></div>
+        <div class="rels">
+          <article class="rel"><div class="pair">Goutetsu <span class="arw">→</span> Gouken y Gouki</div><p>Les enseñó el arte íntegro, con su mitad homicida incluida, y les dejó a ellos la decisión de usarla. Murió por esa renuncia a escoger.</p><span class="when">Capítulos 1 y 2</span></article>
+          <article class="rel"><div class="pair">Gouken <span class="arw">→</span> Ryu</div><p>Lo recogió sin familia y lo formó en una versión depurada del arte. Nunca le explicó qué le había quitado ni por qué, y ese silencio es el origen del conflicto interior de Ryu.</p><span class="when">Capítulo 3</span></article>
+          <article class="rel"><div class="pair">Gouken <span class="arw">→</span> Ken Masters</div><p>Recibió al hijo de un empresario estadounidense enviado a Japón por un padre que no sabía qué hacer con él. Mismo maestro, misma técnica, vida opuesta a la de Ryu.</p><span class="when">Capítulo 3</span></article>
+          <article class="rel"><div class="pair">Rose <span class="arw">→</span> Menat</div><p>La adivina toma una discípula y le transmite el Soul Power y la lectura del futuro. Es el reflejo luminoso de la transmisión del Ansatsuken.</p><span class="when">Capítulo 39</span></article>
+        </div>
+      </div>
+
+      <div class="relgroup" style="--rc:#D24A40">
+        <div class="relhead"><span class="reltag">Rivalidad</span><h3>Los que se definen por el otro</h3></div>
+        <div class="rels">
+          <article class="rel"><div class="pair">Ryu <span class="arw">↔</span> Ken</div><p>Hermanos de adopción antes que rivales. Ken tiene todo lo que Ryu no tiene —dinero, familia, país, nombre— y la saga los usa para preguntar qué queda de un luchador cuando le quitan eso.</p><span class="when">Capítulos 3, 23 y 53</span></article>
+          <article class="rel"><div class="pair">Ryu <span class="arw">↔</span> Sagat</div><p>La rivalidad más completa de la franquicia: empieza con una victoria que ensucia a los dos y termina, décadas después, siendo lo único que salva a uno de ellos.</p><span class="when">Capítulos 6 y 22</span></article>
+          <article class="rel"><div class="pair">Gill <span class="arw">↔</span> Alex</div><p>Alex no busca al líder de los Illuminati por ideología: lo busca porque dejó malherido a Tom, el hombre que lo entrenó y lo crió.</p><span class="when">Capítulos 44 y 45</span></article>
+          <article class="rel"><div class="pair">Jamie <span class="arw">↔</span> Yun</div><p>Dos guardianes de barrio con la misma vocación y ninguna paciencia el uno con el otro. La rivalidad de la nueva generación, sin dictadores de por medio.</p><span class="when">Capítulo 54</span></article>
+        </div>
+      </div>
+
+      <div class="relgroup" style="--rc:#8E2B36">
+        <div class="relhead"><span class="reltag">Odio y persecución</span><h3>Los que no pueden soltar</h3></div>
+        <div class="rels">
+          <article class="rel"><div class="pair">Akuma <span class="arw">→</span> Ryu</div><p>No lo persigue para matarlo, sino para obligarle a soltar el freno. Quiere el combate verdadero que su hermano le negó, y cree que Ryu es el único capaz de dárselo.</p><span class="when">Capítulos 15 y 32</span></article>
+          <article class="rel"><div class="pair">Chun-Li <span class="arw">→</span> M. Bison</div><p>Empieza como la investigación de la desaparición de su padre, agente de la Interpol, y no termina nunca. Es la única motivación de la saga que jamás cambia.</p><span class="when">Capítulos 10 y 21</span></article>
+          <article class="rel"><div class="pair">Guile <span class="arw">→</span> M. Bison</div><p>Entra en el torneo por venganza, no por deporte: Shadaloo mató a su mejor amigo. Encarna el coste privado de una guerra que el mundo no sabe que existe.</p><span class="when">Capítulos 9 y 21</span></article>
+          <article class="rel"><div class="pair">Juri Han <span class="arw">→</span> Shadaloo</div><p>La organización mató a su familia y le arrancó un ojo. Se vengó, pero para entonces el daño ya le gustaba demasiado como para volver a ser de nadie.</p><span class="when">Capítulo 30</span></article>
+        </div>
+      </div>
+
+      <div class="relgroup" style="--rc:#8368E8">
+        <div class="relhead"><span class="reltag">Creación y control</span><h3>Lo que Shadaloo fabrica</h3></div>
+        <div class="rels">
+          <article class="rel"><div class="pair">M. Bison <span class="arw">→</span> Cammy</div><p>No es su enemiga capturada: es su creación. La primera de las Dolls, y la única que rompió el control. Obliga a la saga a preguntarse si una persona fabricada tiene alma propia.</p><span class="when">Capítulo 12</span></article>
+          <article class="rel"><div class="pair">M. Bison <span class="arw">→</span> Sagat</div><p>Le ofreció la venganza que necesitaba a cambio de servidumbre. El mejor luchador del mundo aceptó, y tardó años en entender qué había vendido.</p><span class="when">Capítulo 13</span></article>
+          <article class="rel"><div class="pair">M. Bison <span class="arw">→</span> Ed</div><p>Un niño criado como pieza de recambio: un cuerpo de reserva con Psycho Power para cuando el suyo fallase. Ed acabará decidiendo qué hacer con esa herencia.</p><span class="when">Capítulo 38</span></article>
+          <article class="rel"><div class="pair">M. Bison <span class="arw">↔</span> Rose</div><p>El vínculo más extraño de la franquicia y la clave para entender al villano: Rose es la mitad que Bison arrancó de su propia alma para poder usar el Psycho Power sin freno.</p><span class="when">Capítulo 11</span></article>
+        </div>
+      </div>
+
+      <div class="relgroup" style="--rc:#34B3A2">
+        <div class="relhead"><span class="reltag">Lazos personales</span><h3>Lo que hay detrás del combate</h3></div>
+        <div class="rels">
+          <article class="rel"><div class="pair">Gouken <span class="arw">↔</span> Akuma</div><p>Los materiales oficiales los presentan como hermanos, aunque el término japonés admite también «hermanos de escuela». Dos lecturas defendibles del mismo arte, y ninguna de las dos va a funcionar.</p><span class="when">Capítulo 2</span></article>
+          <article class="rel"><div class="pair">Guile <span class="arw">↔</span> Charlie Nash</div><p>Amistad militar antes que nada. Nash existió veinte años solo como el amigo muerto de Guile; cuando por fin apareció en pantalla, ya conocíamos su final.</p><span class="when">Capítulos 9 y 37</span></article>
+          <article class="rel"><div class="pair">Ken <span class="arw">↔</span> Eliza y Mel</div><p>La familia es lo que distingue a Ken de Ryu, y por tanto lo que la saga puede quitarle. En Street Fighter 6 se aparta de ellos para protegerlos.</p><span class="when">Capítulo 53</span></article>
+          <article class="rel"><div class="pair">Luke <span class="arw">↔</span> su padre</div><p>Hijo de un soldado muerto en combate. Es el primer protagonista de la franquicia que no viene de un dojo, sino de un cuartel y un gimnasio.</p><span class="when">Capítulo 51</span></article>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="glosario">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2>Glosario de términos oficiales</h2>
+    </div>
+    <p class="sec-intro prose">La saga usa vocabulario propio, casi todo japonés, y las traducciones occidentales lo han enturbiado durante décadas. Estos son los términos que necesita, con su forma original y su significado literal. El glosario crece a medida que avanzan los capítulos; los que están marcados en ocre ya se han explicado.</p>
+
+    <div class="sec-body gloss">
+      <article class="term"><div class="top"><span class="jp">暗殺拳</span><span class="kana">Ansatsuken</span><span class="lit">«Puño de asesinato»</span></div><p>El arte marcial de Ryu, Ken, Gouken y Akuma. No es el nombre de una escuela, sino una descripción de su función: nació sin nombre, concebido para matar. <b>Los manuales occidentales lo llamaron «Shotokan» por decisión comercial de Capcom USA</b>, y de ahí viene que la afición diga «shotos».</p><span class="src">Explicado en el Capítulo 1</span></article>
+      <article class="term"><div class="top"><span class="jp">波動</span><span class="kana">Hado</span><span class="lit">«Onda, pulso»</span></div><p>La energía interna del luchador puesta en movimiento. No es magia: es la consecuencia de llevar el entrenamiento del cuerpo y la voluntad a un extremo que casi nadie alcanza. Todo lo demás del glosario deriva de esta palabra.</p><span class="src">Explicado en el Capítulo 1</span></article>
+      <article class="term"><div class="top"><span class="jp">殺意の波動</span><span class="kana">Satsui no Hado</span><span class="lit">«Onda de la intención homicida»</span></div><p>La vía oscura del arte. No es rabia ni odio: es la disposición fría y sostenida a acabar con el adversario, sin el instante de vacilación que separa al luchador del asesino. Multiplica la potencia y cobra la humanidad.</p><span class="src">Explicado en el Capítulo 1</span></article>
+      <article class="term"><div class="top"><span class="jp">瞬獄殺</span><span class="kana">Shun Goku Satsu</span><span class="lit">«Asesinato instantáneo del infierno»</span></div><p>En Occidente, <b>Raging Demon</b>. La técnica que corona el arte. No mata con el puño: ataca el espíritu del adversario y lo mata con el peso de sus propios pecados. Cuanto más culpable es la víctima, peor su final.</p><span class="src">Explicado en el Capítulo 2</span></article>
+      <article class="term"><div class="top"><span class="jp">波動拳</span><span class="kana">Hadouken</span><span class="lit">«Puño de la onda»</span></div><p>El proyectil de energía que todo el mundo reconoce. Es la punta visible del hado, no su totalidad. Se le atribuye a Goutetsu haberlo sistematizado, aunque Capcom nunca lo ha detallado.</p><span class="src">Explicado en el Capítulo 1</span></article>
+      <article class="term"><div class="top"><span class="jp">昇龍拳</span><span class="kana">Shoryuken</span><span class="lit">«Puño del dragón ascendente»</span></div><p>El gancho ascendente en salto. Junto al Hadouken y al Tatsumaki Senpukyaku, una de las tres formas que Gouken conservó al depurar el arte.</p><span class="src">Explicado en el Capítulo 2</span></article>
+      <article class="term"><div class="top"><span class="jp">竜巻旋風脚</span><span class="kana">Tatsumaki Senpukyaku</span><span class="lit">«Patada de torbellino»</span></div><p>La patada giratoria en desplazamiento. La tercera forma superviviente del arte original tras la amputación de Gouken.</p><span class="src">Explicado en el Capítulo 2</span></article>
+      <article class="term"><div class="top"><span class="jp">天</span><span class="kana">Ten</span><span class="lit">«Cielo»</span></div><p>El kanji que aparece sobre la espalda de Akuma. Su firma y su declaración: alguien situado por encima de la escala con la que se mide a los demás.</p><span class="src">Explicado en el Capítulo 2</span></article>
+      <article class="term"><div class="top"><span class="jp">豪鬼 / 悪魔</span><span class="kana">Gouki / Akuma</span><span class="lit">«Gran demonio» / «Demonio»</span></div><p>Dos nombres del mismo personaje en dos mercados. <b>Gouki es el nombre japonés; Akuma lo puso Capcom USA en la localización.</b> No existe ninguna escena canónica de cambio de nombre.</p><span class="src">Explicado en el Capítulo 2</span></article>
+      <article class="term"><div class="top"><span class="jp">無の波動</span><span class="kana">Mu no Hado</span><span class="lit">«Onda de la nada»</span></div><p>El contrapeso del Satsui no Hado: el poder de la nada, alcanzado vaciándose en lugar de llenándose de intención homicida. Es lo que permitirá a Ryu sostener su conflicto sin ceder.</p><span class="src">Se explicará en los Capítulos 33 y 41</span></article>
+      <article class="term"><div class="top"><span class="jp">Psycho Power</span><span class="lit">Sin término japonés fijo</span></div><p>La energía de M. Bison. Su origen no es el entrenamiento, sino un acto: expulsó de su alma todo lo que le impedía usarla. Ese fragmento expulsado camina por el mundo y se llama Rose.</p><span class="src">Se explicará en los Capítulos 5 y 11</span></article>
+      <article class="term"><div class="top"><span class="jp">Soul Power</span><span class="lit">La cara luminosa</span></div><p>La energía de Rose: la misma raíz que el Psycho Power, canalizada al contrario. Adivinación y protección en lugar de dominio.</p><span class="src">Se explicará en el Capítulo 11</span></article>
+      <article class="term"><div class="top"><span class="jp">Shadaloo</span><span class="lit">Organización criminal</span></div><p>La red de M. Bison: narcotráfico, armas, gobiernos comprados y un ejército propio. No la reconoce ningún país, y por eso ningún país puede combatirla.</p><span class="src">Se explicará en los Capítulos 5 y 20</span></article>
+      <article class="term"><div class="top"><span class="jp">Dolls</span><span class="lit">«Muñecas»</span></div><p>Las soldados creadas y controladas mentalmente por Shadaloo, cada una con nombre en clave. Cammy fue la primera y la única que rompió el control.</p><span class="src">Se explicará en el Capítulo 12</span></article>
+      <article class="term"><div class="top"><span class="jp">S.I.N.</span><span class="lit">División de armamento</span></div><p>El brazo tecnológico de Shadaloo que sobrevive a la caída de su jefe y funciona solo, dirigido por Seth. Convoca un torneo que en realidad es una recolección de datos de combate.</p><span class="src">Se explicará en el Capítulo 28</span></article>
+      <article class="term"><div class="top"><span class="jp">Illuminati</span><span class="lit">Sociedad secreta</span></div><p>La organización de Gill, sucesora conceptual de Shadaloo y su opuesto exacto: no quiere gobernar el mundo, quiere que acabe para renacer purificado bajo su mando.</p><span class="src">Se explicará en el Capítulo 44</span></article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="indice">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
       <h2>Índice completo de la saga</h2>
     </div>
     <p class="sec-intro prose">Su esquema original agrupaba los capítulos por juego en orden de publicación. He reordenado las siete partes para que sigan el <b>orden de los acontecimientos</b>: Alpha pasa delante de Street Fighter II, y Street Fighter III baja hasta la penúltima posición, justo antes de SF6. El contenido de sus capítulos se conserva; lo que cambia es el sitio donde encaja cada uno. Son 54 capítulos y tres apéndices.</p>
@@ -1069,6 +1237,10 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21" stroke-linecap="round"></path></svg>
         <input id="q" type="search" placeholder="Buscar un capítulo, un personaje, una organización…" aria-label="Buscar en el índice">
         <span class="count" id="count">54 capítulos</span>
+      </div>
+      <div class="readbar" id="readbar" hidden>
+        <span class="lab" id="readlab">Progreso de lectura</span>
+        <span class="track"><i id="readfill"></i></span>
       </div>
 
       <div id="parts">
@@ -1260,6 +1432,77 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
   }
   q.addEventListener('input', filter);
 
+
+  // --- tema: sistema -> claro -> oscuro ---
+  var btn = document.getElementById('themebtn');
+  var lab = document.getElementById('themelab');
+  var modes = ['auto','light','dark'];
+  var names = { auto: 'Auto', light: 'Claro', dark: 'Oscuro' };
+  function readTheme(){
+    try { var t = localStorage.getItem('sf-theme'); return (t === 'light' || t === 'dark') ? t : 'auto'; }
+    catch (e) { return 'auto'; }
+  }
+  function applyTheme(m){
+    if (m === 'auto') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = m;
+    if (lab) lab.textContent = names[m];
+    try { m === 'auto' ? localStorage.removeItem('sf-theme') : localStorage.setItem('sf-theme', m); } catch (e) {}
+  }
+  applyTheme(readTheme());
+  if (btn) btn.addEventListener('click', function(){
+    applyTheme(modes[(modes.indexOf(readTheme()) + 1) % modes.length]);
+  });
+
+  // --- progreso de lectura, privado en este navegador ---
+  var ready = Array.prototype.slice.call(document.querySelectorAll('.ch.ready'));
+  var bar = document.getElementById('readbar');
+  var barFill = document.getElementById('readfill');
+  var barLab = document.getElementById('readlab');
+  var KEY = 'sf-read';
+  function loadRead(){
+    try { var v = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(v) ? v : []; }
+    catch (e) { return []; }
+  }
+  function saveRead(list){ try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) {} }
+
+  if (ready.length && bar) {
+    bar.hidden = false;
+    var read = loadRead();
+    var tick = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"></path></svg>';
+    function refresh(){
+      var n = ready.filter(function(c){ return c.classList.contains('done'); }).length;
+      barFill.style.width = (n / ready.length * 100) + '%';
+      barLab.textContent = n + ' de ' + ready.length + ' capítulos publicados';
+    }
+    ready.forEach(function(c){
+      var num = (c.querySelector('.ch-n') || {}).textContent || '';
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'mark';
+      b.innerHTML = tick;
+      var name = (c.querySelector('.ch-t') || {}).textContent || ('capítulo ' + num);
+      function sync(){
+        var on = c.classList.contains('done');
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        b.setAttribute('aria-label', (on ? 'Marcar como no leído: ' : 'Marcar como leído: ') + name);
+      }
+      if (read.indexOf(num) !== -1) c.classList.add('done');
+      b.addEventListener('click', function(){
+        c.classList.toggle('done');
+        var list = loadRead();
+        var i = list.indexOf(num);
+        if (c.classList.contains('done')) { if (i === -1) list.push(num); }
+        else if (i !== -1) list.splice(i, 1);
+        saveRead(list);
+        sync(); refresh();
+      });
+      sync();
+      c.insertBefore(b, c.firstChild);
+      c.classList.add('marked');
+    });
+    refresh();
+  }
+
   var fill = document.getElementById('meterfill');
   function meter(){
     var h = document.documentElement.scrollHeight - window.innerHeight;
@@ -1279,8 +1522,9 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         if (!e.isIntersecting) return;
         var i = targets.indexOf(e.target);
         if (i < 0) return;
-        links.forEach(function(a){ a.classList.remove('on'); });
+        links.forEach(function(a){ a.classList.remove('on'); a.removeAttribute('aria-current'); });
         links[i].classList.add('on');
+        links[i].setAttribute('aria-current', 'true');
       });
     }, { rootMargin: '-55px 0px -70% 0px' });
     targets.forEach(function(t){ if (t) io.observe(t); });

@@ -247,12 +247,54 @@ p:last-child{margin-bottom:0}
 .tech .ro{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.17em; font-size:.76rem; font-weight:700; color:var(--text-3); margin-top:.25rem}
 .tech p{margin:.9rem 0 0; font-size:.97rem; color:var(--text-2); line-height:1.65}
 .tech p b{color:var(--text)}
+/* chrome:css */
+.tt{
+  flex:none; display:inline-flex; align-items:center; gap:.45rem;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.72rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:.26rem .65rem; cursor:pointer; transition:color .2s ease, border-color .2s ease;
+}
+.tt:hover{color:var(--text); border-color:var(--text-3)}
+.tt svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round}
+.topbar-right{display:flex; align-items:center; gap:.9rem}
+.chead-in{align-items:start !important}
+.skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--bg); padding:.6rem 1rem; z-index:60}
+.skip:focus{left:.5rem; top:.5rem}
+
+.chnav{border-top:1px solid var(--line-soft); padding:2.2rem 0 3.4rem}
+.chnav-in{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:720px){ .chnav-in{grid-template-columns:1fr 1fr} }
+.chnav a, .chnav span.off{
+  background:var(--bg-2); padding:1.1rem 1.3rem; text-decoration:none; display:grid; gap:.25rem;
+  transition:background .22s ease;
+}
+.chnav a:hover{background:color-mix(in srgb, var(--era) 8%, var(--bg-2))}
+.chnav .dir{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; font-weight:700; color:var(--era)}
+.chnav .ttl{font-family:var(--f-display); font-weight:800; font-size:1.05rem; color:var(--text)}
+.chnav span.off{opacity:.55}
+.chnav span.off .dir{color:var(--text-3)}
+.chnav .right{text-align:right}
+
+.readbtn{
+  display:inline-flex; align-items:center; gap:.6rem; margin-top:1.6rem; cursor:pointer;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.8rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); padding:.7rem 1.2rem;
+  transition:all .2s ease;
+}
+.readbtn svg{width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round}
+.readbtn:hover{border-color:var(--era); color:var(--text)}
+.readbtn[aria-pressed="true"]{background:var(--era); border-color:var(--era); color:var(--bg)}
+/* /chrome:css */
+
 </style>
 
+<script id="sf-theme-boot">
+(function(){try{var t=localStorage.getItem('sf-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
 <div class="topbar">
   <div class="wrap topbar-in">
     <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
-    <span class="progress">Parte I · Capítulo 2 de 54</span>
+    <span class="topbar-right"><span class="progress">Parte I · Capítulo 2 de 54</span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span>
   </div>
   <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
 </div>
@@ -419,8 +461,48 @@ p:last-child{margin-bottom:0}
     <p>Gouken tiene un arte nuevo, un dojo vacío y un secreto. Lo que le falta son alumnos, y el siguiente capítulo se los trae: un niño sin familia al que recoge, y un adolescente estadounidense al que su padre envía a Japón precisamente porque no sabe qué hacer con él. Dos temperamentos opuestos aprendiendo exactamente la misma técnica.</p>
     <p>Es también el capítulo donde empieza, por fin, la historia de Ryu. Y donde entenderemos por qué su maestro le enseñó a golpear pero nunca le explicó contra qué.</p>
     <p class="ask">¿Continuamos con el Capítulo 3 — «El dojo de Gouken»?</p>
+    <p><button class="readbtn" id="readbtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"></path></svg><span class="readbtn-l">Marcar como leído</span></button></p>
   </div>
 </section>
+
+<!--chrome:start-->
+<nav class="chnav" aria-label="Navegación entre capítulos">
+  <div class="wrap chnav-in">
+    <a class="" href="https://claude.ai/code/artifact/dd9b06a3-bd8c-4974-8e91-b9e4d22be648"><span class="dir">← Capítulo 01</span><span class="ttl">El arte que no tenía nombre</span></a>
+    <span class="off right"><span class="dir">Capítulo 03 →</span><span class="ttl">El dojo de Gouken · en preparación</span></span>
+  </div>
+</nav>
+<script>
+(function(){
+  var modes=['auto','light','dark'], names={auto:'Auto',light:'Claro',dark:'Oscuro'};
+  var btn=document.getElementById('themebtn'), lab=document.getElementById('themelab');
+  function read(){try{var t=localStorage.getItem('sf-theme');return (t==='light'||t==='dark')?t:'auto';}catch(e){return 'auto';}}
+  function apply(m){
+    if(m==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=m;
+    if(lab) lab.textContent=names[m];
+    try{ m==='auto'?localStorage.removeItem('sf-theme'):localStorage.setItem('sf-theme',m); }catch(e){}
+  }
+  apply(read());
+  if(btn) btn.addEventListener('click',function(){apply(modes[(modes.indexOf(read())+1)%modes.length]);});
+
+  var mark=document.getElementById('readbtn'); if(!mark) return;
+  var KEY='sf-read', NUM='02';
+  function list(){try{var v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function sync(){
+    var on=list().indexOf(NUM)!==-1;
+    mark.setAttribute('aria-pressed', on?'true':'false');
+    mark.querySelector('.readbtn-l').textContent = on ? 'Capítulo leído' : 'Marcar como leído';
+  }
+  mark.addEventListener('click',function(){
+    var l=list(), i=l.indexOf(NUM);
+    if(i===-1) l.push(NUM); else l.splice(i,1);
+    try{ localStorage.setItem(KEY, JSON.stringify(l)); }catch(e){}
+    sync();
+  });
+  sync();
+})();
+</script>
+<!--chrome:end-->
 
 <footer class="foot">
   <div class="wrap">
