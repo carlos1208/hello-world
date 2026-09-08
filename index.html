@@ -185,8 +185,6 @@ p:last-child{margin-bottom:0}
 .era-games{font-family:var(--f-hud); font-size:.82rem; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:600}
 .era-when{font-family:var(--f-hud); font-size:.8rem; letter-spacing:.1em; color:var(--text-3); text-transform:uppercase}
 .era p{margin:.5rem 0 0; color:var(--text-2); max-width:72ch; font-size:.985rem}
-.era.villain .era-n{color:var(--psycho)}
-.era.villain .era-games{color:var(--psycho)}
 
 /* ---------- order diagram ---------- */
 .diagram{
@@ -295,6 +293,85 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
   .era-rail{flex-direction:row; width:auto; align-items:center}
   .era-line{flex:none; width:2.5rem; height:1px; min-height:0}
 }
+/* ---------- color por era ---------- */
+.era{--era:var(--accent)}
+.era .era-n{color:var(--era)}
+.era .era-games{color:color-mix(in srgb, var(--era) 74%, var(--text))}
+.era{position:relative; transition:background .35s ease}
+.era::before{
+  content:""; position:absolute; left:-1.2rem; top:0; bottom:0; width:2px;
+  background:var(--era); opacity:0; transition:opacity .3s ease;
+}
+.era:hover::before{opacity:.9}
+.era:hover{background:linear-gradient(90deg, color-mix(in srgb,var(--era) 9%, transparent), transparent 55%)}
+.era-rail{width:6.4rem}
+.vig{width:100%; height:auto; display:block; border-radius:3px; overflow:hidden}
+.vig .sky{fill:color-mix(in srgb, var(--era) 16%, var(--bg-2))}
+
+/* ---------- medidor de lectura ---------- */
+.meter{position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent}
+.meter span{
+  display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--brass), var(--accent));
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+/* ---------- portada: orbe de hado ---------- */
+.hero-in{display:grid; gap:clamp(2rem,5vw,3.5rem); grid-template-columns:minmax(0,1fr)}
+@media (min-width:940px){ .hero-in{grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr); align-items:center} }
+.orb{position:relative; aspect-ratio:1; width:min(100%,380px); margin-inline:auto}
+.orb svg{width:100%; height:100%; display:block; overflow:visible}
+.orb .ring{fill:none; stroke:var(--accent); opacity:.28}
+.orb .ring2{stroke:var(--brass); opacity:.22}
+.orb .core{fill:url(#coreGrad)}
+.orb .spark{fill:var(--accent)}
+
+/* ---------- micro-interacciones ---------- */
+.chip{transition:border-color .2s ease, color .2s ease, transform .2s ease}
+.chip:hover{transform:translateY(-2px)}
+.char{transition:transform .28s cubic-bezier(.2,.7,.3,1), box-shadow .28s ease, background .28s ease}
+.char:hover{transform:translateY(-3px); box-shadow:var(--shadow); background:color-mix(in srgb, var(--char-c) 5%, var(--bg-2))}
+.char .crest{transition:transform .45s cubic-bezier(.2,.7,.3,1), filter .3s ease}
+.char:hover .crest{transform:rotate(-8deg) scale(1.08); filter:drop-shadow(0 0 10px color-mix(in srgb, var(--char-c) 55%, transparent))}
+.callout{transition:border-color .25s ease, padding-left .25s ease}
+.callout:hover{padding-left:1.35rem}
+.tier{transition:transform .28s cubic-bezier(.2,.7,.3,1)}
+.tier:hover{transform:translateY(-3px)}
+.ch{transition:background .2s ease, padding-left .2s ease}
+.ch:hover{background:color-mix(in srgb, var(--accent) 6%, transparent); padding-left:.5rem}
+.ch:hover .ch-n{color:var(--accent)}
+.cta{transition:background .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease}
+.cta:hover{transform:translateY(-2px); box-shadow:0 6px 20px color-mix(in srgb,var(--accent) 35%, transparent)}
+.nav a{transition:color .2s ease, border-color .2s ease}
+
+/* ---------- movimiento ---------- */
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes spinBack{to{transform:rotate(-360deg)}}
+@keyframes breathe{0%,100%{transform:scale(1); opacity:.95}50%{transform:scale(1.045); opacity:1}}
+@keyframes ripple{0%{r:34; opacity:.55}100%{r:96; opacity:0}}
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes dash{to{stroke-dashoffset:-220}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+@media (prefers-reduced-motion: no-preference){
+  .hero-in > div > *{animation:riseIn .6s cubic-bezier(.2,.7,.3,1) both}
+  .hero-in > div > .eyebrow{animation-delay:.02s}
+  .hero-in > div > h1{animation-delay:.10s}
+  .hero-in > div > .hero-lede{animation-delay:.20s}
+  .hero-in > div > .hero-meta{animation-delay:.30s}
+  .orb{animation:riseIn .8s cubic-bezier(.2,.7,.3,1) both .12s}
+  .orb .rot{transform-origin:50% 50%; animation:spinSlow 46s linear infinite}
+  .orb .rot-b{transform-origin:50% 50%; animation:spinBack 68s linear infinite}
+  .orb .core{transform-origin:50% 50%; animation:breathe 5.2s ease-in-out infinite}
+  .orb .wave{animation:ripple 4.6s ease-out infinite}
+  .orb .wave.b{animation-delay:1.55s}
+  .orb .wave.c{animation-delay:3.1s}
+  .d-link.moved{stroke-dasharray:7 9; animation:dash 5.5s linear infinite}
+  .vig .float{animation:drift 6s ease-in-out infinite}
+  .vig .orbit{transform-origin:50% 50%; animation:spinSlow 24s linear infinite}
+  .vig .glow{animation:breathe 3.4s ease-in-out infinite; transform-origin:50% 50%}
+}
+
 </style>
 
 <nav class="nav">
@@ -306,10 +383,12 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
     <a href="#personajes">15 claves</a>
     <a href="#indice">Índice</a>
   </div>
+  <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
 </nav>
 
 <header class="hero">
   <div class="wrap hero-in">
+    <div>
     <p class="eyebrow">Guía de lectura · Universo Street Fighter · Capcom, 1987 – hoy</p>
     <h1>El Puño<br>y la <em>Sombra</em></h1>
     <p class="hero-lede">Casi cuarenta años de torneos, dictaduras, linajes de artes marciales y hombres que confunden la fuerza con el propósito. Antes de contarlo, hay que ordenarlo: <strong>Street Fighter nunca se publicó en el orden en que ocurre</strong>.</p>
@@ -318,6 +397,33 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
       <span class="chip">7 partes cronológicas</span>
       <span class="chip">8 eras narrativas</span>
       <span class="chip psy">Canon separado de no canon</span>
+    </div>
+    </div>
+
+    <div class="orb">
+      <svg viewBox="0 0 260 260" role="img" aria-label="Esfera de energía: una representación del hado, la onda interior del luchador">
+        <defs>
+          <radialGradient id="coreGrad" cx="42%" cy="38%" r="68%">
+            <stop offset="0%" stop-color="var(--bg-2)"></stop>
+            <stop offset="34%" stop-color="var(--accent)"></stop>
+            <stop offset="100%" stop-color="var(--accent-ink)"></stop>
+          </radialGradient>
+        </defs>
+        <circle class="wave" cx="130" cy="130" r="34" fill="none" stroke="var(--accent)" stroke-width="1.4"></circle>
+        <circle class="wave b" cx="130" cy="130" r="34" fill="none" stroke="var(--accent)" stroke-width="1.4"></circle>
+        <circle class="wave c" cx="130" cy="130" r="34" fill="none" stroke="var(--brass)" stroke-width="1.2"></circle>
+        <g class="rot">
+          <circle class="ring" cx="130" cy="130" r="92" stroke-width="1.2" stroke-dasharray="3 12"></circle>
+          <circle class="ring" cx="130" cy="130" r="74" stroke-width="2" stroke-dasharray="52 190"></circle>
+          <circle class="spark" cx="130" cy="38" r="3.2"></circle>
+        </g>
+        <g class="rot-b">
+          <circle class="ring ring2" cx="130" cy="130" r="108" stroke-width="1" stroke-dasharray="1 9"></circle>
+          <circle class="ring ring2" cx="130" cy="130" r="60" stroke-width="1.6" stroke-dasharray="30 160"></circle>
+        </g>
+        <circle class="core" cx="130" cy="130" r="40"></circle>
+        <circle cx="118" cy="118" r="11" fill="var(--bg-2)" opacity=".35"></circle>
+      </svg>
     </div>
   </div>
 </header>
@@ -333,8 +439,17 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
 
     <div class="sec-body eras">
 
-      <article class="era">
-        <div class="era-rail"><span class="era-n">I</span><span class="era-line"></span></div>
+      <article class="era" style="--era:#C9954A">
+        <div class="era-rail">
+          <span class="era-n">I</span>
+          <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Cumbres de montaña bajo la luna: el dojo apartado donde se transmite el arte">
+            <rect class="sky" width="120" height="72" rx="3"></rect>
+            <circle class="glow float" cx="92" cy="20" r="9" fill="var(--era)" opacity=".9"></circle>
+        <path d="M0,72 L26,32 L46,54 L64,24 L96,72 Z" fill="var(--era)" opacity=".45"></path>
+        <path d="M24,72 L56,38 L88,72 Z" fill="var(--era)" opacity=".85"></path>
+          </svg>
+          <span class="era-line"></span>
+        </div>
         <div>
           <div class="era-top">
             <span class="era-title">La era de los maestros</span>
@@ -345,8 +460,19 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         </div>
       </article>
 
-      <article class="era">
-        <div class="era-rail"><span class="era-n">II</span><span class="era-line"></span></div>
+      <article class="era" style="--era:#D24A40">
+        <div class="era-rail">
+          <span class="era-n">II</span>
+          <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un sol naciente tras una puerta ceremonial: el primer torneo">
+            <rect class="sky" width="120" height="72" rx="3"></rect>
+            <circle class="glow" cx="60" cy="42" r="19" fill="var(--era)" opacity=".5"></circle>
+        <rect x="18" y="20" width="84" height="4.5" fill="var(--era)"></rect>
+        <rect x="26" y="30" width="68" height="3" fill="var(--era)"></rect>
+        <rect x="33" y="20" width="5" height="52" fill="var(--era)"></rect>
+        <rect x="82" y="20" width="5" height="52" fill="var(--era)"></rect>
+          </svg>
+          <span class="era-line"></span>
+        </div>
         <div>
           <div class="era-top">
             <span class="era-title">El primer torneo</span>
@@ -357,8 +483,18 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         </div>
       </article>
 
-      <article class="era villain">
-        <div class="era-rail"><span class="era-n">III</span><span class="era-line"></span></div>
+      <article class="era" style="--era:#8368E8">
+        <div class="era-rail">
+          <span class="era-n">III</span>
+          <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Una base con un núcleo de energía: Shadaloo se convierte en maquinaria">
+            <rect class="sky" width="120" height="72" rx="3"></rect>
+            <path d="M16,72 L33,34 L87,34 L104,72 Z" fill="var(--era)" opacity=".6"></path>
+        <rect x="58" y="10" width="4" height="24" fill="var(--era)" opacity=".8"></rect>
+        <circle cx="60" cy="8" r="3.5" fill="var(--era)"></circle>
+        <circle class="glow" cx="60" cy="52" r="8" fill="var(--era)"></circle>
+          </svg>
+          <span class="era-line"></span>
+        </div>
         <div>
           <div class="era-top">
             <span class="era-title">La era Alpha</span>
@@ -369,8 +505,27 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         </div>
       </article>
 
-      <article class="era villain">
-        <div class="era-rail"><span class="era-n">IV</span><span class="era-line"></span></div>
+      <article class="era" style="--era:#34B3A2">
+        <div class="era-rail">
+          <span class="era-n">IV</span>
+          <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un globo terráqueo rodeado de ocho combatientes: el torneo mundial">
+            <rect class="sky" width="120" height="72" rx="3"></rect>
+            <circle cx="60" cy="36" r="23" fill="none" stroke="var(--era)" stroke-width="2"></circle>
+        <ellipse cx="60" cy="36" rx="9.5" ry="23" fill="none" stroke="var(--era)" stroke-width="1.3" opacity=".65"></ellipse>
+        <path d="M37,36 H83" stroke="var(--era)" stroke-width="1.3" opacity=".65"></path>
+        <g class="orbit">
+          <circle cx="92" cy="36" r="2.6" fill="var(--era)"></circle>
+          <circle cx="82.6" cy="58.6" r="2.6" fill="var(--era)"></circle>
+          <circle cx="60" cy="68" r="2.6" fill="var(--era)"></circle>
+          <circle cx="37.4" cy="58.6" r="2.6" fill="var(--era)"></circle>
+          <circle cx="28" cy="36" r="2.6" fill="var(--era)"></circle>
+          <circle cx="37.4" cy="13.4" r="2.6" fill="var(--era)"></circle>
+          <circle cx="60" cy="4" r="2.6" fill="var(--era)"></circle>
+          <circle cx="82.6" cy="13.4" r="2.6" fill="var(--era)"></circle>
+        </g>
+          </svg>
+          <span class="era-line"></span>
+        </div>
         <div>
           <div class="era-top">
             <span class="era-title">World Warrior</span>
@@ -381,8 +536,18 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         </div>
       </article>
 
-      <article class="era villain">
-        <div class="era-rail"><span class="era-n">V</span><span class="era-line"></span></div>
+      <article class="era" style="--era:#4E8FE8">
+        <div class="era-rail">
+          <span class="era-n">V</span>
+          <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un reactor hexagonal conectado a un circuito: la tecnología de S.I.N.">
+            <rect class="sky" width="120" height="72" rx="3"></rect>
+            <path d="M0,40 H34 M86,40 H120" stroke="var(--era)" stroke-width="1.4" opacity=".5"></path>
+        <path d="M60,8 L86,23 L86,53 L60,68 L34,53 L34,23 Z" fill="none" stroke="var(--era)" stroke-width="2"></path>
+        <path d="M60,24 L74,32 L74,48 L60,56 L46,48 L46,32 Z" fill="var(--era)" opacity=".3"></path>
+        <circle class="glow" cx="60" cy="40" r="6" fill="var(--era)"></circle>
+          </svg>
+          <span class="era-line"></span>
+        </div>
         <div>
           <div class="era-top">
             <span class="era-title">La era S.I.N.</span>
@@ -393,8 +558,22 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         </div>
       </article>
 
-      <article class="era villain">
-        <div class="era-rail"><span class="era-n">VI</span><span class="era-line"></span></div>
+      <article class="era" style="--era:#C158AC">
+        <div class="era-rail">
+          <span class="era-n">VI</span>
+          <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un planeta rodeado de tres lunas en órbita: las Black Moons">
+            <rect class="sky" width="120" height="72" rx="3"></rect>
+            <circle cx="60" cy="36" r="30" fill="none" stroke="var(--era)" stroke-width="1" stroke-dasharray="2 6" opacity=".6"></circle>
+        <circle cx="60" cy="36" r="14" fill="var(--era)" opacity=".5"></circle>
+        <circle cx="60" cy="36" r="14" fill="none" stroke="var(--era)" stroke-width="1.4"></circle>
+        <g class="orbit">
+          <circle cx="90" cy="36" r="4" fill="var(--era)"></circle>
+          <circle cx="45" cy="62" r="4" fill="var(--era)"></circle>
+          <circle cx="45" cy="10" r="4" fill="var(--era)"></circle>
+        </g>
+          </svg>
+          <span class="era-line"></span>
+        </div>
         <div>
           <div class="era-top">
             <span class="era-title">La era de la sombra</span>
@@ -405,8 +584,18 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         </div>
       </article>
 
-      <article class="era">
-        <div class="era-rail"><span class="era-n">VII</span><span class="era-line"></span></div>
+      <article class="era" style="--era:#E0555F">
+        <div class="era-rail">
+          <span class="era-n">VII</span>
+          <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un rombo partido en fuego y hielo: Gill y los Illuminati">
+            <rect class="sky" width="120" height="72" rx="3"></rect>
+            <path d="M60,6 L60,66 L31,36 Z" fill="#C0392B" opacity=".85"></path>
+        <path d="M60,6 L89,36 L60,66 Z" fill="#2E6FD6" opacity=".85"></path>
+        <path d="M60,6 L89,36 L60,66 L31,36 Z" fill="none" stroke="var(--era)" stroke-width="1.5"></path>
+        <path d="M60,6 L60,66" stroke="var(--bg-2)" stroke-width="1.4" opacity=".8"></path>
+          </svg>
+          <span class="era-line"></span>
+        </div>
         <div>
           <div class="era-top">
             <span class="era-title">La nueva generación</span>
@@ -417,8 +606,21 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
         </div>
       </article>
 
-      <article class="era">
-        <div class="era-rail"><span class="era-n">VIII</span><span class="era-line"></span></div>
+      <article class="era" style="--era:#26B8BD">
+        <div class="era-rail">
+          <span class="era-n">VIII</span>
+          <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un perfil urbano bajo un trazo de espray: la lucha callejera como cultura">
+            <rect class="sky" width="120" height="72" rx="3"></rect>
+            <rect x="8" y="42" width="12" height="30" fill="var(--era)" opacity=".5"></rect>
+        <rect x="24" y="32" width="14" height="40" fill="var(--era)" opacity=".75"></rect>
+        <rect x="42" y="48" width="10" height="24" fill="var(--era)" opacity=".5"></rect>
+        <rect x="56" y="24" width="16" height="48" fill="var(--era)"></rect>
+        <rect x="76" y="38" width="12" height="34" fill="var(--era)" opacity=".7"></rect>
+        <rect x="92" y="46" width="14" height="26" fill="var(--era)" opacity=".45"></rect>
+        <path class="float" d="M8,18 C40,3 84,5 112,16" fill="none" stroke="var(--era)" stroke-width="3.5" stroke-linecap="round"></path>
+          </svg>
+          <span class="era-line"></span>
+        </div>
         <div>
           <div class="era-top">
             <span class="era-title">El mundo nuevo</span>
@@ -1057,6 +1259,17 @@ figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
     count.textContent = term ? (shown + (shown === 1 ? ' resultado' : ' resultados')) : '54 capítulos';
   }
   q.addEventListener('input', filter);
+
+  var fill = document.getElementById('meterfill');
+  function meter(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+  }
+  addEventListener('scroll', function(){
+    if (!meter.t) meter.t = requestAnimationFrame(function(){ meter.t = 0; meter(); });
+  }, { passive: true });
+  addEventListener('resize', meter, { passive: true });
+  meter();
 
   var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
   var targets = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });

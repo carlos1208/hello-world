@@ -190,6 +190,47 @@ p:last-child{margin-bottom:0}
 .next .ask{font-family:var(--f-display); font-weight:800; color:var(--accent); font-size:clamp(1.1rem,2.2vw,1.35rem); margin-top:2rem}
 .foot{padding:0 0 3rem; color:var(--text-3); font-size:.85rem}
 .foot p{max-width:74ch}
+/* ---------- color de la Era I y movimiento ---------- */
+:root{--era:#C9954A}
+.meter{position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent}
+.meter span{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--era), var(--accent));
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);}
+.topbar{position:sticky}
+
+.vig{width:100%; height:auto; display:block; border-radius:3px; max-width:230px}
+.vig .sky{fill:color-mix(in srgb, var(--era) 16%, var(--bg-2))}
+.chead-art{display:grid; gap:1.4rem; justify-items:start}
+
+.back{transition:color .2s ease, gap .2s ease}
+.back:hover{gap:.85rem}
+.meta{border-left-color:var(--era)}
+.note .k{color:var(--era)}
+.keyev li{transition:transform .2s ease}
+.keyev li:hover{transform:translateX(4px)}
+.keyev li:hover::before{color:var(--era)}
+.who div{transition:background .2s ease, padding-left .2s ease}
+.who div:hover{background:color-mix(in srgb, var(--era) 8%, transparent); padding-left:.5rem}
+.remember article{transition:transform .26s cubic-bezier(.2,.7,.3,1), background .26s ease}
+.remember article:hover{transform:translateY(-2px); background:color-mix(in srgb, var(--era) 7%, var(--bg))}
+.tl div{transition:padding-left .2s ease}
+.tl div:hover{padding-left:.4rem}
+.pull{position:relative}
+.pull::before{content:""; position:absolute; left:0; top:-1px; width:0; height:2px; background:var(--accent); transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.pull:hover::before{width:100%}
+
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes breathe{0%,100%{transform:scale(1); opacity:.9}50%{transform:scale(1.05); opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion: no-preference){
+  .chead-in > div > *{animation:riseIn .6s cubic-bezier(.2,.7,.3,1) both}
+  .chead-in > div > h1{animation-delay:.08s}
+  .chead-in > div > .sub{animation-delay:.18s}
+  .chead-art{animation:riseIn .7s cubic-bezier(.2,.7,.3,1) both .1s}
+  .vig .float{animation:drift 6s ease-in-out infinite}
+  .vig .glow{animation:breathe 4.2s ease-in-out infinite; transform-origin:50% 50%}
+}
+
 </style>
 
 <div class="topbar">
@@ -197,6 +238,7 @@ p:last-child{margin-bottom:0}
     <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
     <span class="progress">Parte I · Capítulo 1 de 54</span>
   </div>
+  <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
 </div>
 
 <header class="chead">
@@ -206,11 +248,19 @@ p:last-child{margin-bottom:0}
       <h1>El arte que no tenía nombre</h1>
       <p class="sub">Antes del primer torneo, antes de Ryu, antes incluso de que existiera algo llamado Street Fighter, hubo un maestro en una montaña enseñando a dos discípulos una técnica que no debía enseñarse a nadie.</p>
     </div>
+    <div class="chead-art">
+      <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Cumbres de montaña bajo la luna: el dojo apartado donde se transmite el arte">
+        <rect class="sky" width="120" height="72" rx="3"></rect>
+        <circle class="glow float" cx="92" cy="20" r="9" fill="var(--era)" opacity=".9"></circle>
+        <path d="M0,72 L26,32 L46,54 L64,24 L96,72 Z" fill="var(--era)" opacity=".45"></path>
+        <path d="M24,72 L56,38 L88,72 Z" fill="var(--era)" opacity=".85"></path>
+      </svg>
     <div class="meta">
       <div><span class="k">Período</span><span class="v">Era I — desde el Japón feudal hasta unas décadas antes del primer torneo</span></div>
       <div><span class="k">Juegos relacionados</span><span class="v">Ninguno de forma directa. El material procede del trasfondo de <b>Super Street Fighter II Turbo</b> (1994), la era <b>Alpha</b> y, sobre todo, <b>Street Fighter IV</b> (2008)</span></div>
       <div><span class="k">Personajes principales</span><span class="v"><b>Goutetsu</b>, <b>Gouken</b>, <b>Gouki</b></span></div>
       <div><span class="k">Importancia</span><span class="v">Aquí se instala el conflicto que sostiene los cuarenta años siguientes: un arte marcial que solo se domina del todo si aceptas matar</span></div>
+    </div>
     </div>
   </div>
 </header>
@@ -361,3 +411,20 @@ p:last-child{margin-bottom:0}
     <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. Fuentes principales de este capítulo: el trasfondo introducido en <em>Super Street Fighter II Turbo</em>, los perfiles oficiales de Capcom y las fichas de personaje de <em>Street Fighter IV</em>. El material señalado como secundario procede de guías y enciclopedias licenciadas, no de declaraciones directas de Capcom.</p>
   </div>
 </footer>
+
+<script>
+(function(){
+  var fill = document.getElementById('meterfill');
+  if (!fill) return;
+  var q = 0;
+  function meter(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+  }
+  addEventListener('scroll', function(){
+    if (!q) q = requestAnimationFrame(function(){ q = 0; meter(); });
+  }, { passive: true });
+  addEventListener('resize', meter, { passive: true });
+  meter();
+})();
+</script>
