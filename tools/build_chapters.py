@@ -25,7 +25,9 @@ CHAPTERS = [
      "https://claude.ai/code/artifact/fe80f362-2ea6-4b4e-bb8b-616a27d11e9b"),
     ("05", "cap-05.html", "El hombre que se amputó el alma",
      "https://claude.ai/code/artifact/374a2cbe-1d79-4c13-affd-646964a0cd47"),
-    ("06", None, "El primer torneo", None),
+    ("06", "cap-06.html", "El primer torneo",
+     "https://claude.ai/code/artifact/42b8bdf3-f70b-41b2-9f6b-44245e7504e5"),
+    ("07", None, "Por qué Alpha va aquí", None),
 ]
 
 CSS = """

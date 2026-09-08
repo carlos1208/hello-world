@@ -1,0 +1,627 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La Cicatriz del Emperador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --bg:#E9E6DE;          /* piedra / washi frío */
+  --bg-2:#F4F2EC;
+  --bg-3:#DCD8CD;
+  --line:#C6C1B3;
+  --line-soft:#D6D2C6;
+  --text:#151824;
+  --text-2:#585D6C;
+  --text-3:#7C8191;
+  --accent:#B3262F;      /* hachimaki */
+  --accent-ink:#8E1D25;
+  --psycho:#5636BE;      /* Psycho Power */
+  --brass:#8E6B10;       /* torneos / eras */
+  --halo:rgba(179,38,47,.12);
+  --shadow:0 1px 2px rgba(21,24,36,.07), 0 8px 24px rgba(21,24,36,.06);
+  --grid:rgba(21,24,36,.055);
+
+  --f-display:"Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hud:"Barlow Condensed", "Oswald", Impact, sans-serif;
+
+  --step-hero:clamp(2.4rem,7.2vw,4.5rem);
+  --step-h2:clamp(1.6rem,3.4vw,2.35rem);
+  --step-h3:clamp(1.12rem,1.7vw,1.32rem);
+  --wrap:1140px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D17;
+    --bg-2:#131828;
+    --bg-3:#1B2133;
+    --line:#2A3145;
+    --line-soft:#212739;
+    --text:#EBE7DC;
+    --text-2:#98A0B4;
+    --text-3:#7A8296;
+    --accent:#E2515B;
+    --accent-ink:#F0838A;
+    --psycho:#9679FF;
+    --brass:#D7AE44;
+    --halo:rgba(226,81,91,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+    --grid:rgba(235,231,220,.05);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D17;
+  --bg-2:#131828;
+  --bg-3:#1B2133;
+  --line:#2A3145;
+  --line-soft:#212739;
+  --text:#EBE7DC;
+  --text-2:#98A0B4;
+  --text-3:#7A8296;
+  --accent:#E2515B;
+  --accent-ink:#F0838A;
+  --psycho:#9679FF;
+  --brass:#D7AE44;
+  --halo:rgba(226,81,91,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+  --grid:rgba(235,231,220,.05);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:1.0425rem;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem)}
+.prose{max-width:66ch}
+
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:var(--step-h2); line-height:1.15}
+h3{font-size:var(--step-h3); line-height:1.3; font-weight:600}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+
+.eyebrow{
+  font-family:var(--f-hud); font-weight:600; text-transform:uppercase;
+  letter-spacing:.19em; font-size:.775rem; color:var(--text-3); margin:0;
+}
+.hud{font-family:var(--f-hud); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+
+/* ---------- chapter page ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);
+}
+.topbar-in{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:52px}
+.back{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:600;
+  text-decoration:none; color:var(--text-2); display:inline-flex; align-items:center; gap:.5rem;
+}
+.back:hover{color:var(--accent)}
+.progress{font-family:var(--f-hud); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3)}
+
+.chead{border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+.chead-in{padding:clamp(2.6rem,6vw,4.6rem) 0 clamp(2rem,4vw,3rem); display:grid; gap:clamp(1.8rem,4vw,3rem); grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .chead-in{grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr); align-items:end} }
+.chead .num{font-family:var(--f-hud); font-weight:700; letter-spacing:.22em; text-transform:uppercase; font-size:.82rem; color:var(--accent)}
+.chead h1{font-size:clamp(2.1rem,5.6vw,3.7rem); line-height:1.02; margin:.7rem 0 0; letter-spacing:-.02em}
+.chead .sub{color:var(--text-2); margin-top:1.2rem; font-size:1.08rem; max-width:52ch}
+.meta{border-left:2px solid var(--brass); padding-left:1.2rem; display:grid; gap:.9rem}
+.meta div{display:grid; gap:.15rem}
+.meta dt, .meta .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; color:var(--text-3); font-weight:700}
+.meta .v{font-size:.94rem; color:var(--text-2); line-height:1.5}
+.meta .v b{color:var(--text); font-weight:700}
+
+.body{padding:clamp(2.6rem,6vw,4.4rem) 0}
+.body .prose{font-size:1.085rem; line-height:1.78}
+.body .prose > h2{margin:2.8rem 0 1rem; font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.body .prose > h2:first-child{margin-top:0}
+.body .prose em{color:var(--text)}
+.body .prose strong{font-weight:700}
+.lead{font-size:1.2rem; line-height:1.65; color:var(--text); border-left:2px solid var(--accent); padding-left:1.2rem}
+
+.pull{
+  margin:2.4rem 0; font-family:var(--f-display); font-weight:600; font-size:clamp(1.25rem,2.6vw,1.6rem);
+  line-height:1.35; color:var(--text); text-wrap:balance; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:1.4rem 0;
+}
+.note{
+  margin:2rem 0; border:1px dashed var(--line); padding:1.15rem 1.3rem; background:transparent;
+  font-size:.95rem; color:var(--text-2); line-height:1.65;
+}
+.note .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:700; color:var(--brass); display:block; margin-bottom:.4rem}
+.note b{color:var(--text)}
+.note.warn .k{color:var(--psycho)}
+
+.outro{border-top:1px solid var(--line-soft); background:var(--bg-2)}
+.outro-in{padding:clamp(2.6rem,6vw,4.2rem) 0; display:grid; gap:2.8rem}
+.block h2{font-size:1.32rem; margin-bottom:1rem}
+.keyev{list-style:none; margin:0; padding:0; display:grid; gap:.85rem; counter-reset:k}
+.keyev li{
+  display:grid; grid-template-columns:2.1rem minmax(0,1fr); gap:.8rem; align-items:start;
+  font-size:.985rem; color:var(--text-2); line-height:1.6;
+}
+.keyev li > span{grid-column:2}
+.keyev li::before{
+  counter-increment:k; content:counter(k,decimal-leading-zero);
+  font-family:var(--f-hud); font-weight:700; color:var(--accent); font-size:.95rem; padding-top:.12rem;
+}
+.keyev li b{color:var(--text)}
+
+.who{display:grid; gap:0; border-top:1px solid var(--line)}
+.who div{display:grid; grid-template-columns:minmax(120px,auto) 1fr; gap:.4rem 1.4rem; padding:.85rem 0; border-bottom:1px solid var(--line-soft); align-items:baseline}
+.who .n{font-family:var(--f-display); font-weight:800; font-size:1rem}
+.who .r{font-size:.94rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .who div{grid-template-columns:1fr; gap:.15rem} }
+
+.tl{display:grid; gap:0; margin-top:.4rem}
+.tl div{display:grid; grid-template-columns:minmax(150px,auto) 1fr; gap:.3rem 1.4rem; padding:.75rem 0; border-top:1px solid var(--line-soft); align-items:baseline}
+.tl .w{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; font-size:.78rem; color:var(--brass); font-weight:600}
+.tl .e{font-size:.96rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .tl div{grid-template-columns:1fr; gap:.1rem} }
+
+.remember{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+.remember article{background:var(--bg); padding:1.1rem 1.2rem; display:grid; grid-template-columns:2rem 1fr; gap:.9rem; align-items:start}
+.remember .n{font-family:var(--f-hud); font-weight:700; font-size:1.35rem; color:var(--brass); line-height:1.1}
+.remember p{margin:0; font-size:.96rem; color:var(--text-2); line-height:1.6}
+.remember p b{color:var(--text)}
+
+.next{border-top:1px solid var(--line-soft); padding:clamp(2.4rem,5vw,3.6rem) 0 clamp(3rem,6vw,4.4rem)}
+.next h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+.next p{color:var(--text-2); max-width:62ch; margin-top:1rem}
+.next .ask{font-family:var(--f-display); font-weight:800; color:var(--accent); font-size:clamp(1.1rem,2.2vw,1.35rem); margin-top:2rem}
+.foot{padding:0 0 3rem; color:var(--text-3); font-size:.85rem}
+.foot p{max-width:74ch}
+/* ---------- color de la Era I y movimiento ---------- */
+:root{--era:#C9954A}
+.meter{position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent}
+.meter span{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--era), var(--accent));
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);}
+.topbar{position:sticky}
+
+.vig{width:100%; height:auto; display:block; border-radius:3px; max-width:230px}
+.vig .sky{fill:color-mix(in srgb, var(--era) 16%, var(--bg-2))}
+.chead-art{display:grid; gap:1.4rem; justify-items:start}
+
+.back{transition:color .2s ease, gap .2s ease}
+.back:hover{gap:.85rem}
+.meta{border-left-color:var(--era)}
+.note .k{color:var(--era)}
+.keyev li{transition:transform .2s ease}
+.keyev li:hover{transform:translateX(4px)}
+.keyev li:hover::before{color:var(--era)}
+.who div{transition:background .2s ease, padding-left .2s ease}
+.who div:hover{background:color-mix(in srgb, var(--era) 8%, transparent); padding-left:.5rem}
+.remember article{transition:transform .26s cubic-bezier(.2,.7,.3,1), background .26s ease}
+.remember article:hover{transform:translateY(-2px); background:color-mix(in srgb, var(--era) 7%, var(--bg))}
+.tl div{transition:padding-left .2s ease}
+.tl div:hover{padding-left:.4rem}
+.pull{position:relative}
+.pull::before{content:""; position:absolute; left:0; top:-1px; width:0; height:2px; background:var(--accent); transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.pull:hover::before{width:100%}
+
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes breathe{0%,100%{transform:scale(1); opacity:.9}50%{transform:scale(1.05); opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion: no-preference){
+  .chead-in > div > *{animation:riseIn .6s cubic-bezier(.2,.7,.3,1) both}
+  .chead-in > div > h1{animation-delay:.08s}
+  .chead-in > div > .sub{animation-delay:.18s}
+  .chead-art{animation:riseIn .7s cubic-bezier(.2,.7,.3,1) both .1s}
+  .vig .float{animation:drift 6s ease-in-out infinite}
+  .vig .glow{animation:breathe 4.2s ease-in-out infinite; transform-origin:50% 50%}
+}
+
+
+
+
+
+
+
+
+.scene{
+  margin:2.4rem 0; padding:1.5rem 1.6rem; border:1px solid var(--line);
+  background:color-mix(in srgb, var(--accent) 4%, transparent);
+  font-family:var(--f-display); font-size:1.06rem; line-height:1.72; color:var(--text-2);
+}
+.scene .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.7rem;
+  font-weight:700; color:var(--accent); display:block; margin-bottom:.7rem}
+.scene p{margin:0 0 .85rem}
+.scene p:last-child{margin-bottom:0}
+.scene em{color:var(--text)}
+.tech{
+  margin:2.2rem 0; border:1px solid var(--line); border-left:3px solid var(--accent);
+  padding:1.3rem 1.4rem; background:color-mix(in srgb, var(--accent) 5%, transparent);
+}
+.tech .jp{font-family:var(--f-display); font-weight:800; font-size:1.5rem; line-height:1.2; color:var(--accent)}
+.tech .ro{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.17em; font-size:.76rem; font-weight:700; color:var(--text-3); margin-top:.25rem}
+.tech p{margin:.9rem 0 0; font-size:.97rem; color:var(--text-2); line-height:1.65}
+.tech p b{color:var(--text)}
+.roster{margin:2.2rem 0; display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:640px){ .roster{grid-template-columns:1fr 1fr} }
+.roster div{background:var(--bg-2); padding:.7rem 1rem; display:grid; grid-template-columns:auto 1fr; gap:.7rem; align-items:baseline}
+.roster .n{font-family:var(--f-display); font-weight:800; font-size:.98rem; color:var(--text)}
+.roster .d{font-size:.87rem; color:var(--text-2); line-height:1.45}
+.roster div.back-later{background:color-mix(in srgb, var(--brass) 8%, var(--bg-2))}
+.roster div.back-later .n{color:var(--brass)}
+
+/* chrome:css */
+.tt{
+  flex:none; display:inline-flex; align-items:center; gap:.45rem;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.72rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:.26rem .65rem; cursor:pointer; transition:color .2s ease, border-color .2s ease;
+}
+.tt:hover{color:var(--text); border-color:var(--text-3)}
+.tt svg{width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round}
+.topbar-right{display:flex; align-items:center; gap:.9rem}
+.chead-in{align-items:start !important}
+.skip{position:absolute; left:-9999px; top:0; background:var(--accent); color:var(--bg); padding:.6rem 1rem; z-index:60}
+.skip:focus{left:.5rem; top:.5rem}
+
+.chnav{border-top:1px solid var(--line-soft); padding:2.2rem 0 3.4rem}
+.chnav-in{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+@media (min-width:720px){ .chnav-in{grid-template-columns:1fr 1fr} }
+.chnav a, .chnav span.off{
+  background:var(--bg-2); padding:1.1rem 1.3rem; text-decoration:none; display:grid; gap:.25rem;
+  transition:background .22s ease;
+}
+.chnav a:hover{background:color-mix(in srgb, var(--era) 8%, var(--bg-2))}
+.chnav .dir{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; font-weight:700; color:var(--era)}
+.chnav .ttl{font-family:var(--f-display); font-weight:800; font-size:1.05rem; color:var(--text)}
+.chnav span.off{opacity:.55}
+.chnav span.off .dir{color:var(--text-3)}
+.chnav .right{text-align:right}
+
+.readbtn{
+  display:inline-flex; align-items:center; gap:.6rem; margin-top:1.6rem; cursor:pointer;
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.8rem; font-weight:700;
+  background:transparent; color:var(--text-2); border:1px solid var(--line); padding:.7rem 1.2rem;
+  transition:all .2s ease;
+}
+.readbtn svg{width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2.6; stroke-linecap:round; stroke-linejoin:round}
+.readbtn:hover{border-color:var(--era); color:var(--text)}
+.readbtn[aria-pressed="true"]{background:var(--era); border-color:var(--era); color:var(--bg)}
+/* /chrome:css */
+
+</style>
+
+
+
+<script id="sf-theme-boot">
+(function(){try{var t=localStorage.getItem('sf-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
+    <span class="topbar-right"><span class="topbar-right"><span class="progress">Parte I · Capítulo 6 de 54</span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span><button class="tt" id="themebtn" type="button" aria-label="Cambiar tema de color"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"></path></svg><span id="themelab">Auto</span></button></span>
+  </div>
+  <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
+</div>
+
+<header class="chead">
+  <div class="wrap chead-in">
+    <div>
+      <p class="num">Capítulo 6</p>
+      <h1>El primer torneo</h1>
+      <p class="sub">Sagat lo tenía inmovilizado. Estaba seguro de haber ganado. Bajó la mano para ayudarlo a levantarse, y eso fue lo peor que hizo en su vida.</p>
+    </div>
+    <div class="chead-art">
+      <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="El aro dorado de un campeonato atravesado por una cicatriz roja, con una flecha ascendente en el centro">
+        <rect class="sky" width="120" height="72" rx="3"></rect>
+        <circle cx="60" cy="36" r="24" fill="none" stroke="var(--brass)" stroke-width="4"></circle>
+        <path class="glow" d="M60,48 L60,26 M52,34 L60,24 L68,34" fill="none" stroke="var(--brass)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path class="float" d="M26,58 L96,12" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"></path>
+      </svg>
+    <div class="meta">
+      <div><span class="k">Período</span><span class="v">Era II — el punto cero de la cronología jugable</span></div>
+      <div><span class="k">Juegos relacionados</span><span class="v"><b>Street Fighter</b> (1987). Lo que ocurrió <em>realmente</em> en la final se reescribió en la era <b>Alpha</b>, y la suerte de Gouken volvió a cambiar en <b>Street Fighter IV</b></span></div>
+      <div><span class="k">Personajes principales</span><span class="v"><b>Ryu</b>, <b>Sagat</b>, <b>Akuma</b>, <b>Gouken</b>, <b>Ken</b>, <b>Adon</b></span></div>
+      <div><span class="k">Importancia</span><span class="v">El primer acontecimiento que ocurre dentro de un videojuego. Rompe a dos hombres a la vez y deja huérfano a un tercero</span></div>
+    </div>
+    </div>
+  </div>
+</header>
+
+<main class="body">
+  <div class="wrap prose">
+
+    <p class="lead">Todo lo que hemos contado hasta ahora era preparación: linajes, decisiones, silencios y un hombre que se vació por dentro para poder arder mejor. Este capítulo es distinto. Este ocurre de verdad, en una pantalla, en 1987. Y es el punto exacto en que la historia deja de acumular piezas y empieza a romperlas.</p>
+
+    <h2>Una convocatoria sin remitente</h2>
+
+    <p>Se anunció un torneo mundial. Sin federación detrás, sin televisión, sin gradas llenas de patrocinadores: una convocatoria abierta para averiguar quién era el mejor luchador del planeta, con reglas mínimas y un solo campeón esperando al final del cuadro.</p>
+
+    <p>Nunca se ha dicho quién lo organizó. Es un detalle curioso que conviene registrar ahora, porque todos los torneos que vendrán después tendrán un dueño, un propósito oculto y una letra pequeña. Este no. Este parece ser lo que dice ser, y por eso es el único torneo limpio de toda la franquicia.</p>
+
+    <p>Ryu llegó como llega un peregrino: sin equipo, sin dinero, sin ficha federativa y sin nadie que lo hubiera oído nombrar. Un japonés de veintitantos años con una bolsa, un gi blanco y una cinta blanca en la cabeza. Su maestro le había dicho que fuera al mundo a medirse. Esto era el mundo.</p>
+
+    <h2>El camino hasta la final</h2>
+
+    <p>El cuadro de aquel torneo es hoy una reliquia. La mayoría de aquellos nombres desaparecieron para siempre; unos pocos volverán a esta historia por caminos que entonces nadie podía prever.</p>
+
+    <div class="roster">
+      <div><span class="n">Retsu</span><span class="d">Monje japonés, expulsado de su templo por haber usado su arte contra otra persona</span></div>
+      <div><span class="n">Geki</span><span class="d">Ninja con una garra de acero. Uno de los que no volvió</span></div>
+      <div><span class="n">Joe</span><span class="d">Estadounidense, kickboxing. Poco más se sabe de él</span></div>
+      <div><span class="n">Mike</span><span class="d">Boxeador. Su diseño acabaría reciclado en un personaje mucho más célebre</span></div>
+      <div><span class="n">Lee</span><span class="d">Kung-fu chino, elegante y metódico</span></div>
+      <div class="back-later"><span class="n">Gen</span><span class="d">Asesino chino, viejo y enfermo, que pelea con dos estilos incompatibles. <b>Volverá</b></span></div>
+      <div class="back-later"><span class="n">Birdie</span><span class="d">Punk británico, mercenario sin causa. <b>Volverá</b>, y bastante cambiado</span></div>
+      <div class="back-later"><span class="n">Eagle</span><span class="d">Guardaespaldas británico armado con dos bastones. <b>Volverá</b></span></div>
+      <div class="back-later"><span class="n">Adon</span><span class="d">Tailandés. El discípulo del campeón, colocado ahí para allanarle el camino. <b>Volverá</b></span></div>
+      <div><span class="n">Sagat</span><span class="d">El campeón. El final del cuadro. Invicto</span></div>
+    </div>
+
+    <p>Ryu los fue pasando uno detrás de otro. No hay crónica de esos combates y probablemente sea mejor así: lo importante no era ninguno de ellos.</p>
+
+    <div class="note">
+      <span class="k">Punto ambiguo</span>
+      En el juego de 1987 se podía elegir entre Ryu y Ken —Ken era el segundo jugador—, y Capcom nunca ha aclarado del todo si Ken participó también en este torneo ni hasta dónde llegó. El único resultado que la franquicia ha tratado siempre como canónico es <b>la victoria final de Ryu</b>. De Ken en este torneo, lo honesto es decir que no lo sabemos.
+    </div>
+
+    <h2>La final</h2>
+
+    <p>Sagat llevaba años esperando algo así sin saber que lo esperaba. Llegaba a aquel combate como el hombre más fuerte del mundo, con un ojo de menos, un muerto a la espalda y la certeza acumulada de que nadie iba a exigirle nunca nada de verdad otra vez.</p>
+
+    <p>Y entonces, enfrente, un desconocido sin ficha ni patrocinador que peleaba como si el resultado no le importase en absoluto.</p>
+
+    <p>Hay que ser claro con lo que ocurrió, porque la memoria popular lo ha suavizado durante décadas: <strong>Sagat estaba ganando</strong>. No fue un combate igualado que se decidió por un detalle. El Emperador del Muay Thai era más grande, más experimentado y sencillamente mejor, y llegó un momento en que tuvo a Ryu inmovilizado en el suelo, incapaz de continuar.</p>
+
+    <p>Se acabó, pensó. Y aquí es donde este hombre —el que mató a golpes a Go Hibiki, el que la franquicia nos había presentado como un monstruo— hace lo único verdaderamente noble que le hemos visto hacer hasta ahora.</p>
+
+    <div class="scene">
+      <span class="k">Reconstrucción narrativa</span>
+      <p>Capcom no ha dramatizado nunca este instante en un juego; lo que sí es canon es cada uno de sus elementos. Lo que sigue es una puesta en escena de hechos establecidos.</p>
+      <p>Sagat se irguió. El combate estaba resuelto y él lo sabía, igual que lo sabía el chico tirado a sus pies. No había ninguna razón para rematarlo.</p>
+      <p>Así que hizo lo que hace un campeón con un rival que ha peleado bien: <em>bajó la mano</em>. Le tendió el brazo para ayudarle a levantarse.</p>
+      <p>Y algo que estaba dentro de Ryu, algo que llevaba toda la vida ahí y que ningún maestro le había mencionado jamás, entendió que la guardia acababa de abrirse.</p>
+    </div>
+
+    <p>Lo que subió del suelo no era exactamente Ryu.</p>
+
+    <div class="tech">
+      <div class="jp">滅昇龍拳</div>
+      <div class="ro">Metsu Shoryuken · «Puño del dragón ascendente destructor»</div>
+      <p>El Shoryuken que le enseñó Gouken, ejecutado con el combustible que Gouken le extirpó al arte. No es una versión más fuerte de la técnica: es <b>la técnica original</b>, la que sale cuando el Satsui no Hado empuja desde dentro.</p>
+      <p>Impactó de abajo arriba, en diagonal, a través del pecho descubierto del hombre que le estaba ofreciendo la mano. Le abrió el torso desde la cadera hasta el hombro.</p>
+    </div>
+
+    <p>Sagat cayó. Ryu ganó el torneo.</p>
+
+    <div class="pull">Ninguno de los dos volvería a ser el mismo, y por motivos distintos. Uno se llevó una cicatriz. El otro se llevó una pregunta.</div>
+
+    <h2>Lo que cada uno se llevó de allí</h2>
+
+    <p>Para <strong>Sagat</strong>, la herida era lo de menos. Lo insoportable fue lo otro: había perdido en el único momento de su carrera en que se había comportado decentemente. Su gesto —el único— había sido castigado. La lección que extrajo de aquella noche fue exactamente la contraria a la que uno querría, y la va a arrastrar durante años: <em>bajar la guardia se paga</em>.</p>
+
+    <p>La cicatriz le cruza el pecho de forma que no puede vestirse, ni entrenar, ni mirarse en un espejo sin verla. Es un recordatorio permanente, colocado en el sitio exacto donde más se ve, de que un desconocido lo humilló mientras le ofrecía ayuda. A partir de ahí, Sagat tiene un solo objetivo en la vida, y es un objetivo que lo va a envenenar hasta dejarlo irreconocible.</p>
+
+    <p>Para <strong>Ryu</strong>, lo grave no fue ganar. Fue no recordar del todo cómo.</p>
+
+    <p>Se levantó campeón del mundo con la certeza incómoda de que la mano que lanzó aquel golpe no la había gobernado él. No tenía vocabulario para nombrarlo —su maestro no se lo había dado— así que lo dejó dentro, sin nombre, como se deja un ruido en una casa que uno prefiere no investigar.</p>
+
+    <p>Es el momento fundacional del personaje. Todo lo que Ryu haga durante los próximos cuarenta años —el vagabundeo, la disciplina obsesiva, la negativa a competir por títulos, la incomodidad con la fama— arranca de aquí: <strong>de un hombre que ganó una vez de una manera que no puede explicarse.</strong></p>
+
+    <div class="note warn">
+      <span class="k">Retcon — y una discusión abierta</span>
+      En 1987 nada de esto existía. Ryu derrotaba a Sagat y se acababa el juego. La cicatriz, la mano tendida y el Satsui no Hado <b>se añadieron en la era Alpha</b>, ocho años después, para recontextualizar aquella victoria y darle a Sagat un motivo de odio.<br><br>
+      Y hay una discusión legítima que conviene no zanjar: <b>¿fue un golpe sucio?</b> Hay lectura para las dos posturas. Una dice que Ryu, poseído por un impulso que no controlaba, no es culpable de un acto que no decidió. La otra dice que el Satsui no Hado <em>es</em> Ryu —que no viene de fuera, que vive en él— y que la posesión no lo exculpa. Capcom ha alimentado ambas versiones y no ha cerrado la puerta a ninguna. Yo se la dejo abierta igual.
+    </div>
+
+    <h2>Mientras tanto, en la montaña</h2>
+
+    <p>Aquí la historia hace algo cruel: mientras Ryu peleaba en Tailandia, en Japón alguien subía por un sendero que conocía muy bien.</p>
+
+    <p>Akuma llevaba años esperando este momento. No fue al dojo por rencor ni por herencia. Fue porque su hermano había cumplido ya su función: había formado a un alumno con un talento excepcional y lo había soltado al mundo. Lo que quedaba por resolver era el asunto pendiente entre los dos, y ese asunto era una discusión técnica que solo podía dirimirse de una manera.</p>
+
+    <p>Gouken lo estaba esperando. Es difícil imaginar que no lo estuviera.</p>
+
+    <p>Akuma usó contra él la misma técnica que había usado contra su maestro: el <strong>Shun Goku Satsu</strong>.</p>
+
+    <p>Y ahora, por favor, recuerde lo que dejamos guardado en el Capítulo 2.</p>
+
+    <div class="pull">El Shun Goku Satsu no mata con el puño. Mata al adversario con el peso de sus propios pecados.</div>
+
+    <p>Gouken no tenía ninguno que pesara lo suficiente.</p>
+
+    <p>El hombre que había renunciado a la mitad homicida de su arte, que había expulsado a un alumno por entrenar con ánimo de venganza, que se había pasado la vida entera domando aquello que su hermano abrazó —ese hombre entró en la técnica más letal del universo Street Fighter y la técnica no encontró de qué agarrarse.</p>
+
+    <p>No salió indemne. El impacto lo derribó y lo dejó en un estado que, a todos los efectos prácticos y durante los siguientes veinte años de franquicia, iba a considerarse muerte. Pero no lo mató.</p>
+
+    <div class="note warn">
+      <span class="k">Retcon doble — de los más enredados de la saga</span>
+      La suerte de Gouken ha cambiado dos veces.<br><br>
+      <b>Primero:</b> antes de la era Alpha, algunos materiales atribuían su muerte a otras manos —se llegó a señalar a Sagat y a Bison—. Alpha fijó que fue Akuma.<br><br>
+      <b>Después:</b> durante casi veinte años se dio por muerto sin matices. <b>Street Fighter IV</b> (2008) lo devolvió: no había muerto, había desviado la parte letal de la técnica y quedado en un estado comatoso. Ese juego atribuye además su supervivencia al <b>Mu no Hado</b>, el poder de la nada, del que hablaremos en su momento.<br><br>
+      Es el retcon más grande de la franquicia y no pienso disimularlo. Durante veinte años, la muerte del maestro fue el motor emocional de Ryu; hoy sabemos que no ocurrió. Ambas versiones han sido oficiales en su momento, y las dos importan.
+    </div>
+
+    <h2>El regreso</h2>
+
+    <p>Ryu volvió al dojo siendo campeón del mundo. Traía una victoria que no sabía explicar y probablemente una pregunta que quería hacerle a la única persona capaz de responderla.</p>
+
+    <p>No la pudo hacer.</p>
+
+    <p>Encontró a su maestro caído y encontró, con él, una firma que no necesitaba explicación. Un kanji. <strong>天</strong>.</p>
+
+    <p>De golpe, y en el mismo viaje, Ryu descubrió tres cosas: que dentro de él vive algo que puede tomar el control; que existe un hombre capaz de hacer <em>esto</em>; y que su maestro conocía a ese hombre y nunca se lo dijo.</p>
+
+    <p>El silencio del Capítulo 3 acaba de vencer, todo de una vez y con intereses.</p>
+
+    <div class="note">
+      <span class="k">Punto ambiguo</span>
+      Capcom no ha fijado con precisión la puesta en escena de este descubrimiento: si Ryu llegó a tiempo de ver algo, si encontró solo las consecuencias, o cuánto tiempo pasó entre una cosa y otra. Las distintas adaptaciones lo han contado de formas incompatibles. Lo firme es la secuencia: <b>Akuma ataca a Gouken durante el torneo, y Ryu se entera al volver.</b>
+    </div>
+
+    <h2>Tres hombres al final de la primera parte</h2>
+
+    <p>Aquí termina la Parte I, y conviene ver dónde queda cada uno, porque los tres van a pasar los próximos años haciendo exactamente lo mismo por motivos opuestos: entrenar.</p>
+
+    <p><strong>Sagat</strong> se encierra a entrenar para el día en que vuelva a tener a ese japonés enfrente. El odio le da un propósito por primera vez desde que ganó su título, y eso lo hace peligrosamente vulnerable a cualquiera que sepa ofrecerle una venganza.</p>
+
+    <p><strong>Ryu</strong> se echa otra vez al camino, ahora sin maestro y sin destino, buscando una respuesta que no sabe formular. No compite. No acepta títulos. Solo camina y pelea, con la esperanza vaga de que en algún combate se le aclare qué fue lo que se levantó del suelo aquella noche.</p>
+
+    <p><strong>Ken</strong> se entera de lo ocurrido desde el otro lado del mundo, con una vida cómoda, un campeonato nacional y un hermano que acaba de perderlo todo.</p>
+
+    <p>Y en algún lugar sin nombre, un hombre que ya no es del todo un hombre lee el resultado de un torneo mundial y toma nota de dos apellidos.</p>
+
+    <p>Uno de ellos es el de un tailandés invicto al que acaban de dejar destrozado y furioso: exactamente el tipo de hombre al que se le puede ofrecer algo.</p>
+
+  </div>
+</main>
+
+<section class="outro">
+  <div class="wrap outro-in">
+
+    <div class="block">
+      <h2>Acontecimientos clave</h2>
+      <ol class="keyev">
+        <li><span><b>Se convoca el primer torneo mundial.</b> Capcom nunca ha revelado quién lo organizó, lo que lo convierte en el único torneo limpio de toda la franquicia.</span></li>
+        <li><span><b>Ryu llega sin nombre ni respaldo</b> y avanza por el cuadro hasta la final. Su participación es la consecuencia directa del peregrinaje que le impuso Gouken.</span></li>
+        <li><span><b>Sagat domina la final.</b> No fue un combate igualado: el campeón era mejor y llegó a tener a Ryu inmovilizado y vencido.</span></li>
+        <li><span><b>Sagat baja la guardia y le tiende la mano</b> para ayudarlo a levantarse, convencido de haber ganado. Es el único gesto noble que se le conoce hasta ese momento.</span></li>
+        <li><span><b>El Satsui no Hado toma a Ryu</b> y ejecuta el <em>Metsu Shoryuken</em>, que abre a Sagat el pecho en diagonal y decide el combate.</span></li>
+        <li><span><b>Ryu gana el torneo sin poder explicarse cómo,</b> y se queda con una pregunta que le durará décadas.</span></li>
+        <li><span><b>Mientras tanto, Akuma ataca a Gouken</b> en el dojo con el Shun Goku Satsu.</span></li>
+        <li><span><b>Gouken sobrevive.</b> La técnica mata con el peso de los pecados del adversario, y él no tenía ninguno que pesara: cae en un estado comatoso que durante veinte años se tomó por muerte.</span></li>
+        <li><span><b>Ryu regresa, encuentra a su maestro caído</b> y ve el kanji 天. Descubre a la vez lo que lleva dentro, quién es Akuma y que Gouken se lo calló todo.</span></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h2>Personajes que debemos recordar</h2>
+      <div class="who">
+        <div><span class="n">Ryu</span><span class="r">Campeón del mundo y, desde esa misma noche, un hombre con un problema que no sabe nombrar. Su vagabundeo y su rechazo a los títulos nacen aquí, no de la humildad.</span></div>
+        <div><span class="n">Sagat</span><span class="r">Pierde el invicto, gana una cicatriz y aprende la lección equivocada: que la decencia se castiga. Queda convertido en el hombre más manipulable del planeta.</span></div>
+        <div><span class="n">Akuma</span><span class="r">Ejecuta lo que llevaba años pendiente. No busca la escuela ni el legado: busca cerrar una discusión técnica con su hermano de la única manera que él reconoce.</span></div>
+        <div><span class="n">Gouken</span><span class="r">Cae, pero no muere, y la razón es la mejor ironía de la saga: la técnica que mata con los propios pecados no encontró en él ninguno del que tirar.</span></div>
+        <div><span class="n">Gen, Birdie, Eagle y Adon</span><span class="r">Cuatro nombres del cuadro de 1987 que volverán a esta historia. Los demás participantes desaparecieron del canon.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Organizaciones</h2>
+      <div class="who">
+        <div><span class="n">El torneo de 1987</span><span class="r">Sin organizador conocido, sin propósito oculto y sin letra pequeña. Todos los torneos posteriores tendrán dueño e intención; este es la excepción, y por eso sirve de vara de medir.</span></div>
+        <div><span class="n">Shadaloo</span><span class="r">No participa ni aparece, pero está mirando. El resultado del torneo le entrega dos datos valiosos: quién es el luchador más prometedor del mundo y quién acaba de quedarse lo bastante roto como para aceptar una oferta.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Cronología del capítulo</h2>
+      <div class="tl">
+        <div><span class="w">Convocatoria</span><span class="e">Se anuncia un torneo mundial de origen no establecido. Ryu acude en el curso de su peregrinaje.</span></div>
+        <div><span class="w">El cuadro</span><span class="e">Ryu supera a los participantes uno a uno hasta llegar al campeón.</span></div>
+        <div><span class="w">La final</span><span class="e">Sagat domina, inmoviliza a Ryu y le tiende la mano. El Satsui no Hado responde con un Metsu Shoryuken que le abre el pecho.</span></div>
+        <div><span class="w">En paralelo, en Japón</span><span class="e">Akuma ataca a Gouken con el Shun Goku Satsu. Gouken desvía la parte letal y queda en estado comatoso.</span></div>
+        <div><span class="w">El regreso</span><span class="e">Ryu vuelve al dojo y encuentra a su maestro caído, con el kanji 天 como única explicación.</span></div>
+        <div><span class="w">Final del capítulo</span><span class="e">Sagat se encierra a entrenar por venganza. Ryu se echa al camino sin maestro. Ken se entera desde Estados Unidos.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Lo que debes recordar</h2>
+      <div class="remember">
+        <article><span class="n">1</span><p><b>Sagat estaba ganando y le tendió la mano.</b> Es el dato que cambia por completo la lectura de su odio. No perdió por ser peor: perdió por ser decente una sola vez.</p></article>
+        <article><span class="n">2</span><p><b>Ryu no gobernó ese golpe.</b> Su victoria fundacional es también su primera prueba de que dentro de él hay algo que puede tomar el mando. De ahí sale todo el personaje.</p></article>
+        <article><span class="n">3</span><p><b>Si el golpe fue sucio o no es una discusión abierta,</b> y Capcom no la ha cerrado. Depende de si uno considera que el Satsui no Hado viene de fuera o de si <em>es</em> Ryu.</p></article>
+        <article><span class="n">4</span><p><b>Gouken sobrevivió porque no tenía pecados que pesaran.</b> La regla del Shun Goku Satsu que anotamos en el Capítulo 2 se cobra aquí su primer efecto.</p></article>
+        <article><span class="n">5</span><p><b>Durante veinte años Gouken estuvo muerto.</b> Street Fighter IV lo deshizo. Es el retcon más grande de la franquicia y conviene tenerlo presente al leer cualquier material anterior a 2008.</p></article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap">
+    <h2>Conexión con el Capítulo 7</h2>
+    <p>Aquí se cierra la Parte I. Lo que viene es la era más densa de la franquicia y también la más tardía en escribirse: <em>Street Fighter Alpha</em>, publicada en 1995 y situada aquí, en el hueco que acabamos de abrir.</p>
+    <p>El próximo capítulo explica por qué Capcom decidió viajar hacia atrás en el tiempo, qué gana la historia colocando Alpha en este punto exacto y qué personajes que usted creía conocer resultan ser, en realidad, mucho más jóvenes y bastante peores de lo que recordaba.</p>
+    <p class="ask">¿Continuamos con el Capítulo 7 — «Por qué Alpha va aquí»?</p>
+    <p><button class="readbtn" id="readbtn" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5.5 5.5L20 7"></path></svg><span class="readbtn-l">Marcar como leído</span></button></p>
+  </div>
+</section>
+
+
+<!--chrome:start-->
+<nav class="chnav" aria-label="Navegación entre capítulos">
+  <div class="wrap chnav-in">
+    <a class="" href="https://claude.ai/code/artifact/374a2cbe-1d79-4c13-affd-646964a0cd47"><span class="dir">← Capítulo 05</span><span class="ttl">El hombre que se amputó el alma</span></a>
+    <span class="off right"><span class="dir">Capítulo 07 →</span><span class="ttl">Por qué Alpha va aquí · en preparación</span></span>
+  </div>
+</nav>
+<script>
+(function(){
+  var modes=['auto','light','dark'], names={auto:'Auto',light:'Claro',dark:'Oscuro'};
+  var btn=document.getElementById('themebtn'), lab=document.getElementById('themelab');
+  function read(){try{var t=localStorage.getItem('sf-theme');return (t==='light'||t==='dark')?t:'auto';}catch(e){return 'auto';}}
+  function apply(m){
+    if(m==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=m;
+    if(lab) lab.textContent=names[m];
+    try{ m==='auto'?localStorage.removeItem('sf-theme'):localStorage.setItem('sf-theme',m); }catch(e){}
+  }
+  apply(read());
+  if(btn) btn.addEventListener('click',function(){apply(modes[(modes.indexOf(read())+1)%modes.length]);});
+
+  var mark=document.getElementById('readbtn'); if(!mark) return;
+  var KEY='sf-read', NUM='06';
+  function list(){try{var v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function sync(){
+    var on=list().indexOf(NUM)!==-1;
+    mark.setAttribute('aria-pressed', on?'true':'false');
+    mark.querySelector('.readbtn-l').textContent = on ? 'Capítulo leído' : 'Marcar como leído';
+  }
+  mark.addEventListener('click',function(){
+    var l=list(), i=l.indexOf(NUM);
+    if(i===-1) l.push(NUM); else l.splice(i,1);
+    try{ localStorage.setItem(KEY, JSON.stringify(l)); }catch(e){}
+    sync();
+  });
+  sync();
+})();
+</script>
+<!--chrome:end-->
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. La recontextualización de la final —la mano tendida, el Satsui no Hado y la cicatriz— procede de la era <em>Street Fighter Alpha</em>; la supervivencia de Gouken, de <em>Street Fighter IV</em>. La única escena dramatizada aparece marcada como reconstrucción narrativa, y las dos discusiones abiertas del capítulo se presentan como tales, sin cerrarlas.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var fill = document.getElementById('meterfill');
+  if (!fill) return;
+  var q = 0;
+  function meter(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+  }
+  addEventListener('scroll', function(){
+    if (!q) q = requestAnimationFrame(function(){ q = 0; meter(); });
+  }, { passive: true });
+  addEventListener('resize', meter, { passive: true });
+  meter();
+})();
+</script>
