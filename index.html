@@ -1,0 +1,1065 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El Puño y la Sombra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --bg:#E9E6DE;          /* piedra / washi frío */
+  --bg-2:#F4F2EC;
+  --bg-3:#DCD8CD;
+  --line:#C6C1B3;
+  --line-soft:#D6D2C6;
+  --text:#151824;
+  --text-2:#585D6C;
+  --text-3:#7C8191;
+  --accent:#B3262F;      /* hachimaki */
+  --accent-ink:#8E1D25;
+  --psycho:#5636BE;      /* Psycho Power */
+  --brass:#8E6B10;       /* torneos / eras */
+  --halo:rgba(179,38,47,.12);
+  --shadow:0 1px 2px rgba(21,24,36,.07), 0 8px 24px rgba(21,24,36,.06);
+  --grid:rgba(21,24,36,.055);
+
+  --f-display:"Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hud:"Barlow Condensed", "Oswald", Impact, sans-serif;
+
+  --step-hero:clamp(2.4rem,7.2vw,4.5rem);
+  --step-h2:clamp(1.6rem,3.4vw,2.35rem);
+  --step-h3:clamp(1.12rem,1.7vw,1.32rem);
+  --wrap:1140px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D17;
+    --bg-2:#131828;
+    --bg-3:#1B2133;
+    --line:#2A3145;
+    --line-soft:#212739;
+    --text:#EBE7DC;
+    --text-2:#98A0B4;
+    --text-3:#7A8296;
+    --accent:#E2515B;
+    --accent-ink:#F0838A;
+    --psycho:#9679FF;
+    --brass:#D7AE44;
+    --halo:rgba(226,81,91,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+    --grid:rgba(235,231,220,.05);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D17;
+  --bg-2:#131828;
+  --bg-3:#1B2133;
+  --line:#2A3145;
+  --line-soft:#212739;
+  --text:#EBE7DC;
+  --text-2:#98A0B4;
+  --text-3:#7A8296;
+  --accent:#E2515B;
+  --accent-ink:#F0838A;
+  --psycho:#9679FF;
+  --brass:#D7AE44;
+  --halo:rgba(226,81,91,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+  --grid:rgba(235,231,220,.05);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:1.0425rem;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem)}
+.prose{max-width:66ch}
+
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:var(--step-h2); line-height:1.15}
+h3{font-size:var(--step-h3); line-height:1.3; font-weight:600}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+
+.eyebrow{
+  font-family:var(--f-hud); font-weight:600; text-transform:uppercase;
+  letter-spacing:.19em; font-size:.775rem; color:var(--text-3); margin:0;
+}
+.hud{font-family:var(--f-hud); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky; top:0; z-index:40;
+  background:color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line-soft);
+}
+.nav-in{display:flex; align-items:center; gap:1.5rem; height:54px; overflow-x:auto; scrollbar-width:none}
+.nav-in::-webkit-scrollbar{display:none}
+.nav-mark{
+  font-family:var(--f-display); font-weight:800; font-size:.98rem; white-space:nowrap;
+  padding-right:1.1rem; border-right:1px solid var(--line); flex:none;
+}
+.nav-mark span{color:var(--accent)}
+.nav a{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.78rem;
+  font-weight:600; text-decoration:none; color:var(--text-2); white-space:nowrap; flex:none;
+  padding:.2rem 0; border-bottom:2px solid transparent;
+}
+.nav a:hover{color:var(--text)}
+.nav a.on{color:var(--text); border-bottom-color:var(--accent)}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative; overflow:hidden;
+  border-bottom:1px solid var(--line-soft);
+  background:
+    radial-gradient(120% 90% at 82% -10%, var(--halo), transparent 60%),
+    linear-gradient(180deg, var(--bg-2), var(--bg));
+}
+.hero::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px);
+  background-size:100% 6px; opacity:.6;
+}
+.hero-in{position:relative; z-index:1; padding:clamp(3rem,8vw,6.5rem) 0 clamp(2.6rem,6vw,4.5rem)}
+.hero h1{
+  font-size:var(--step-hero); line-height:.96; margin:.85rem 0 0; letter-spacing:-.025em;
+}
+.hero h1 em{font-style:normal; color:var(--accent); display:block}
+.hero-lede{font-size:clamp(1.05rem,1.7vw,1.22rem); color:var(--text-2); margin-top:1.5rem; max-width:56ch}
+.hero-lede strong{color:var(--text); font-weight:700}
+.hero-meta{
+  display:flex; flex-wrap:wrap; gap:.5rem .55rem; margin-top:2rem;
+}
+.chip{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.12em; font-size:.74rem; font-weight:600;
+  padding:.34rem .7rem; border:1px solid var(--line); border-radius:999px; color:var(--text-2);
+  background:color-mix(in srgb, var(--bg-2) 70%, transparent);
+}
+.chip.hot{border-color:var(--accent); color:var(--accent)}
+.chip.psy{border-color:var(--psycho); color:var(--psycho)}
+
+/* ---------- section frame ---------- */
+.sec{padding:clamp(3.4rem,7vw,5.8rem) 0; border-bottom:1px solid var(--line-soft)}
+.sec-head{display:flex; align-items:baseline; gap:1rem; flex-wrap:wrap; margin-bottom:.9rem}
+.sec-num{
+  font-family:var(--f-hud); font-size:.8rem; font-weight:700; letter-spacing:.2em;
+  color:var(--brass); text-transform:uppercase;
+}
+.sec-intro{color:var(--text-2); margin-top:1.1rem}
+.sec-body{margin-top:2.6rem}
+
+/* ---------- eras: spine ---------- */
+.eras{display:grid; gap:0}
+.era{
+  display:grid; grid-template-columns:auto 1fr; gap:0 clamp(1rem,3vw,2.2rem);
+  padding:1.5rem 0; border-top:1px solid var(--line-soft);
+}
+.era:first-child{border-top:0}
+.era-rail{display:flex; flex-direction:column; align-items:center; gap:.5rem; width:3.4rem}
+.era-n{
+  font-family:var(--f-hud); font-weight:700; font-size:1.6rem; line-height:1;
+  color:var(--brass); font-variant-numeric:tabular-nums;
+}
+.era-line{width:1px; flex:1; background:var(--line); min-height:1.2rem}
+.era-top{display:flex; align-items:baseline; gap:.7rem; flex-wrap:wrap}
+.era-title{font-family:var(--f-display); font-weight:800; font-size:1.16rem}
+.era-games{font-family:var(--f-hud); font-size:.82rem; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:600}
+.era-when{font-family:var(--f-hud); font-size:.8rem; letter-spacing:.1em; color:var(--text-3); text-transform:uppercase}
+.era p{margin:.5rem 0 0; color:var(--text-2); max-width:72ch; font-size:.985rem}
+.era.villain .era-n{color:var(--psycho)}
+.era.villain .era-games{color:var(--psycho)}
+
+/* ---------- order diagram ---------- */
+.diagram{
+  margin:0; background:var(--bg-2); border:1px solid var(--line-soft);
+  padding:clamp(1rem,3vw,2rem) clamp(.4rem,2vw,1.4rem); overflow-x:auto;
+}
+.diagram svg{display:block; min-width:600px; width:100%; height:auto}
+.d-rail{font-family:"Barlow Condensed",sans-serif; font-size:12px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; fill:var(--text-3)}
+.d-name{font-family:"Zen Kaku Gothic New",sans-serif; font-size:14.5px; fill:var(--text); font-weight:500}
+.d-note{font-family:"Barlow Condensed",sans-serif; font-size:12.5px; fill:var(--text-3); letter-spacing:.05em}
+.d-idx{font-family:"Barlow Condensed",sans-serif; font-size:13px; font-weight:700; fill:var(--brass)}
+.d-link{fill:none; stroke:var(--line); stroke-width:1.4}
+.d-link.moved{stroke:var(--accent); stroke-width:2.2}
+.d-dot{fill:var(--bg)} .d-dot-ring{fill:none; stroke:var(--line); stroke-width:1.6}
+.d-dot-ring.moved{stroke:var(--accent)}
+figcaption{color:var(--text-3); font-size:.9rem; margin-top:.9rem}
+
+.callouts{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); margin-top:2rem}
+.callout{border-left:2px solid var(--accent); padding:.1rem 0 .1rem 1rem}
+.callout h3{font-size:1rem; margin-bottom:.3rem}
+.callout p{font-size:.94rem; color:var(--text-2); margin:0}
+.callout.psy{border-left-color:var(--psycho)}
+.callout.brass{border-left-color:var(--brass)}
+
+/* ---------- canon tiers ---------- */
+.tiers{display:grid; gap:1.4rem; grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.tier{border:1px solid var(--line-soft); background:var(--bg-2); padding:1.4rem 1.4rem 1.5rem; position:relative}
+.tier::before{content:""; position:absolute; inset:0 0 auto 0; height:3px; background:var(--tier-c,var(--line))}
+.tier h3{margin-bottom:.15rem}
+.tier .tier-k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.74rem; font-weight:700; color:var(--tier-c,var(--text-3))}
+.tier ul{list-style:none; margin:.9rem 0 0; padding:0; display:grid; gap:.55rem}
+.tier li{font-size:.93rem; color:var(--text-2); padding-left:.95rem; position:relative; line-height:1.55}
+.tier li::before{content:""; position:absolute; left:0; top:.62em; width:5px; height:5px; background:var(--tier-c,var(--line))}
+.tier li b{color:var(--text); font-weight:700}
+.t-canon{--tier-c:var(--accent)}
+.t-sat{--tier-c:var(--brass)}
+.t-off{--tier-c:var(--psycho)}
+
+.retcons{margin-top:2.2rem; border:1px dashed var(--line); padding:1.3rem 1.4rem; background:transparent}
+.retcons h3{margin-bottom:.7rem}
+.retcons ol{margin:0; padding-left:1.25rem; display:grid; gap:.5rem}
+.retcons li{font-size:.94rem; color:var(--text-2)}
+.retcons li b{color:var(--text)}
+
+/* ---------- characters ---------- */
+.chars{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft);
+  grid-template-columns:repeat(auto-fill,minmax(288px,1fr))}
+.char{background:var(--bg-2); padding:1.35rem 1.35rem 1.5rem; display:flex; flex-direction:column; gap:.9rem}
+.char-top{display:flex; align-items:center; gap:.85rem}
+.crest{width:52px; height:52px; flex:none}
+.char-id h3{font-size:1.08rem; line-height:1.2}
+.char-alias{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.13em; font-size:.75rem; color:color-mix(in srgb, var(--char-c,var(--text-3)) 68%, var(--text)); font-weight:600}
+.char dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:.28rem .7rem; font-size:.845rem}
+.char dt{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; color:var(--text-3); font-weight:600; white-space:nowrap}
+.char dd{margin:0; color:var(--text-2)}
+.char .why{font-size:.94rem; color:var(--text-2); margin:0; border-top:1px solid var(--line-soft); padding-top:.85rem}
+.char .why b{color:var(--text); font-weight:700}
+
+.also{margin-top:2rem; display:flex; flex-wrap:wrap; gap:.5rem; align-items:center}
+.also .eyebrow{margin-right:.4rem}
+
+/* ---------- index ---------- */
+.search{display:flex; align-items:center; gap:.7rem; border:1px solid var(--line); background:var(--bg-2); padding:.6rem .9rem; max-width:26rem}
+.search input{
+  flex:1; border:0; background:transparent; color:var(--text); font-family:var(--f-body); font-size:.95rem; min-width:0;
+}
+.search input:focus{outline:none}
+.search svg{flex:none; stroke:var(--text-3)}
+.count{font-family:var(--f-hud); font-size:.8rem; letter-spacing:.1em; color:var(--text-3); text-transform:uppercase; white-space:nowrap}
+
+.part{margin-top:2.6rem}
+.part-head{display:flex; align-items:baseline; gap:.9rem; flex-wrap:wrap; padding-bottom:.6rem; border-bottom:2px solid var(--text); margin-bottom:.2rem}
+.part-k{font-family:var(--f-hud); font-weight:700; letter-spacing:.2em; font-size:.78rem; text-transform:uppercase; color:var(--accent)}
+.part-head h3{font-size:1.28rem; font-weight:800}
+.part-when{margin-left:auto; font-family:var(--f-hud); font-size:.8rem; letter-spacing:.1em; text-transform:uppercase; color:var(--text-3)}
+.chapters{display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:0 2.4rem}
+.ch{display:grid; grid-template-columns:2.6rem 1fr; gap:.1rem .6rem; padding:.75rem 0; border-bottom:1px solid var(--line-soft); align-items:baseline}
+.ch-n{font-family:var(--f-hud); font-weight:700; font-size:1rem; color:var(--text-3); font-variant-numeric:tabular-nums}
+.ch-t{font-weight:700; font-size:.985rem; line-height:1.35}
+.ch-d{grid-column:2; font-size:.875rem; color:var(--text-2); line-height:1.5; margin-top:.15rem}
+.ch mark{background:var(--halo); color:var(--accent); padding:0 .1em}
+.empty{color:var(--text-2); font-style:italic; margin-top:2rem}
+
+/* ---------- closing ---------- */
+.close{padding:clamp(3.2rem,8vw,6rem) 0; text-align:center;
+  background:radial-gradient(90% 120% at 50% 0%, var(--halo), transparent 65%)}
+.close h2{font-size:clamp(1.9rem,5vw,3.1rem); line-height:1.08}
+.close p{color:var(--text-2); margin:1.2rem auto 0; max-width:52ch}
+.close .kicker{font-family:var(--f-display); font-size:clamp(1.15rem,2.4vw,1.5rem); color:var(--accent); margin-top:2.2rem; font-weight:800}
+.foot{padding:2rem 0 3rem; color:var(--text-3); font-size:.85rem}
+.foot p{max-width:74ch}
+
+@media (max-width:640px){
+  .chapters{grid-template-columns:1fr}
+  .era{grid-template-columns:1fr; gap:.6rem}
+  .era-rail{flex-direction:row; width:auto; align-items:center}
+  .era-line{flex:none; width:2.5rem; height:1px; min-height:0}
+}
+</style>
+
+<nav class="nav">
+  <div class="wrap nav-in">
+    <div class="nav-mark">El Puño y la <span>Sombra</span></div>
+    <a href="#eras">Las ocho eras</a>
+    <a href="#orden">Orden real</a>
+    <a href="#canon">Canon</a>
+    <a href="#personajes">15 claves</a>
+    <a href="#indice">Índice</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-in">
+    <p class="eyebrow">Guía de lectura · Universo Street Fighter · Capcom, 1987 – hoy</p>
+    <h1>El Puño<br>y la <em>Sombra</em></h1>
+    <p class="hero-lede">Casi cuarenta años de torneos, dictaduras, linajes de artes marciales y hombres que confunden la fuerza con el propósito. Antes de contarlo, hay que ordenarlo: <strong>Street Fighter nunca se publicó en el orden en que ocurre</strong>.</p>
+    <div class="hero-meta">
+      <span class="chip hot">54 capítulos + apéndices</span>
+      <span class="chip">7 partes cronológicas</span>
+      <span class="chip">8 eras narrativas</span>
+      <span class="chip psy">Canon separado de no canon</span>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="sec" id="eras">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>Las ocho eras de la saga</h2>
+    </div>
+    <p class="sec-intro prose">Capcom casi nunca fija años exactos dentro del universo: lo que sí fija con claridad es el <em>orden relativo</em> de los acontecimientos. Por eso esta guía se organiza en eras y no en fechas. Las referencias temporales que aparecen abajo son aproximaciones procedentes de material secundario (guías, perfiles y enciclopedias licenciadas), no dogmas de Capcom, y lo indico allí donde importa.</p>
+
+    <div class="sec-body eras">
+
+      <article class="era">
+        <div class="era-rail"><span class="era-n">I</span><span class="era-line"></span></div>
+        <div>
+          <div class="era-top">
+            <span class="era-title">La era de los maestros</span>
+            <span class="era-games">Sin juego · Trasfondo</span>
+            <span class="era-when">Décadas antes del primer torneo</span>
+          </div>
+          <p>Todo empieza fuera de la pantalla. Un estilo de asesinato llamado Ansatsuken, un maestro llamado Goutetsu y dos discípulos hermanos: Gouken y Gouki. Uno decide amputar del arte su parte homicida; el otro se entrega a ella y se convierte en Akuma. En paralelo, un joven tailandés llamado Sagat asciende hasta ser invicto, y un hombre que aprendió a separar el bien de su propia alma empieza a construir una organización criminal con alcance de estado.</p>
+        </div>
+      </article>
+
+      <article class="era">
+        <div class="era-rail"><span class="era-n">II</span><span class="era-line"></span></div>
+        <div>
+          <div class="era-top">
+            <span class="era-title">El primer torneo</span>
+            <span class="era-games">Street Fighter (1987)</span>
+            <span class="era-when">Punto cero de la cronología jugable</span>
+          </div>
+          <p>Un torneo mundial sin nombre grandilocuente y con un solo final que Capcom considera canónico: Ryu derrota a Sagat. Lo importante no es la victoria, sino <em>cómo</em> se produjo, algo que la saga tardaría ocho años en explicarnos y que dejaría una cicatriz —literal— en el pecho del hombre más fuerte del mundo.</p>
+        </div>
+      </article>
+
+      <article class="era villain">
+        <div class="era-rail"><span class="era-n">III</span><span class="era-line"></span></div>
+        <div>
+          <div class="era-top">
+            <span class="era-title">La era Alpha</span>
+            <span class="era-games">Alpha · Alpha 2 · Alpha 3</span>
+            <span class="era-when">Entre el primer y el segundo torneo</span>
+          </div>
+          <p>La era más densa de la franquicia, y también la más tardía en escribirse. Aquí Shadaloo pasa de organización a maquinaria: el Psycho Drive, las Dolls, la desaparición de Charlie Nash, la juventud de Chun-Li y Guile, y el primer intento serio de Ryu por entender qué es esa cosa negra que se agita dentro de él.</p>
+        </div>
+      </article>
+
+      <article class="era villain">
+        <div class="era-rail"><span class="era-n">IV</span><span class="era-line"></span></div>
+        <div>
+          <div class="era-top">
+            <span class="era-title">World Warrior</span>
+            <span class="era-games">Street Fighter II y sus revisiones</span>
+            <span class="era-when">El segundo gran torneo</span>
+          </div>
+          <p>El torneo que M. Bison convoca como red de caza: quiere talento, quiere cuerpos y quiere al mejor luchador del mundo. Es la era en la que el reparto se vuelve mundial y en la que aparece el matiz que define a la serie: cada luchador entra por un motivo íntimo, no por el trofeo. Y al final, un tercero al que nadie invitó decide quién muere.</p>
+        </div>
+      </article>
+
+      <article class="era villain">
+        <div class="era-rail"><span class="era-n">V</span><span class="era-line"></span></div>
+        <div>
+          <div class="era-top">
+            <span class="era-title">La era S.I.N.</span>
+            <span class="era-games">Street Fighter IV · Super · Ultra</span>
+            <span class="era-when">Poco después de Street Fighter II</span>
+          </div>
+          <p>Shadaloo está descabezada, pero su división de armamento sigue funcionando sola. S.I.N. convoca un nuevo torneo que en realidad es una recolección de datos de combate, dirigida por Seth: un arma con cara de hombre que quiere ocupar el trono vacío. Aquí regresa Gouken, y aquí entra Juri Han.</p>
+        </div>
+      </article>
+
+      <article class="era villain">
+        <div class="era-rail"><span class="era-n">VI</span><span class="era-line"></span></div>
+        <div>
+          <div class="era-top">
+            <span class="era-title">La era de la sombra</span>
+            <span class="era-games">Street Fighter V</span>
+            <span class="era-when">Después de SFIV, antes de SFIII</span>
+          </div>
+          <p>El único juego de la serie con una campaña cinematográfica larga y unitaria: <em>A Shadow Falls</em>. Bison lanza las Black Moons para drenar la energía del planeta, Charlie Nash vuelve de la muerte por mano ajena, y Ryu por fin resuelve —o al menos aprende a sostener— el conflicto que arrastraba desde el primer torneo.</p>
+        </div>
+      </article>
+
+      <article class="era">
+        <div class="era-rail"><span class="era-n">VII</span><span class="era-line"></span></div>
+        <div>
+          <div class="era-top">
+            <span class="era-title">La nueva generación</span>
+            <span class="era-games">Street Fighter III · 2nd Impact · 3rd Strike</span>
+            <span class="era-when">Años después de SFV</span>
+          </div>
+          <p>Un salto temporal brusco a un mundo sin Shadaloo, donde el enemigo ya no es un dictador sino una sociedad secreta que se cree destinada a heredar la Tierra: los Illuminati de Gill. Ryu y Ken pasan a segundo plano; el protagonista designado es Alex. Es la era más incomprendida y la que peor encaja para quien juega en orden de salida.</p>
+        </div>
+      </article>
+
+      <article class="era">
+        <div class="era-rail"><span class="era-n">VIII</span><span class="era-line"></span></div>
+        <div>
+          <div class="era-top">
+            <span class="era-title">El mundo nuevo</span>
+            <span class="era-games">Street Fighter 6</span>
+            <span class="era-when">Presente de la franquicia</span>
+          </div>
+          <p>La lucha callejera se ha vuelto cultura pop, deporte y negocio. Los veteranos son maestros o leyendas caídas, Ken vive como fugitivo con el nombre manchado, y el Psycho Power sobrevive a Shadaloo en manos de un hombre trajeado llamado JP. Capcom sitúa SF6 después de <em>3rd Strike</em>: es el punto más avanzado de la cronología.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="orden">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Por qué el orden de salida no sirve</h2>
+    </div>
+    <p class="sec-intro prose">Street Fighter se escribió hacia atrás. <em>Alpha</em> se publicó cuatro años después de <em>Street Fighter II</em> pero cuenta lo que pasó <em>antes</em>. <em>Street Fighter III</em> salió en 1997 y sigue siendo, veintiséis años después, el penúltimo capítulo de la historia. De siete entregas principales, solo dos ocupan en la historia el mismo lugar que ocupan en el calendario.</p>
+
+    <div class="sec-body">
+    <figure class="diagram">
+      <svg viewBox="0 0 740 468" role="img" aria-labelledby="dg-t dg-d">
+        <title id="dg-t">Comparación entre el orden de lanzamiento y el orden cronológico de Street Fighter</title>
+        <desc id="dg-d">Street Fighter mantiene la posición 1 y Street Fighter 6 la posición 7. Street Fighter II baja del puesto 2 al 3, Alpha sube del 3 al 2, Street Fighter III cae del 4 al 6, Street Fighter IV sube del 5 al 4 y Street Fighter V del 6 al 5.</desc>
+
+        <text class="d-rail" x="232" y="30" text-anchor="end">Orden de lanzamiento</text>
+        <text class="d-rail" x="470" y="30">Orden de la historia</text>
+
+        <path class="d-link"       d="M250,62 C320,62 382,62 452,62"></path>
+        <path class="d-link moved" d="M250,118 C320,118 382,174 452,174"></path>
+        <path class="d-link moved" d="M250,174 C320,174 382,118 452,118"></path>
+        <path class="d-link moved" d="M250,230 C320,230 382,342 452,342"></path>
+        <path class="d-link moved" d="M250,286 C320,286 382,230 452,230"></path>
+        <path class="d-link moved" d="M250,342 C320,342 382,286 452,286"></path>
+        <path class="d-link"       d="M250,398 C320,398 382,398 452,398"></path>
+
+        <text class="d-name" x="232" y="67" text-anchor="end">Street Fighter <tspan class="d-note">1987</tspan></text>
+        <text class="d-name" x="232" y="123" text-anchor="end">Street Fighter II <tspan class="d-note">1991</tspan></text>
+        <text class="d-name" x="232" y="179" text-anchor="end">Street Fighter Alpha <tspan class="d-note">1995</tspan></text>
+        <text class="d-name" x="232" y="235" text-anchor="end">Street Fighter III <tspan class="d-note">1997</tspan></text>
+        <text class="d-name" x="232" y="291" text-anchor="end">Street Fighter IV <tspan class="d-note">2008</tspan></text>
+        <text class="d-name" x="232" y="347" text-anchor="end">Street Fighter V <tspan class="d-note">2016</tspan></text>
+        <text class="d-name" x="232" y="403" text-anchor="end">Street Fighter 6 <tspan class="d-note">2023</tspan></text>
+
+        <circle class="d-dot" cx="250" cy="62" r="4.5"></circle><circle class="d-dot-ring" cx="250" cy="62" r="4.5"></circle>
+        <circle class="d-dot" cx="250" cy="118" r="4.5"></circle><circle class="d-dot-ring moved" cx="250" cy="118" r="4.5"></circle>
+        <circle class="d-dot" cx="250" cy="174" r="4.5"></circle><circle class="d-dot-ring moved" cx="250" cy="174" r="4.5"></circle>
+        <circle class="d-dot" cx="250" cy="230" r="4.5"></circle><circle class="d-dot-ring moved" cx="250" cy="230" r="4.5"></circle>
+        <circle class="d-dot" cx="250" cy="286" r="4.5"></circle><circle class="d-dot-ring moved" cx="250" cy="286" r="4.5"></circle>
+        <circle class="d-dot" cx="250" cy="342" r="4.5"></circle><circle class="d-dot-ring moved" cx="250" cy="342" r="4.5"></circle>
+        <circle class="d-dot" cx="250" cy="398" r="4.5"></circle><circle class="d-dot-ring" cx="250" cy="398" r="4.5"></circle>
+
+        <circle class="d-dot" cx="452" cy="62" r="4.5"></circle><circle class="d-dot-ring" cx="452" cy="62" r="4.5"></circle>
+        <circle class="d-dot" cx="452" cy="118" r="4.5"></circle><circle class="d-dot-ring moved" cx="452" cy="118" r="4.5"></circle>
+        <circle class="d-dot" cx="452" cy="174" r="4.5"></circle><circle class="d-dot-ring moved" cx="452" cy="174" r="4.5"></circle>
+        <circle class="d-dot" cx="452" cy="230" r="4.5"></circle><circle class="d-dot-ring moved" cx="452" cy="230" r="4.5"></circle>
+        <circle class="d-dot" cx="452" cy="286" r="4.5"></circle><circle class="d-dot-ring moved" cx="452" cy="286" r="4.5"></circle>
+        <circle class="d-dot" cx="452" cy="342" r="4.5"></circle><circle class="d-dot-ring moved" cx="452" cy="342" r="4.5"></circle>
+        <circle class="d-dot" cx="452" cy="398" r="4.5"></circle><circle class="d-dot-ring" cx="452" cy="398" r="4.5"></circle>
+
+        <text class="d-idx" x="470" y="67">1</text><text class="d-name" x="488" y="67">Street Fighter <tspan class="d-note">El primer torneo</tspan></text>
+        <text class="d-idx" x="470" y="123">2</text><text class="d-name" x="488" y="123">Alpha 1–3 <tspan class="d-note">Shadaloo se arma</tspan></text>
+        <text class="d-idx" x="470" y="179">3</text><text class="d-name" x="488" y="179">Street Fighter II <tspan class="d-note">World Warrior</tspan></text>
+        <text class="d-idx" x="470" y="235">4</text><text class="d-name" x="488" y="235">Street Fighter IV <tspan class="d-note">S.I.N.</tspan></text>
+        <text class="d-idx" x="470" y="291">5</text><text class="d-name" x="488" y="291">Street Fighter V <tspan class="d-note">Black Moons</tspan></text>
+        <text class="d-idx" x="470" y="347">6</text><text class="d-name" x="488" y="347">Street Fighter III <tspan class="d-note">Illuminati</tspan></text>
+        <text class="d-idx" x="470" y="403">7</text><text class="d-name" x="488" y="403">Street Fighter 6 <tspan class="d-note">Presente</tspan></text>
+      </svg>
+      <figcaption>En rojo, las entregas que ocupan en la historia un lugar distinto al de su lanzamiento. Las revisiones (Champion Edition, Super, Turbo, 2nd Impact, 3rd Strike, Ultra) no son saltos en el tiempo: se sitúan dentro de la ventana de su juego base, aunque algunas de ellas —sobre todo <em>Super Turbo</em> y <em>3rd Strike</em>— añaden acontecimientos decisivos.</figcaption>
+    </figure>
+
+    <div class="callouts">
+      <div class="callout">
+        <h3>Alpha llega tarde y ocurre pronto</h3>
+        <p>Capcom quiso contar la juventud del reparto de SFII. Todo lo que explica <em>por qué</em> Guile odia a Bison o <em>quién</em> es realmente Cammy se escribió después de que ya los hubiéramos jugado.</p>
+      </div>
+      <div class="callout brass">
+        <h3>Street Fighter IV y V se insertaron en un hueco</h3>
+        <p>Ambos se colocan entre SFII y SFIII, un espacio que llevaba una década vacío. Por eso ninguno de los dos puede matar a personajes que siguen vivos en <em>3rd Strike</em>: el final ya estaba escrito.</p>
+      </div>
+      <div class="callout psy">
+        <h3>Street Fighter III es el futuro que ya vimos</h3>
+        <p>Publicado en 1997, sigue siendo posterior a SFV. Cuando Capcom añade personajes de III a juegos anteriores —Alex, Urien, Ibuki—, está tirando hacia atrás de gente cuyo desenlace ya conocemos.</p>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="canon">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>Qué es canon y qué no lo es</h2>
+    </div>
+    <p class="sec-intro prose">Capcom nunca ha publicado una biblia oficial que diga «esto sí, esto no». Lo que sí ha hecho, de forma consistente, es <em>reutilizar</em> unos materiales e ignorar otros. Estos tres niveles son la regla de trabajo de esta guía; cuando durante la narración use algo del segundo o del tercer nivel, lo diré expresamente.</p>
+
+    <div class="sec-body tiers">
+      <article class="tier t-canon">
+        <span class="tier-k">Nivel 1</span>
+        <h3>Canon principal</h3>
+        <ul>
+          <li>Los <b>juegos numerados</b> de la serie principal y sus revisiones: SF, SFII (CE, Hyper, Super, Super Turbo), Alpha 1–3, SFIII (New Generation, 2nd Impact, 3rd Strike), SFIV (Super, Ultra), SFV y SF6.</li>
+          <li>Sus <b>modos historia</b>, prólogos de personaje, cinemáticas y perfiles oficiales.</li>
+          <li>Salvedad importante: los <b>finales arcade</b> de cada personaje se contradicen entre sí por diseño. Capcom escoge uno como válido —Ryu gana SF1; Shadaloo cae al final de SFII— y descarta el resto sin decirlo.</li>
+        </ul>
+      </article>
+
+      <article class="tier t-sat">
+        <span class="tier-k">Nivel 2</span>
+        <h3>Material secundario y satélite</h3>
+        <ul>
+          <li><b>Final Fight</b>: mismo universo. Metro City, Haggar, Cody, Guy y Poison cruzan a Alpha, SFIV, SFV y SF6.</li>
+          <li><b>Rival Schools</b> y <b>Saturday Night Slam Masters</b>: comparten mundo con guiños explícitos, pero su trama propia no se cita en la serie principal.</li>
+          <li><b>Guías y libros oficiales de Capcom</b> y la enciclopedia licenciada de Udon: útiles y muy citadas, ocasionalmente contradichas por juegos posteriores.</li>
+          <li>Trato este nivel como <b>apoyo</b>: sirve para rellenar huecos, no para cerrar discusiones.</li>
+        </ul>
+      </article>
+
+      <article class="tier t-off">
+        <span class="tier-k">Nivel 3</span>
+        <h3>Fuera de continuidad</h3>
+        <ul>
+          <li><b>Crossovers</b>: Marvel vs. Capcom, Capcom vs. SNK, Street Fighter X Tekken, Capcom Fighting Evolution. Historias explícitamente alternativas.</li>
+          <li><b>Spin-offs</b>: la serie Street Fighter EX (Arika), Puzzle Fighter, Street Fighter 2010, el juego de <em>Street Fighter: The Movie</em>.</li>
+          <li><b>Cine y TV</b>: la película de 1994, <em>The Legend of Chun-Li</em> (2009), la serie animada estadounidense, <em>Street Fighter II V</em>, las películas de anime y <em>Assassin's Fist</em> / <em>Resurrection</em> —esta última supervisada por Capcom, pero con continuidad propia—.</li>
+          <li><b>Cómics</b>: Malibu y Udon. Licenciados, no vinculantes.</li>
+        </ul>
+      </article>
+    </div>
+
+    <div class="retcons">
+      <h3>Los retcones y ambigüedades que iré explicando</h3>
+      <ol>
+        <li><b>Gouken está vivo.</b> Se le dio por muerto a manos de Akuma desde antes del primer torneo; SFIV lo devuelve. Es el retcon más grande de la saga.</li>
+        <li><b>Charlie Nash vuelve de la muerte.</b> Su muerte era el motor de Guile durante veinte años. SFV lo resucita por mano ajena, y eso tiene un precio.</li>
+        <li><b>El origen de Cammy.</b> Pasó de ser una agente amnésica del MI6 a ser una creación de Shadaloo. Alpha 3 reescribió su identidad entera.</li>
+        <li><b>La cicatriz de Sagat.</b> El primer torneo se recontextualizó por completo: la victoria de Ryu dejó de ser limpia.</li>
+        <li><b>Las muertes de M. Bison.</b> Muere varias veces y vuelve varias veces, con explicaciones desiguales. SF6 lo trae de nuevo y no todas las piezas encajan.</li>
+        <li><b>Los nombres cambiados.</b> Bison, Balrog y Vega se llaman distinto en Japón y en Occidente. Usaré siempre la nomenclatura occidental y avisaré cuando importe.</li>
+        <li><b>Ingrid.</b> Nació en un crossover no canónico, reapareció en un port de Alpha 3 y ha entrado en SF6. Su estatus está cambiando ahora mismo.</li>
+        <li><b>La paternidad de Ryu.</b> La idea de que Akuma es su padre <b>no</b> está confirmada por Capcom. Es teoría de aficionados alimentada por material no canónico, y como tal la trataré.</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="personajes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>Quince personajes para entenderlo todo</h2>
+    </div>
+    <p class="sec-intro prose">El reparto de Street Fighter supera holgadamente los ochenta luchadores. Estos quince no son los más populares ni los más fuertes: son aquellos sin los cuales la historia deja de sostenerse. Fíjese en la diferencia entre <em>debut</em> —cuándo lo conocimos— y <em>entrada cronológica</em> —cuándo empieza realmente su historia—: casi nunca coinciden, y esa distancia es la saga entera en miniatura.</p>
+
+    <div class="sec-body chars">
+
+      <article class="char" style="--char-c:#C6353C">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#C6353C" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#C6353C" opacity=".1"></circle>
+            <rect x="8" y="26" width="48" height="7" fill="#C6353C" rx="1"></rect>
+            <path d="M52,33 L60,42 L50,40 Z" fill="#C6353C"></path>
+            <circle cx="32" cy="44" r="6" fill="none" stroke="#C6353C" stroke-width="2.4"></circle>
+          </svg>
+          <div class="char-id"><h3>Ryu</h3><span class="char-alias">El vagabundo eterno</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter (1987)</dd>
+          <dt>Entra en</dt><dd>Era II, aunque su formación es anterior a todo</dd>
+        </dl>
+        <p class="why">Es el hilo conductor, pero no por ser el más fuerte. Su verdadero antagonista <b>no es Bison: es él mismo</b>. Dentro de Ryu vive el Satsui no Hado, el impulso homicida del estilo que aprendió, y toda la saga puede leerse como cuarenta años de un hombre negándose a usarlo.</p>
+      </article>
+
+      <article class="char" style="--char-c:#D8712A">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#D8712A" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#D8712A" opacity=".1"></circle>
+            <path d="M32,12 C40,24 42,30 42,36 A10,10 0 0,1 22,36 C22,29 27,24 32,12 Z" fill="#D8712A"></path>
+            <path d="M32,30 C35,36 36,38 36,41 A4,4 0 0,1 28,41 C28,38 30,35 32,30 Z" fill="var(--bg-2)" opacity=".9"></path>
+            <path d="M18,46 L46,46" stroke="#D8712A" stroke-width="2.4" stroke-linecap="round"></path>
+          </svg>
+          <div class="char-id"><h3>Ken Masters</h3><span class="char-alias">El heredero inquieto</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter (1987)</dd>
+          <dt>Entra en</dt><dd>Era II, junto a Ryu</dd>
+        </dl>
+        <p class="why">El espejo de Ryu: mismo maestro, misma técnica, vida opuesta. Ken tiene dinero, familia, país y nombre. La saga lo usa para preguntar qué queda de un luchador cuando <b>le quitan todo lo que Ryu nunca tuvo</b>, y en Street Fighter 6 se lo quita de verdad.</p>
+      </article>
+
+      <article class="char" style="--char-c:#2E7BC4">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#2E7BC4" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#2E7BC4" opacity=".1"></circle>
+            <circle cx="21" cy="23" r="7" fill="#2E7BC4"></circle>
+            <circle cx="43" cy="23" r="7" fill="#2E7BC4"></circle>
+            <path d="M17,36 C22,48 42,48 47,36" fill="none" stroke="#2E7BC4" stroke-width="3.4" stroke-linecap="round"></path>
+          </svg>
+          <div class="char-id"><h3>Chun-Li</h3><span class="char-alias">La mujer más fuerte del mundo</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+          <dt>Entra en</dt><dd>Era III (Alpha), como agente joven</dd>
+        </dl>
+        <p class="why">La conciencia moral de la franquicia. Investiga la desaparición de su padre, agente de la Interpol, y esa investigación la lleva directamente a Shadaloo. Es <b>el único personaje cuya motivación no cambia jamás</b>: no busca ser la mejor, busca justicia.</p>
+      </article>
+
+      <article class="char" style="--char-c:#9E2B4C">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#9E2B4C" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#9E2B4C" opacity=".14"></circle>
+            <text x="32" y="44" text-anchor="middle" font-family="'Shippori Mincho B1', serif" font-size="30" font-weight="800" fill="#9E2B4C">天</text>
+          </svg>
+          <div class="char-id"><h3>Akuma</h3><span class="char-alias">Gouki · El puño del Satsui no Hado</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Super SF II Turbo (1994), jefe oculto</dd>
+          <dt>Entra en</dt><dd>Era I, mucho antes del primer torneo</dd>
+        </dl>
+        <p class="why">No es un villano: es una advertencia con forma de hombre. Eligió entregarse al impulso homicida del Ansatsuken y ganó un poder absoluto a cambio de su humanidad. El kanji 天 de su espalda —«cielo»— es <b>lo que Ryu podría llegar a ser</b> si un día se rinde.</p>
+      </article>
+
+      <article class="char" style="--char-c:#3F8E72">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#3F8E72" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#3F8E72" opacity=".12"></circle>
+            <text x="32" y="43" text-anchor="middle" font-family="'Shippori Mincho B1', serif" font-size="28" font-weight="800" fill="#3F8E72">無</text>
+          </svg>
+          <div class="char-id"><h3>Gouken</h3><span class="char-alias">El maestro que renunció</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter IV (2008)</dd>
+          <dt>Entra en</dt><dd>Era I, décadas antes de todo</dd>
+        </dl>
+        <p class="why">Hermano de Akuma y maestro de Ryu y Ken. Amputó del Ansatsuken su parte asesina y enseñó lo que quedaba. Se le creyó muerto durante veinte años de franquicia; su regreso trajo consigo el concepto que salva a Ryu: el <b>Mu no Hado</b>, el poder de la nada.</p>
+      </article>
+
+      <article class="char" style="--char-c:#C0761E">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#C0761E" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#C0761E" opacity=".1"></circle>
+            <path d="M17,47 L47,17" stroke="#C0761E" stroke-width="6" stroke-linecap="round"></path>
+            <path d="M25,25 L33,33" stroke="#C0761E" stroke-width="3" stroke-linecap="round" opacity=".65"></path>
+            <path d="M31,39 L39,47" stroke="#C0761E" stroke-width="3" stroke-linecap="round" opacity=".65"></path>
+          </svg>
+          <div class="char-id"><h3>Sagat</h3><span class="char-alias">El Emperador del Muay Thai</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter (1987), jefe final</dd>
+          <dt>Entra en</dt><dd>Era I como campeón; Era II como derrotado</dd>
+        </dl>
+        <p class="why">El arco más completo de la saga: invicto, humillado, consumido por el odio, aliado del dictador que le prometía venganza y finalmente <b>el único villano de Street Fighter que se redime de verdad</b>. Su cicatriz es el recordatorio permanente de que Ryu también puede caer.</p>
+      </article>
+
+      <article class="char" style="--char-c:#7A5AD6">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#7A5AD6" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#7A5AD6" opacity=".13"></circle>
+            <path d="M14,22 L32,36 L50,22" fill="none" stroke="#7A5AD6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M19,34 L32,45 L45,34" fill="none" stroke="#7A5AD6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity=".6"></path>
+          </svg>
+          <div class="char-id"><h3>M. Bison</h3><span class="char-alias">Vega en Japón · El Dictador</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+          <dt>Entra en</dt><dd>Era I; domina las eras III, IV, V y VI</dd>
+        </dl>
+        <p class="why">Fundador de Shadaloo y motor de cuatro juegos. Su poder, el <b>Psycho Power</b>, nace de un acto concreto: expulsó de su alma todo lo que le impedía usarlo. Ese fragmento desechado tiene nombre y camina por el mundo. Y su relación con la muerte es, digamos, flexible.</p>
+      </article>
+
+      <article class="char" style="--char-c:#6E8C3F">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#6E8C3F" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#6E8C3F" opacity=".12"></circle>
+            <path d="M32,14 L37.6,26.8 L51.4,28.2 L41,37.6 L44,51.2 L32,44.2 L20,51.2 L23,37.6 L12.6,28.2 L26.4,26.8 Z" fill="#6E8C3F"></path>
+          </svg>
+          <div class="char-id"><h3>Guile</h3><span class="char-alias">El soldado que no supo soltar</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter II (1991)</dd>
+          <dt>Entra en</dt><dd>Era III, buscando a un amigo desaparecido</dd>
+        </dl>
+        <p class="why">Entra en el segundo torneo por venganza, no por deporte: Shadaloo mató a su mejor amigo. Es el personaje que encarna el <b>coste privado</b> de una guerra que el mundo ni siquiera sabe que está ocurriendo, y el que peor gestiona ese coste.</p>
+      </article>
+
+      <article class="char" style="--char-c:#4E7A8C">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#4E7A8C" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#4E7A8C" opacity=".12"></circle>
+            <path d="M32,14 L37.6,26.8 L51.4,28.2 L41,37.6 L44,51.2 L32,44.2 L20,51.2 L23,37.6 L12.6,28.2 L26.4,26.8 Z" fill="none" stroke="#4E7A8C" stroke-width="2.8" stroke-dasharray="13 7" stroke-linejoin="round"></path>
+          </svg>
+          <div class="char-id"><h3>Charlie Nash</h3><span class="char-alias">El fantasma del deber</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter Alpha (1995)</dd>
+          <dt>Entra en</dt><dd>Era III; muere antes de la Era IV; vuelve en la V</dd>
+        </dl>
+        <p class="why">Existió durante veinte años solo como recuerdo: el amigo muerto de Guile. Cuando Alpha por fin lo puso en pantalla, ya sabíamos su destino. Y cuando SFV lo devolvió a la vida, lo hizo <b>a costa de convertirlo en algo que ya no es del todo humano</b>.</p>
+      </article>
+
+      <article class="char" style="--char-c:#2FA07A">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#2FA07A" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#2FA07A" opacity=".12"></circle>
+            <path d="M32,13 L48,22 L48,42 L32,51 L16,42 L16,22 Z" fill="none" stroke="#2FA07A" stroke-width="2.6" stroke-linejoin="round"></path>
+            <path d="M32,25 L40,29.5 L40,38.5 L32,43 L24,38.5 L24,29.5 Z" fill="#2FA07A"></path>
+          </svg>
+          <div class="char-id"><h3>Cammy White</h3><span class="char-alias">Killer Bee</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Super Street Fighter II (1993)</dd>
+          <dt>Entra en</dt><dd>Era III, creada por Shadaloo</dd>
+        </dl>
+        <p class="why">La víctima que se convirtió en cazadora. Alpha 3 revela que no es una agente con amnesia, sino <b>una creación de Bison</b>: la primera de las Dolls, y la única que rompió el control. Su historia obliga a la saga a preguntarse si una persona fabricada tiene derecho a un alma propia.</p>
+      </article>
+
+      <article class="char" style="--char-c:#B0489B">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#B0489B" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#B0489B" opacity=".12"></circle>
+            <path d="M32,13 A19,19 0 1,1 13,32 A14,14 0 1,1 41,32 A9,9 0 1,1 32,41" fill="none" stroke="#B0489B" stroke-width="2.8" stroke-linecap="round"></path>
+          </svg>
+          <div class="char-id"><h3>Rose</h3><span class="char-alias">La adivina de Génova</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter Alpha (1995)</dd>
+          <dt>Entra en</dt><dd>Era III, persiguiendo a Bison</dd>
+        </dl>
+        <p class="why">La clave para entender al villano principal. Rose maneja el <b>Soul Power</b>, la cara luminosa de la misma energía que usa Bison. No es su enemiga por casualidad: es la mitad que él arrancó de sí mismo, y ninguno de los dos puede morir del todo mientras el otro viva.</p>
+      </article>
+
+      <article class="char" style="--char-c:#4A7FD1">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#4A7FD1" stroke-width="1.4" opacity=".4"></circle>
+            <path d="M32,10 A22,22 0 0,0 32,54 Z" fill="#C0392B" opacity=".85"></path>
+            <path d="M32,10 A22,22 0 0,1 32,54 Z" fill="#2E6FD6" opacity=".85"></path>
+            <path d="M32,8 L32,56" stroke="var(--bg-2)" stroke-width="1.8" opacity=".9"></path>
+          </svg>
+          <div class="char-id"><h3>Gill</h3><span class="char-alias">Emperador de fuego y hielo</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter III: New Generation (1997)</dd>
+          <dt>Entra en</dt><dd>Era VII, después de la caída de Shadaloo</dd>
+        </dl>
+        <p class="why">El sucesor conceptual de Bison, y su opuesto exacto. Bison quería el mundo; Gill cree que el mundo <b>debe acabarse</b> para renacer purificado bajo su mando. Preside los Illuminati, y a diferencia del dictador, está absolutamente convencido de ser el bueno de la historia.</p>
+      </article>
+
+      <article class="char" style="--char-c:#C05A3E">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#C05A3E" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#C05A3E" opacity=".1"></circle>
+            <path d="M18,18 L46,46 M46,18 L18,46" stroke="#C05A3E" stroke-width="6" stroke-linecap="round"></path>
+          </svg>
+          <div class="char-id"><h3>Alex</h3><span class="char-alias">El relevo</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter III: New Generation (1997)</dd>
+          <dt>Entra en</dt><dd>Era VII, como protagonista designado</dd>
+        </dl>
+        <p class="why">Capcom intentó jubilar a Ryu y puso a este luchador estadounidense en su lugar. Busca a Gill porque dejó malherido a Tom, el hombre que lo entrenó y lo crió. Su fracaso comercial como sustituto <b>explica por qué la franquicia volvió atrás en el tiempo</b> durante los siguientes veinte años.</p>
+      </article>
+
+      <article class="char" style="--char-c:#8B49C4">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#8B49C4" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#8B49C4" opacity=".12"></circle>
+            <path d="M11,32 C20,20 44,20 53,32 C44,44 20,44 11,32 Z" fill="none" stroke="#8B49C4" stroke-width="2.6"></path>
+            <circle cx="32" cy="32" r="7.5" fill="#8B49C4"></circle>
+          </svg>
+          <div class="char-id"><h3>Juri Han</h3><span class="char-alias">La araña</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Super Street Fighter IV (2010)</dd>
+          <dt>Entra en</dt><dd>Era V, ya adulta y ya rota</dd>
+        </dl>
+        <p class="why">Shadaloo mató a su familia y le arrancó un ojo; S.I.N. se lo devolvió convertido en arma, el <b>Feng Shui Engine</b>. Es la prueba de que las víctimas del dictador no siempre se convierten en héroes: Juri disfruta demasiado del daño como para volver a ser de nadie.</p>
+      </article>
+
+      <article class="char" style="--char-c:#D6A82F">
+        <div class="char-top">
+          <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="29" fill="none" stroke="#D6A82F" stroke-width="1.4" opacity=".4"></circle>
+            <circle cx="32" cy="32" r="23" fill="#D6A82F" opacity=".12"></circle>
+            <path d="M37,11 L20,35 L30,35 L26,53 L44,29 L34,29 Z" fill="#D6A82F"></path>
+          </svg>
+          <div class="char-id"><h3>Luke Sullivan</h3><span class="char-alias">La cara del futuro</span></div>
+        </div>
+        <dl>
+          <dt>Debut</dt><dd>Street Fighter V (2021), último DLC</dd>
+          <dt>Entra en</dt><dd>Bisagra entre la Era VI y la Era VIII</dd>
+        </dl>
+        <p class="why">Capcom lo presentó explícitamente como <b>«el rostro de la nueva generación»</b>, y lo insertó al final de un juego solo para que el siguiente pudiera empezar con él. Ex-militar, hijo de un soldado muerto en combate, instructor: es el primer protagonista de la saga que no viene de un dojo.</p>
+      </article>
+
+    </div>
+
+    <div class="also">
+      <span class="eyebrow">También decisivos, en su momento:</span>
+      <span class="chip psy">JP</span>
+      <span class="chip psy">Seth</span>
+      <span class="chip psy">F.A.N.G</span>
+      <span class="chip psy">Urien</span>
+      <span class="chip">Ed</span>
+      <span class="chip">Sakura</span>
+      <span class="chip">Karin</span>
+      <span class="chip">Dan</span>
+      <span class="chip">Zangief</span>
+      <span class="chip">Dhalsim</span>
+      <span class="chip">Ibuki</span>
+      <span class="chip">Yun y Yang</span>
+      <span class="chip">Cody y Guy</span>
+      <span class="chip">Kimberly</span>
+      <span class="chip">A.K.I.</span>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="indice">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2>Índice completo de la saga</h2>
+    </div>
+    <p class="sec-intro prose">Su esquema original agrupaba los capítulos por juego en orden de publicación. He reordenado las siete partes para que sigan el <b>orden de los acontecimientos</b>: Alpha pasa delante de Street Fighter II, y Street Fighter III baja hasta la penúltima posición, justo antes de SF6. El contenido de sus capítulos se conserva; lo que cambia es el sitio donde encaja cada uno. Son 54 capítulos y tres apéndices.</p>
+
+    <div class="sec-body">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21" stroke-linecap="round"></path></svg>
+        <input id="q" type="search" placeholder="Buscar un capítulo, un personaje, una organización…" aria-label="Buscar en el índice">
+        <span class="count" id="count">54 capítulos</span>
+      </div>
+
+      <div id="parts">
+
+      <section class="part" data-part>
+        <div class="part-head">
+          <span class="part-k">Parte I</span>
+          <h3>Los orígenes</h3>
+          <span class="part-when">Era I – II · antes y durante el primer torneo</span>
+        </div>
+        <div class="chapters">
+          <article class="ch"><span class="ch-n">01</span><span class="ch-t">Antes de Street Fighter</span><p class="ch-d">El Ansatsuken, el maestro Goutetsu y un arte marcial diseñado para matar.</p></article>
+          <article class="ch"><span class="ch-n">02</span><span class="ch-t">Dos hermanos y una decisión</span><p class="ch-d">Gouken y Gouki ante el Satsui no Hado. Uno renuncia; el otro mata a su maestro y deja de llamarse por su nombre.</p></article>
+          <article class="ch"><span class="ch-n">03</span><span class="ch-t">El dojo de Gouken</span><p class="ch-d">La infancia de Ryu y la llegada de Ken Masters. Dos discípulos, dos temperamentos, una misma técnica incompleta.</p></article>
+          <article class="ch"><span class="ch-n">04</span><span class="ch-t">El ascenso de Sagat</span><p class="ch-d">Muay Thai, invencibilidad y el combate con Go Hibiki que le costó un ojo y le dio un enemigo póstumo.</p></article>
+          <article class="ch"><span class="ch-n">05</span><span class="ch-t">El nacimiento de Shadaloo</span><p class="ch-d">Quién era Bison antes de ser Bison, qué es el Psycho Power y qué precio pagó por dominarlo.</p></article>
+          <article class="ch"><span class="ch-n">06</span><span class="ch-t">Street Fighter (1987): el primer torneo</span><p class="ch-d">Ryu contra Sagat. Qué ocurrió realmente en ese combate y por qué la cicatriz importa más que el resultado.</p></article>
+        </div>
+      </section>
+
+      <section class="part" data-part>
+        <div class="part-head">
+          <span class="part-k">Parte II</span>
+          <h3>La era Alpha</h3>
+          <span class="part-when">Era III · Alpha, Alpha 2, Alpha 3</span>
+        </div>
+        <div class="chapters">
+          <article class="ch"><span class="ch-n">07</span><span class="ch-t">Por qué Alpha va aquí</span><p class="ch-d">Cómo una precuela publicada en 1995 reescribió el pasado de un reparto que ya conocíamos desde 1991.</p></article>
+          <article class="ch"><span class="ch-n">08</span><span class="ch-t">Ryu en el camino</span><p class="ch-d">El vagabundo joven, la sombra que lo persigue, y dos personajes que lo miran desde fuera: Sakura y Dan Hibiki.</p></article>
+          <article class="ch"><span class="ch-n">09</span><span class="ch-t">Charlie Nash y Guile</span><p class="ch-d">La misión no autorizada contra Shadaloo, la amistad militar y la desaparición que definirá dos juegos.</p></article>
+          <article class="ch"><span class="ch-n">10</span><span class="ch-t">La juventud de Chun-Li</span><p class="ch-d">El caso de su padre, su entrada en la Interpol y el momento en que la investigación se vuelve personal.</p></article>
+          <article class="ch"><span class="ch-n">11</span><span class="ch-t">Rose y la mitad perdida</span><p class="ch-d">Soul Power contra Psycho Power. Qué es exactamente Rose respecto a Bison y por qué él no puede matarla.</p></article>
+          <article class="ch"><span class="ch-n">12</span><span class="ch-t">Cammy, las Dolls y el proyecto Killer Bee</span><p class="ch-d">La fábrica de soldados de Shadaloo, el retcon que cambió su origen y la fuga que Bison no previó.</p></article>
+          <article class="ch"><span class="ch-n">13</span><span class="ch-t">Sagat bajo la sombra del dictador</span><p class="ch-d">Por qué el mejor luchador del mundo acepta servir a un criminal, y qué le pide Bison a cambio.</p></article>
+          <article class="ch"><span class="ch-n">14</span><span class="ch-t">El Psycho Drive y la caída de la base</span><p class="ch-d">Alpha 3: la máquina que amplificaba a Bison, la revuelta de las Dolls y la primera destrucción de Shadaloo.</p></article>
+          <article class="ch"><span class="ch-n">15</span><span class="ch-t">Ryu contra su propia sombra</span><p class="ch-d">El secuestro, la posesión y el instante en que Ryu está a punto de convertirse en lo que teme.</p></article>
+          <article class="ch"><span class="ch-n">16</span><span class="ch-t">Akuma, Gouken y el legado del Ansatsuken</span><p class="ch-d">El Shun Goku Satsu, lo que Akuma le hizo a su hermano y la deuda que Ryu no sabe que ha heredado.</p></article>
+          <article class="ch"><span class="ch-n">17</span><span class="ch-t">El final de la era Alpha</span><p class="ch-d">Quién queda en pie, qué se sabe y qué se ignora cuando llega la convocatoria del segundo torneo.</p></article>
+        </div>
+      </section>
+
+      <section class="part" data-part>
+        <div class="part-head">
+          <span class="part-k">Parte III</span>
+          <h3>Street Fighter II</h3>
+          <span class="part-when">Era IV · World Warrior y sus revisiones</span>
+        </div>
+        <div class="chapters">
+          <article class="ch"><span class="ch-n">18</span><span class="ch-t">El mundo entre torneos</span><p class="ch-d">Shadaloo reconstruida, el narcotráfico, los gobiernos comprados y una red que ningún país reconoce.</p></article>
+          <article class="ch"><span class="ch-n">19</span><span class="ch-t">World Warrior: el segundo gran torneo</span><p class="ch-d">Por qué Bison lo convoca, a quién busca de verdad y qué gana cada uno de los ocho al aceptar.</p></article>
+          <article class="ch"><span class="ch-n">20</span><span class="ch-t">M. Bison y Shadaloo en su apogeo</span><p class="ch-d">La estructura interna: Balrog, Vega, Sagat y el dictador. Cuatro hombres que se desprecian entre sí.</p></article>
+          <article class="ch"><span class="ch-n">21</span><span class="ch-t">Chun-Li y Guile: la cacería</span><p class="ch-d">Dos motivaciones privadas dentro de un torneo público. La justicia contra la venganza.</p></article>
+          <article class="ch"><span class="ch-n">22</span><span class="ch-t">Sagat, el tigre roto</span><p class="ch-d">La obsesión con Ryu, la Shadaloo Tiger y el momento en que entiende que el odio le ha quitado más de lo que le dio.</p></article>
+          <article class="ch"><span class="ch-n">23</span><span class="ch-t">Ryu y Ken: dos caminos que se separan</span><p class="ch-d">El vagabundo y el campeón, el matrimonio de Ken con Eliza y la primera grieta entre ambos.</p></article>
+          <article class="ch"><span class="ch-n">24</span><span class="ch-t">Los luchadores del mundo</span><p class="ch-d">Honda, Zangief, Dhalsim, Blanka, Fei Long, Dee Jay, T. Hawk y Cammy: ocho razones distintas para pelear.</p></article>
+          <article class="ch"><span class="ch-n">25</span><span class="ch-t">Akuma irrumpe</span><p class="ch-d">Super Turbo, el jefe oculto y el final que Capcom terminó aceptando como canónico: el dictador no muere en combate limpio.</p></article>
+          <article class="ch"><span class="ch-n">26</span><span class="ch-t">Desenlace de SFII y qué añade cada revisión</span><p class="ch-d">Champion Edition, Hyper Fighting, Super y Super Turbo: qué cambia realmente en la historia y qué es solo reparto.</p></article>
+        </div>
+      </section>
+
+      <section class="part" data-part>
+        <div class="part-head">
+          <span class="part-k">Parte IV</span>
+          <h3>Street Fighter IV</h3>
+          <span class="part-when">Era V · SFIV, Super, Ultra</span>
+        </div>
+        <div class="chapters">
+          <article class="ch"><span class="ch-n">27</span><span class="ch-t">El mundo después de Bison</span><p class="ch-d">Una organización sin cabeza que sigue funcionando por inercia, y los huecos de poder que deja.</p></article>
+          <article class="ch"><span class="ch-n">28</span><span class="ch-t">S.I.N. y el proyecto BLECE</span><p class="ch-d">La división de armamento de Shadaloo se independiza. Investigación de combate disfrazada de torneo.</p></article>
+          <article class="ch"><span class="ch-n">29</span><span class="ch-t">Seth, el arma que quiso ser dios</span><p class="ch-d">Qué es exactamente Seth, para qué fue fabricado y por qué su ambición era, en el fondo, un fallo de diseño.</p></article>
+          <article class="ch"><span class="ch-n">30</span><span class="ch-t">Juri Han</span><p class="ch-d">Corea, la familia asesinada, el ojo perdido y el Feng Shui Engine. Una venganza que se volvió apetito.</p></article>
+          <article class="ch"><span class="ch-n">31</span><span class="ch-t">C. Viper, la espía dentro de la máquina</span><p class="ch-d">Una agente infiltrada, una hija, y el conflicto entre la misión y lo que descubre dentro de S.I.N.</p></article>
+          <article class="ch"><span class="ch-n">32</span><span class="ch-t">Ryu y la tentación</span><p class="ch-d">S.I.N. quiere el Satsui no Hado como dato. Ryu descubre que ahora su interior tiene valor de mercado.</p></article>
+          <article class="ch"><span class="ch-n">33</span><span class="ch-t">Gouken vive</span><p class="ch-d">El regreso del maestro, la explicación del Mu no Hado y el reencuentro con el hermano que lo mató.</p></article>
+          <article class="ch"><span class="ch-n">34</span><span class="ch-t">Desenlace de SFIV</span><p class="ch-d">La caída de Seth, el regreso del dictador y lo que aportan Super y Ultra, incluida Decapre.</p></article>
+        </div>
+      </section>
+
+      <section class="part" data-part>
+        <div class="part-head">
+          <span class="part-k">Parte V</span>
+          <h3>Street Fighter V</h3>
+          <span class="part-when">Era VI · A Shadow Falls</span>
+        </div>
+        <div class="chapters">
+          <article class="ch"><span class="ch-n">35</span><span class="ch-t">El mundo antes de la sombra</span><p class="ch-d">Shadaloo reconstruida en secreto, la Interpol sin pruebas y una operación llamada C.H.A.I.N.S.</p></article>
+          <article class="ch"><span class="ch-n">36</span><span class="ch-t">Las Black Moons</span><p class="ch-d">Siete satélites, un plan para drenar la energía vital del planeta y qué pretendía Bison conseguir con ella.</p></article>
+          <article class="ch"><span class="ch-n">37</span><span class="ch-t">El regreso imposible de Charlie Nash</span><p class="ch-d">Quién lo resucita, con qué intención, y por qué el hombre que vuelve no es exactamente el que murió.</p></article>
+          <article class="ch"><span class="ch-n">38</span><span class="ch-t">F.A.N.G., Ed y la nueva Shadaloo</span><p class="ch-d">El veneno como arma corporativa, el niño criado como recambio y la sucesión que nadie pidió.</p></article>
+          <article class="ch"><span class="ch-n">39</span><span class="ch-t">Rashid, Menat, Zeku y los nuevos hilos</span><p class="ch-d">El terrorismo, la profecía, el Bushinryu y la semilla de tramas que SF6 recogerá años después.</p></article>
+          <article class="ch"><span class="ch-n">40</span><span class="ch-t">Chun-Li, Guile, Cammy y la resistencia</span><p class="ch-d">La alianza improbable entre policías, militares y desertores de Shadaloo.</p></article>
+          <article class="ch"><span class="ch-n">41</span><span class="ch-t">Ryu y el Mu no Hado</span><p class="ch-d">La superación del Satsui no Hado. Qué significa realmente «vaciarse» y por qué no es una victoria definitiva.</p></article>
+          <article class="ch"><span class="ch-n">42</span><span class="ch-t">La caída de Bison y el fin de Shadaloo</span><p class="ch-d">El desenlace de A Shadow Falls, el sacrificio que lo hace posible y los cabos que quedan sueltos.</p></article>
+        </div>
+      </section>
+
+      <section class="part" data-part>
+        <div class="part-head">
+          <span class="part-k">Parte VI</span>
+          <h3>Street Fighter III</h3>
+          <span class="part-when">Era VII · New Generation, 2nd Impact, 3rd Strike</span>
+        </div>
+        <div class="chapters">
+          <article class="ch"><span class="ch-n">43</span><span class="ch-t">Años después: un mundo sin Shadaloo</span><p class="ch-d">El salto temporal, el relevo generacional y por qué casi ningún veterano aparece.</p></article>
+          <article class="ch"><span class="ch-n">44</span><span class="ch-t">Gill, Urien y los Illuminati</span><p class="ch-d">Una sociedad secreta milenaria, dos hermanos enfrentados y una profecía de fin del mundo autoinfligido.</p></article>
+          <article class="ch"><span class="ch-n">45</span><span class="ch-t">Alex y la nueva generación</span><p class="ch-d">El protagonista que Capcom quiso imponer, su maestro herido y el torneo de los Illuminati.</p></article>
+          <article class="ch"><span class="ch-n">46</span><span class="ch-t">Ryu, Ken y los veteranos en un mundo nuevo</span><p class="ch-d">Qué hace Ryu cuando ya no hay dictador contra el que medirse, y en qué se ha convertido Ken.</p></article>
+          <article class="ch"><span class="ch-n">47</span><span class="ch-t">Yun, Yang, Ibuki, Makoto, Q y los enigmas</span><p class="ch-d">Hong Kong, el dojo en ruinas, la aldea ninja y el personaje que Capcom nunca ha explicado.</p></article>
+          <article class="ch"><span class="ch-n">48</span><span class="ch-t">3rd Strike: el desenlace</span><p class="ch-d">La derrota de Gill, la Segunda Venida y por qué este final estuvo veintiséis años siendo el último de la saga.</p></article>
+        </div>
+      </section>
+
+      <section class="part" data-part>
+        <div class="part-head">
+          <span class="part-k">Parte VII</span>
+          <h3>Street Fighter 6</h3>
+          <span class="part-when">Era VIII · el presente</span>
+        </div>
+        <div class="chapters">
+          <article class="ch"><span class="ch-n">49</span><span class="ch-t">El mundo nuevo</span><p class="ch-d">La lucha callejera convertida en industria: circuitos, patrocinios, aplicaciones y fama.</p></article>
+          <article class="ch"><span class="ch-n">50</span><span class="ch-t">Metro City y el legado de Final Fight</span><p class="ch-d">Cómo la ciudad de Haggar, Cody y Guy pasa a ser escenario central del universo Street Fighter.</p></article>
+          <article class="ch"><span class="ch-n">51</span><span class="ch-t">Luke Sullivan y la nueva generación</span><p class="ch-d">El instructor, el padre muerto y el intento más deliberado de Capcom por cambiar de protagonista.</p></article>
+          <article class="ch"><span class="ch-n">52</span><span class="ch-t">JP, Nayshall y el Psycho Power sin Shadaloo</span><p class="ch-d">Un filántropo con bastón, un país intervenido y la prueba de que el poder del dictador sobrevivió a su dueño.</p></article>
+          <article class="ch"><span class="ch-n">53</span><span class="ch-t">Ken Masters, el hombre sin nombre</span><p class="ch-d">La estafa que arruinó su empresa, la familia que abandona para protegerla y la vida de fugitivo.</p></article>
+          <article class="ch"><span class="ch-n">54</span><span class="ch-t">Los nuevos luchadores y el World Tour</span><p class="ch-d">Jamie, Kimberly, Marisa, Manon, Lily, A.K.I. y Ed; el aprendiz creado por el jugador y su lugar en el canon.</p></article>
+        </div>
+      </section>
+
+      <section class="part" data-part>
+        <div class="part-head">
+          <span class="part-k">Apéndices</span>
+          <h3>Material de referencia</h3>
+          <span class="part-when">Al terminar los 54 capítulos</span>
+        </div>
+        <div class="chapters">
+          <article class="ch"><span class="ch-n">A1</span><span class="ch-t">Cronología global completa</span><p class="ch-d">Periodo, juego, acontecimiento, personajes implicados y consecuencia, desde la Era I hasta hoy.</p></article>
+          <article class="ch"><span class="ch-n">A2</span><span class="ch-t">Tabla juego → posición cronológica</span><p class="ch-d">Cada entrega y revisión con su ubicación exacta y sus acontecimientos principales.</p></article>
+          <article class="ch"><span class="ch-n">A3</span><span class="ch-t">El estado actual del universo</span><p class="ch-d">Dónde queda cada personaje importante y qué conflictos siguen abiertos tras el Año 3 de SF6.</p></article>
+        </div>
+      </section>
+
+      </div>
+      <p class="empty" id="empty" hidden>Ningún capítulo coincide con esa búsqueda.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<section class="close">
+  <div class="wrap">
+    <p class="eyebrow">Fin de la introducción</p>
+    <h2>Ya tenemos el mapa.<br>Falta caminarlo.</h2>
+    <p>La historia empieza donde no hay ningún juego: en un dojo, con un maestro, dos hermanos y un arte marcial que fue diseñado para matar y que alguien decidió mutilar para poder enseñarlo sin condenar a nadie.</p>
+    <p class="kicker">¿Comenzamos con el Capítulo 1?</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. Los emblemas de esta página son marcas geométricas originales creadas para esta guía; no reproducen arte oficial de la franquicia. Contenido basado en los juegos de la serie principal, sus modos historia y perfiles oficiales, con material secundario señalado como tal.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var q = document.getElementById('q');
+  var count = document.getElementById('count');
+  var empty = document.getElementById('empty');
+  var parts = Array.prototype.slice.call(document.querySelectorAll('[data-part]'));
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('.ch'));
+  function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+  chapters.forEach(function(c){ c.dataset.hay = norm(c.textContent); });
+
+  function filter(){
+    var term = norm(q.value.trim());
+    var shown = 0;
+    chapters.forEach(function(c){
+      var hit = !term || c.dataset.hay.indexOf(term) !== -1;
+      c.hidden = !hit;
+      if (hit) shown++;
+    });
+    parts.forEach(function(p){
+      var any = Array.prototype.some.call(p.querySelectorAll('.ch'), function(c){ return !c.hidden; });
+      p.hidden = !any;
+    });
+    empty.hidden = shown !== 0;
+    count.textContent = term ? (shown + (shown === 1 ? ' resultado' : ' resultados')) : '54 capítulos';
+  }
+  q.addEventListener('input', filter);
+
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var targets = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (!e.isIntersecting) return;
+        var i = targets.indexOf(e.target);
+        if (i < 0) return;
+        links.forEach(function(a){ a.classList.remove('on'); });
+        links[i].classList.add('on');
+      });
+    }, { rootMargin: '-55px 0px -70% 0px' });
+    targets.forEach(function(t){ if (t) io.observe(t); });
+  }
+})();
+</script>
