@@ -156,9 +156,10 @@ p:last-child{margin-bottom:0}
 .block h2{font-size:1.32rem; margin-bottom:1rem}
 .keyev{list-style:none; margin:0; padding:0; display:grid; gap:.85rem; counter-reset:k}
 .keyev li{
-  display:grid; grid-template-columns:2.1rem 1fr; gap:.8rem; align-items:start;
+  display:grid; grid-template-columns:2.1rem minmax(0,1fr); gap:.8rem; align-items:start;
   font-size:.985rem; color:var(--text-2); line-height:1.6;
 }
+.keyev li > span{grid-column:2}
 .keyev li::before{
   counter-increment:k; content:counter(k,decimal-leading-zero);
   font-family:var(--f-hud); font-weight:700; color:var(--accent); font-size:.95rem; padding-top:.12rem;
@@ -292,12 +293,12 @@ p:last-child{margin-bottom:0}
     <div class="block">
       <h2>Acontecimientos clave</h2>
       <ol class="keyev">
-        <li><b>Nace, en el Japón feudal, un arte marcial concebido para matar.</b> Carece de nombre propio; con el tiempo se lo describirá como Ansatsuken, «puño de asesinato».</li>
-        <li><b>El arte incorpora dos vías opuestas.</b> El hado puede canalizarse por disciplina o alimentarse con la intención homicida —el Satsui no Hado—, que multiplica la potencia a cambio de la humanidad de quien la usa.</li>
-        <li><b>Goutetsu domina el arte completo</b> y lo mantiene vivo lejos de cualquier escuela pública. Se le atribuye haber dado forma sistemática al Hadouken y al Shoryuken.</li>
-        <li><b>Goutetsu acepta dos discípulos, Gouken y Gouki,</b> y toma la decisión que lo define: enseñarles el arte íntegro, sin ocultarles su mitad homicida.</li>
-        <li><b>Los dos discípulos llegan a conclusiones incompatibles.</b> Gouken sostiene que el arte puede separarse de su finalidad; Gouki, que solo se domina aceptándola.</li>
-        <li><b>La contradicción queda sin resolver a la muerte del maestro,</b> y el linaje se parte en dos ramas enfrentadas que llegarán intactas hasta el presente de la saga.</li>
+        <li><span><b>Nace, en el Japón feudal, un arte marcial concebido para matar.</b> Carece de nombre propio; con el tiempo se lo describirá como Ansatsuken, «puño de asesinato».</span></li>
+        <li><span><b>El arte incorpora dos vías opuestas.</b> El hado puede canalizarse por disciplina o alimentarse con la intención homicida —el Satsui no Hado—, que multiplica la potencia a cambio de la humanidad de quien la usa.</span></li>
+        <li><span><b>Goutetsu domina el arte completo</b> y lo mantiene vivo lejos de cualquier escuela pública. Se le atribuye haber dado forma sistemática al Hadouken y al Shoryuken.</span></li>
+        <li><span><b>Goutetsu acepta dos discípulos, Gouken y Gouki,</b> y toma la decisión que lo define: enseñarles el arte íntegro, sin ocultarles su mitad homicida.</span></li>
+        <li><span><b>Los dos discípulos llegan a conclusiones incompatibles.</b> Gouken sostiene que el arte puede separarse de su finalidad; Gouki, que solo se domina aceptándola.</span></li>
+        <li><span><b>La contradicción queda sin resolver a la muerte del maestro,</b> y el linaje se parte en dos ramas enfrentadas que llegarán intactas hasta el presente de la saga.</span></li>
       </ol>
     </div>
 
