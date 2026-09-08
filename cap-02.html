@@ -1,0 +1,446 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dos Hermanos y una Decisión</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ---------- tokens: light (bare :root = complete palette) ---------- */
+:root{
+  --bg:#E9E6DE;          /* piedra / washi frío */
+  --bg-2:#F4F2EC;
+  --bg-3:#DCD8CD;
+  --line:#C6C1B3;
+  --line-soft:#D6D2C6;
+  --text:#151824;
+  --text-2:#585D6C;
+  --text-3:#7C8191;
+  --accent:#B3262F;      /* hachimaki */
+  --accent-ink:#8E1D25;
+  --psycho:#5636BE;      /* Psycho Power */
+  --brass:#8E6B10;       /* torneos / eras */
+  --halo:rgba(179,38,47,.12);
+  --shadow:0 1px 2px rgba(21,24,36,.07), 0 8px 24px rgba(21,24,36,.06);
+  --grid:rgba(21,24,36,.055);
+
+  --f-display:"Shippori Mincho B1", "Hiragino Mincho ProN", Georgia, serif;
+  --f-body:"Zen Kaku Gothic New", "Hiragino Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-hud:"Barlow Condensed", "Oswald", Impact, sans-serif;
+
+  --step-hero:clamp(2.4rem,7.2vw,4.5rem);
+  --step-h2:clamp(1.6rem,3.4vw,2.35rem);
+  --step-h3:clamp(1.12rem,1.7vw,1.32rem);
+  --wrap:1140px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D17;
+    --bg-2:#131828;
+    --bg-3:#1B2133;
+    --line:#2A3145;
+    --line-soft:#212739;
+    --text:#EBE7DC;
+    --text-2:#98A0B4;
+    --text-3:#7A8296;
+    --accent:#E2515B;
+    --accent-ink:#F0838A;
+    --psycho:#9679FF;
+    --brass:#D7AE44;
+    --halo:rgba(226,81,91,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+    --grid:rgba(235,231,220,.05);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D17;
+  --bg-2:#131828;
+  --bg-3:#1B2133;
+  --line:#2A3145;
+  --line-soft:#212739;
+  --text:#EBE7DC;
+  --text-2:#98A0B4;
+  --text-3:#7A8296;
+  --accent:#E2515B;
+  --accent-ink:#F0838A;
+  --psycho:#9679FF;
+  --brass:#D7AE44;
+  --halo:rgba(226,81,91,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.35);
+  --grid:rgba(235,231,220,.05);
+  color-scheme:dark;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation-duration:.001ms !important; transition-duration:.001ms !important} }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--f-body);
+  font-size:1.0425rem;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:2px}
+
+.wrap{max-width:var(--wrap); margin-inline:auto; padding-inline:clamp(1.1rem,4vw,2.5rem)}
+.prose{max-width:66ch}
+
+h1,h2,h3{font-family:var(--f-display); font-weight:800; text-wrap:balance; margin:0; letter-spacing:-.01em}
+h2{font-size:var(--step-h2); line-height:1.15}
+h3{font-size:var(--step-h3); line-height:1.3; font-weight:600}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+
+.eyebrow{
+  font-family:var(--f-hud); font-weight:600; text-transform:uppercase;
+  letter-spacing:.19em; font-size:.775rem; color:var(--text-3); margin:0;
+}
+.hud{font-family:var(--f-hud); font-variant-numeric:tabular-nums; letter-spacing:.04em}
+
+
+/* ---------- chapter page ---------- */
+.topbar{
+  position:sticky; top:0; z-index:30; background:color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line-soft);
+}
+.topbar-in{display:flex; align-items:center; justify-content:space-between; gap:1rem; height:52px}
+.back{
+  font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.14em; font-size:.78rem; font-weight:600;
+  text-decoration:none; color:var(--text-2); display:inline-flex; align-items:center; gap:.5rem;
+}
+.back:hover{color:var(--accent)}
+.progress{font-family:var(--f-hud); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-3)}
+
+.chead{border-bottom:1px solid var(--line-soft); background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+.chead-in{padding:clamp(2.6rem,6vw,4.6rem) 0 clamp(2rem,4vw,3rem); display:grid; gap:clamp(1.8rem,4vw,3rem); grid-template-columns:minmax(0,1fr)}
+@media (min-width:900px){ .chead-in{grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr); align-items:end} }
+.chead .num{font-family:var(--f-hud); font-weight:700; letter-spacing:.22em; text-transform:uppercase; font-size:.82rem; color:var(--accent)}
+.chead h1{font-size:clamp(2.1rem,5.6vw,3.7rem); line-height:1.02; margin:.7rem 0 0; letter-spacing:-.02em}
+.chead .sub{color:var(--text-2); margin-top:1.2rem; font-size:1.08rem; max-width:52ch}
+.meta{border-left:2px solid var(--brass); padding-left:1.2rem; display:grid; gap:.9rem}
+.meta div{display:grid; gap:.15rem}
+.meta dt, .meta .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.15em; font-size:.72rem; color:var(--text-3); font-weight:700}
+.meta .v{font-size:.94rem; color:var(--text-2); line-height:1.5}
+.meta .v b{color:var(--text); font-weight:700}
+
+.body{padding:clamp(2.6rem,6vw,4.4rem) 0}
+.body .prose{font-size:1.085rem; line-height:1.78}
+.body .prose > h2{margin:2.8rem 0 1rem; font-size:clamp(1.35rem,2.6vw,1.75rem)}
+.body .prose > h2:first-child{margin-top:0}
+.body .prose em{color:var(--text)}
+.body .prose strong{font-weight:700}
+.lead{font-size:1.2rem; line-height:1.65; color:var(--text); border-left:2px solid var(--accent); padding-left:1.2rem}
+
+.pull{
+  margin:2.4rem 0; font-family:var(--f-display); font-weight:600; font-size:clamp(1.25rem,2.6vw,1.6rem);
+  line-height:1.35; color:var(--text); text-wrap:balance; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:1.4rem 0;
+}
+.note{
+  margin:2rem 0; border:1px dashed var(--line); padding:1.15rem 1.3rem; background:transparent;
+  font-size:.95rem; color:var(--text-2); line-height:1.65;
+}
+.note .k{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.16em; font-size:.72rem; font-weight:700; color:var(--brass); display:block; margin-bottom:.4rem}
+.note b{color:var(--text)}
+.note.warn .k{color:var(--psycho)}
+
+.outro{border-top:1px solid var(--line-soft); background:var(--bg-2)}
+.outro-in{padding:clamp(2.6rem,6vw,4.2rem) 0; display:grid; gap:2.8rem}
+.block h2{font-size:1.32rem; margin-bottom:1rem}
+.keyev{list-style:none; margin:0; padding:0; display:grid; gap:.85rem; counter-reset:k}
+.keyev li{
+  display:grid; grid-template-columns:2.1rem minmax(0,1fr); gap:.8rem; align-items:start;
+  font-size:.985rem; color:var(--text-2); line-height:1.6;
+}
+.keyev li > span{grid-column:2}
+.keyev li::before{
+  counter-increment:k; content:counter(k,decimal-leading-zero);
+  font-family:var(--f-hud); font-weight:700; color:var(--accent); font-size:.95rem; padding-top:.12rem;
+}
+.keyev li b{color:var(--text)}
+
+.who{display:grid; gap:0; border-top:1px solid var(--line)}
+.who div{display:grid; grid-template-columns:minmax(120px,auto) 1fr; gap:.4rem 1.4rem; padding:.85rem 0; border-bottom:1px solid var(--line-soft); align-items:baseline}
+.who .n{font-family:var(--f-display); font-weight:800; font-size:1rem}
+.who .r{font-size:.94rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .who div{grid-template-columns:1fr; gap:.15rem} }
+
+.tl{display:grid; gap:0; margin-top:.4rem}
+.tl div{display:grid; grid-template-columns:minmax(150px,auto) 1fr; gap:.3rem 1.4rem; padding:.75rem 0; border-top:1px solid var(--line-soft); align-items:baseline}
+.tl .w{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.11em; font-size:.78rem; color:var(--brass); font-weight:600}
+.tl .e{font-size:.96rem; color:var(--text-2); line-height:1.55}
+@media (max-width:560px){ .tl div{grid-template-columns:1fr; gap:.1rem} }
+
+.remember{display:grid; gap:1px; background:var(--line-soft); border:1px solid var(--line-soft)}
+.remember article{background:var(--bg); padding:1.1rem 1.2rem; display:grid; grid-template-columns:2rem 1fr; gap:.9rem; align-items:start}
+.remember .n{font-family:var(--f-hud); font-weight:700; font-size:1.35rem; color:var(--brass); line-height:1.1}
+.remember p{margin:0; font-size:.96rem; color:var(--text-2); line-height:1.6}
+.remember p b{color:var(--text)}
+
+.next{border-top:1px solid var(--line-soft); padding:clamp(2.4rem,5vw,3.6rem) 0 clamp(3rem,6vw,4.4rem)}
+.next h2{font-size:clamp(1.5rem,3.4vw,2.1rem)}
+.next p{color:var(--text-2); max-width:62ch; margin-top:1rem}
+.next .ask{font-family:var(--f-display); font-weight:800; color:var(--accent); font-size:clamp(1.1rem,2.2vw,1.35rem); margin-top:2rem}
+.foot{padding:0 0 3rem; color:var(--text-3); font-size:.85rem}
+.foot p{max-width:74ch}
+/* ---------- color de la Era I y movimiento ---------- */
+:root{--era:#C9954A; --hado:#8E2B36}
+:root:not([data-theme="light"]){--hado:#8E2B36}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--hado:#E0616C}}
+:root[data-theme="dark"]{--hado:#E0616C}
+.meter{position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent}
+.meter span{display:block; height:100%; width:0%;
+  background:linear-gradient(90deg, var(--era), var(--accent));
+  box-shadow:0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);}
+.topbar{position:sticky}
+
+.vig{width:100%; height:auto; display:block; border-radius:3px; max-width:230px}
+.vig .sky{fill:color-mix(in srgb, var(--era) 16%, var(--bg-2))}
+.chead-art{display:grid; gap:1.4rem; justify-items:start}
+
+.back{transition:color .2s ease, gap .2s ease}
+.back:hover{gap:.85rem}
+.meta{border-left-color:var(--era)}
+.note .k{color:var(--era)}
+.keyev li{transition:transform .2s ease}
+.keyev li:hover{transform:translateX(4px)}
+.keyev li:hover::before{color:var(--era)}
+.who div{transition:background .2s ease, padding-left .2s ease}
+.who div:hover{background:color-mix(in srgb, var(--era) 8%, transparent); padding-left:.5rem}
+.remember article{transition:transform .26s cubic-bezier(.2,.7,.3,1), background .26s ease}
+.remember article:hover{transform:translateY(-2px); background:color-mix(in srgb, var(--era) 7%, var(--bg))}
+.tl div{transition:padding-left .2s ease}
+.tl div:hover{padding-left:.4rem}
+.pull{position:relative}
+.pull::before{content:""; position:absolute; left:0; top:-1px; width:0; height:2px; background:var(--accent); transition:width .6s cubic-bezier(.2,.7,.3,1)}
+.pull:hover::before{width:100%}
+
+@keyframes riseIn{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+@keyframes breathe{0%,100%{transform:scale(1); opacity:.9}50%{transform:scale(1.05); opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@media (prefers-reduced-motion: no-preference){
+  .chead-in > div > *{animation:riseIn .6s cubic-bezier(.2,.7,.3,1) both}
+  .chead-in > div > h1{animation-delay:.08s}
+  .chead-in > div > .sub{animation-delay:.18s}
+  .chead-art{animation:riseIn .7s cubic-bezier(.2,.7,.3,1) both .1s}
+  .vig .float{animation:drift 6s ease-in-out infinite}
+  .vig .glow{animation:breathe 4.2s ease-in-out infinite; transform-origin:50% 50%}
+}
+
+
+
+.lead{border-left-color:var(--hado)}
+.pull::before{background:var(--hado)}
+.hado{color:var(--hado); font-weight:700}
+.tech{
+  margin:2.2rem 0; border:1px solid var(--line); border-left:3px solid var(--hado);
+  padding:1.3rem 1.4rem; background:color-mix(in srgb, var(--hado) 5%, transparent);
+}
+.tech .jp{font-family:var(--f-display); font-weight:800; font-size:1.5rem; line-height:1.2; color:var(--hado)}
+.tech .ro{font-family:var(--f-hud); text-transform:uppercase; letter-spacing:.17em; font-size:.76rem; font-weight:700; color:var(--text-3); margin-top:.25rem}
+.tech p{margin:.9rem 0 0; font-size:.97rem; color:var(--text-2); line-height:1.65}
+.tech p b{color:var(--text)}
+</style>
+
+<div class="topbar">
+  <div class="wrap topbar-in">
+    <a class="back" href="https://claude.ai/code/artifact/1af58b5a-3e6c-42af-b901-898d600b1623">← El Puño y la Sombra</a>
+    <span class="progress">Parte I · Capítulo 2 de 54</span>
+  </div>
+  <div class="meter" aria-hidden="true"><span id="meterfill"></span></div>
+</div>
+
+<header class="chead">
+  <div class="wrap chead-in">
+    <div>
+      <p class="num">Capítulo 2</p>
+      <h1>Dos hermanos y una decisión</h1>
+      <p class="sub">El arte tenía una puerta al fondo que el maestro nunca cerró con llave. Uno de sus dos discípulos la abrió. El otro pasó el resto de su vida fingiendo que no existía.</p>
+    </div>
+    <div class="chead-art">
+      <svg class="vig" viewBox="0 0 120 72" role="img" aria-label="Un círculo de tinta partido en dos mitades por una fractura: el linaje que se rompe">
+        <rect class="sky" width="120" height="72" rx="3"></rect>
+        <path d="M60,10 A26,26 0 0,0 60,62" fill="none" stroke="var(--era)" stroke-width="5" stroke-linecap="round"></path>
+        <path d="M60,10 A26,26 0 0,1 60,62" fill="none" stroke="var(--hado)" stroke-width="5" stroke-linecap="round"></path>
+        <path class="float" d="M60,2 L54,24 L66,40 L58,70" fill="none" stroke="var(--bg-2)" stroke-width="4" stroke-linejoin="round"></path>
+        <circle class="glow" cx="60" cy="36" r="4" fill="var(--hado)"></circle>
+      </svg>
+    <div class="meta">
+      <div><span class="k">Período</span><span class="v">Era I — todavía años antes del primer torneo</span></div>
+      <div><span class="k">Juegos relacionados</span><span class="v">Trasfondo de <b>Super Street Fighter II Turbo</b> (1994), ampliado en la era <b>Alpha</b> y en <b>Street Fighter IV</b> (2008)</span></div>
+      <div><span class="k">Personajes principales</span><span class="v"><b>Gouki (Akuma)</b>, <b>Goutetsu</b>, <b>Gouken</b></span></div>
+      <div><span class="k">Importancia</span><span class="v">Nace el estilo que aprenderán Ryu y Ken, y nace también el hombre que pasará cuarenta años intentando obligarles a abandonarlo</span></div>
+    </div>
+    </div>
+  </div>
+</header>
+
+<main class="body">
+  <div class="wrap prose">
+
+    <p class="lead">Hay una diferencia entre saber que una técnica existe y estar dispuesto a ejecutarla. Los dos discípulos de Goutetsu sabían de la existencia de la primera. Solo uno estuvo dispuesto a lo segundo, y lo estuvo, además, contra la única persona que podía juzgarle.</p>
+
+    <h2>La técnica del fondo del arte</h2>
+
+    <p>El Satsui no Hado no es un fin en sí mismo. Es un requisito. Es <em>el primer paso</em> para acceder a lo que corona el arte sin nombre, la técnica que Goutetsu conocía y que ningún alumno había ejecutado nunca.</p>
+
+    <div class="tech">
+      <div class="jp">瞬獄殺</div>
+      <div class="ro">Shun Goku Satsu · «Asesinato instantáneo del infierno»</div>
+      <p>En Occidente se la conoce como <b>Raging Demon</b>. Visualmente, el ejecutante se desliza hacia el adversario, la pantalla se funde en negro y suena una ráfaga de impactos imposible de contar. Pero la parte importante no es lo que se ve.</p>
+      <p>El Shun Goku Satsu <b>no mata con el puño</b>. Ataca directamente el espíritu del adversario y lo mata con el peso de sus propios pecados. Cuanto más culpable es la víctima, más terrible es su final. Es una técnica que no juzga la fuerza del rival, sino su alma.</p>
+      <p>Y para ejecutarla, quien la usa debe haber abandonado antes la suya.</p>
+    </div>
+
+    <p>Guarde ese detalle. Le parecerá una elegancia narrativa y es, en realidad, un mecanismo: dentro de veinte capítulos alguien sobrevivirá a esta técnica y la explicación estará escrita aquí, en la letra pequeña.</p>
+
+    <h2>El discípulo mata al maestro</h2>
+
+    <p>Gouki llevaba años internándose en el Satsui no Hado. No lo hizo en un arrebato ni por una tragedia personal —la saga no le concede a Akuma ninguna excusa de ese tipo, y eso es deliberado—. Lo hizo por método. Descendió peldaño a peldaño, comprobando en cada uno cuánto ganaba y qué perdía, hasta que llegó al fondo y encontró el Shun Goku Satsu esperándolo.</p>
+
+    <p>Entonces hizo lo único que quedaba por hacer: <strong>lo usó contra Goutetsu</strong>.</p>
+
+    <p>La motivación, según el relato oficial, es exactamente la que parece: demostrar su dominio. No era una traición por resentimiento ni una lucha de poder por heredar la escuela. Era una demostración técnica. El maestro era el único adversario cuya muerte probaba algo, porque era el único que entendía qué acababa de ocurrir.</p>
+
+    <div class="note warn">
+      <span class="k">Punto ambiguo</span>
+      Capcom ha descrito el enfrentamiento como un combate serio entre ambos, pero <b>nunca ha aclarado con qué ánimo murió Goutetsu</b>. Hay lecturas —alimentadas sobre todo por material secundario y adaptaciones— según las cuales el maestro aceptó su final con algo parecido al orgullo, como prueba de que su enseñanza había producido un dominio verdadero. Es una interpretación atractiva, y no está confirmada. Lo que sí está establecido es el hecho: Goutetsu murió a manos de su alumno, con la técnica que él mismo custodiaba. El lugar exacto tampoco está fijado con claridad en el canon.
+    </div>
+
+    <div class="pull">El arte no falló. Funcionó exactamente como estaba diseñado. Ese es el horror de este capítulo.</div>
+
+    <h2>Lo que le ocurre a un cuerpo</h2>
+
+    <p>El Satsui no Hado deja marca, y la saga es bastante concreta al respecto. Bajo su influencia los ojos se encienden en rojo, los dientes se afilan, las uñas se alargan, el cabello vira al rojo, la piel se oscurece con el tiempo y la voz se vuelve más grave, con una resonancia que no es del todo humana.</p>
+
+    <p>Sobre la espalda de Gouki aparece un único kanji: <strong>天</strong>, <em>ten</em>, «cielo». Es su firma, y también su declaración: alguien que se ha situado por encima de la escala en la que se mide a los demás. Alrededor del cuello lleva un gran <em>juzu</em>, el rosario de cuentas budista. Un objeto de oración sobre el cuerpo de un hombre que ha renunciado a todo lo que la oración protege. Capcom nunca lo ha explicado, y probablemente por eso funciona tan bien.</p>
+
+    <div class="note">
+      <span class="k">Nota de nomenclatura — y una corrección mía</span>
+      En el índice de esta guía escribí que Gouki «deja de llamarse por su nombre». <b>Es impreciso y conviene enmendarlo aquí.</b> En el canon japonés el personaje se llama <b>Gouki</b> (豪鬼, «gran demonio») antes y después de esta noche; no hay un momento de ficción en que cambie de nombre. El nombre <b>Akuma</b> (悪魔, «demonio») lo puso Capcom USA en la localización occidental para reforzar su carácter diabólico. Son dos nombres del mismo personaje en dos mercados, no dos etapas de su vida. Usaré <b>Akuma</b> a partir de aquí por ser el nombre con el que usted lo conocerá en los juegos, y usaré <b>Gouki</b> cuando hable del hombre anterior a esta decisión.
+    </div>
+
+    <h2>La renuncia de Gouken</h2>
+
+    <p>Queda el otro hermano. Y aquí está, para mi gusto, la mejor decisión de guion de toda la franquicia, porque no es una decisión moral: es <strong>una decisión técnica</strong>.</p>
+
+    <p>Gouken no reaccionó jurando venganza. Reaccionó sentándose a desmontar el arte que había heredado.</p>
+
+    <p>Conservó las formas: el <strong>Hadouken</strong>, el <strong>Shoryuken</strong>, el <strong>Tatsumaki Senpukyaku</strong>. Conservó el entrenamiento, la estructura, el linaje. Y extirpó de raíz aquello que las alimentaba: la intención de matar. En su lugar puso otra cosa —disciplina, dominio de uno mismo, la idea de que un combate se gana sin necesidad de cancelar al adversario— y sostuvo que el arte seguiría funcionando.</p>
+
+    <p>Hay que decir con claridad lo que eso significa, porque la saga lo dice: <strong>el arte de Gouken es más débil</strong>. Deliberadamente. Renunció a un techo de potencia que sabía alcanzable a cambio de que quien lo practicase pudiera seguir siendo una persona. Es una amputación consciente, y Gouken la hizo sabiendo exactamente cuánto cortaba.</p>
+
+    <p>Tomó además una segunda decisión, más silenciosa y más discutible: <em>no contarlo</em>. Enseñaría el arte sin explicar qué le faltaba ni por qué. A cualquier alumno futuro le entregaría una herramienta describiéndola como el conjunto completo.</p>
+
+    <div class="pull">Goutetsu enseñó el arte entero y no escogió por sus alumnos. Gouken escogió por ellos y les enseñó la mitad. Ninguno de los dos métodos va a funcionar.</div>
+
+    <h2>Dos ramas</h2>
+
+    <p>Al final de esta noche quedan dos hombres y dos versiones del mismo conocimiento.</p>
+
+    <p>Uno se marcha al mundo con el arte completo y una convicción intacta: que su hermano practica una mentira educada, y que tarde o temprano alguien tendrá que demostrárselo. No busca poder político, ni dinero, ni territorio —conviene subrayarlo, porque a Akuma se le confunde a menudo con un villano al uso y no lo es—. Busca <em>combates verdaderos</em>, y considera que un combate verdadero es aquel en el que ambos contendientes están dispuestos a morir.</p>
+
+    <p>El otro se queda, monta un dojo apartado y espera. Con el tiempo llegarán dos niños. Uno será recogido; el otro, enviado desde el otro lado del mundo por un padre con dinero y poco tiempo.</p>
+
+    <p>A ninguno de los dos le contará nada de esta noche.</p>
+
+  </div>
+</main>
+
+<section class="outro">
+  <div class="wrap outro-in">
+
+    <div class="block">
+      <h2>Acontecimientos clave</h2>
+      <ol class="keyev">
+        <li><span><b>Gouki completa su descenso al Satsui no Hado</b> de forma metódica, no por una tragedia personal. La saga no le concede atenuantes, y eso forma parte del personaje.</span></li>
+        <li><span><b>Domina el Shun Goku Satsu,</b> la técnica que corona el arte: mata atacando el espíritu del adversario con el peso de sus propios pecados, no con el puño.</span></li>
+        <li><span><b>Mata a Goutetsu con ella para demostrar su dominio.</b> El maestro era el único adversario cuya muerte probaba algo, porque era el único capaz de entender lo que acababa de ver.</span></li>
+        <li><span><b>El Satsui no Hado marca su cuerpo:</b> ojos rojos, colmillos, cabello rojo, piel oscurecida, voz alterada. Y el kanji 天 sobre la espalda.</span></li>
+        <li><span><b>Gouken renuncia al Satsui no Hado</b> y reconstruye el arte sin él: conserva Hadouken, Shoryuken y Tatsumaki Senpukyaku, y extirpa la intención homicida que los alimentaba.</span></li>
+        <li><span><b>Acepta a sabiendas un arte más débil,</b> con un techo de potencia inferior, a cambio de que quien lo practique conserve su humanidad.</span></li>
+        <li><span><b>Decide además no explicárselo a sus futuros alumnos.</b> Les entregará una herramienta incompleta presentándola como completa.</span></li>
+        <li><span><b>El linaje se parte en dos ramas irreconciliables</b> que llegarán intactas, y enfrentadas, hasta el presente de la franquicia.</span></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h2>Personajes que debemos recordar</h2>
+      <div class="who">
+        <div><span class="n">Akuma / Gouki</span><span class="r">Ya no es un discípulo: es la prueba viviente de que el arte funciona como fue diseñado. No persigue poder ni dominio, sino combates en los que ambos contendientes acepten morir. Esa distinción lo separa de todos los demás antagonistas de la saga.</span></div>
+        <div><span class="n">Gouken</span><span class="r">El hombre que amputó su propia herencia. Su decisión crea el estilo que definirá la franquicia, y su silencio crea el problema que Ryu tardará décadas en resolver.</span></div>
+        <div><span class="n">Goutetsu</span><span class="r">Muere en este capítulo, con la técnica que él custodiaba y a manos del alumno al que se la enseñó. Su figura seguirá pesando sobre los dos hermanos mucho después.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Organizaciones</h2>
+      <div class="who">
+        <div><span class="n">Ninguna todavía</span><span class="r">Seguimos antes de cualquier estructura de poder de la saga. Lo único que existe es un linaje marcial, y en este capítulo se rompe en dos: la rama que conserva el arte íntegro, encarnada en un solo hombre, y la rama depurada que Gouken empieza a enseñar y que acabará llamándose, en Occidente y por error, «Shotokan».</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Cronología del capítulo</h2>
+      <div class="tl">
+        <div><span class="w">Años de entrenamiento</span><span class="e">Gouki profundiza en el Satsui no Hado bajo la tutela de Goutetsu, midiendo en cada peldaño lo que gana y lo que pierde.</span></div>
+        <div><span class="w">El descenso se completa</span><span class="e">Gouki domina el Shun Goku Satsu, la técnica que corona el arte y que exige haber renunciado al propio espíritu.</span></div>
+        <div><span class="w">La noche del combate</span><span class="e">Gouki se enfrenta a Goutetsu y lo mata con el Shun Goku Satsu para demostrar su dominio.</span></div>
+        <div><span class="w">Inmediatamente después</span><span class="e">El Satsui no Hado transforma su cuerpo. Aparece el kanji 天 sobre su espalda. Abandona el linaje y sale al mundo.</span></div>
+        <div><span class="w">Los meses siguientes</span><span class="e">Gouken desmonta el arte heredado, extirpa la intención homicida y funda su propia versión. Decide no revelar lo que ha quitado.</span></div>
+        <div><span class="w">Final del capítulo</span><span class="e">Gouken se establece en un dojo apartado. Todavía no tiene alumnos.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Lo que debes recordar</h2>
+      <div class="remember">
+        <article><span class="n">1</span><p><b>El Shun Goku Satsu mata con los pecados de la víctima, no con la fuerza del ejecutante.</b> Es el dato más importante del capítulo y tiene consecuencias mucho más adelante. No lo olvide.</p></article>
+        <article><span class="n">2</span><p><b>Akuma no es un villano de conquista.</b> No quiere dinero, ni territorio, ni súbditos. Quiere combates en los que ambos estén dispuestos a morir. Medirle con la vara de los demás antagonistas es el error más común al leer esta saga.</p></article>
+        <article><span class="n">3</span><p><b>El estilo de Ryu y Ken es, por diseño, una versión mutilada.</b> Gouken le quitó su fuente de potencia a propósito. Todo el conflicto interior de Ryu nace de ahí.</p></article>
+        <article><span class="n">4</span><p><b>Gouken decidió callarlo.</b> No es un detalle menor ni un descuido narrativo: el silencio del maestro es lo que dejará a Ryu indefenso el día que la puerta del fondo se abra sola.</p></article>
+        <article><span class="n">5</span><p><b>Gouki y Akuma son el mismo nombre en dos mercados,</b> no dos etapas de un personaje. Corrijo aquí lo que insinué en el índice: no hay ninguna escena canónica de cambio de nombre.</p></article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="next">
+  <div class="wrap">
+    <h2>Conexión con el Capítulo 3</h2>
+    <p>Gouken tiene un arte nuevo, un dojo vacío y un secreto. Lo que le falta son alumnos, y el siguiente capítulo se los trae: un niño sin familia al que recoge, y un adolescente estadounidense al que su padre envía a Japón precisamente porque no sabe qué hacer con él. Dos temperamentos opuestos aprendiendo exactamente la misma técnica.</p>
+    <p>Es también el capítulo donde empieza, por fin, la historia de Ryu. Y donde entenderemos por qué su maestro le enseñó a golpear pero nunca le explicó contra qué.</p>
+    <p class="ask">¿Continuamos con el Capítulo 3 — «El dojo de Gouken»?</p>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>Guía de lectura no oficial del universo Street Fighter, propiedad de Capcom Co., Ltd. Fuentes principales de este capítulo: el trasfondo introducido en <em>Super Street Fighter II Turbo</em>, los perfiles oficiales de Capcom y el material de personaje de <em>Street Fighter IV</em>. Las lecturas señaladas como interpretación —el ánimo con el que murió Goutetsu— se presentan expresamente como tales.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var fill = document.getElementById('meterfill');
+  if (!fill) return;
+  var q = 0;
+  function meter(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    fill.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + '%';
+  }
+  addEventListener('scroll', function(){
+    if (!q) q = requestAnimationFrame(function(){ q = 0; meter(); });
+  }, { passive: true });
+  addEventListener('resize', meter, { passive: true });
+  meter();
+})();
+</script>
