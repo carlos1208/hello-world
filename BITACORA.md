@@ -129,3 +129,25 @@ Formato: dónde estoy · qué hice · qué medí · qué sigue.
 - **Pendiente:** verificar el tutor y la sincronización en el sitio real. Y lo
   de siempre, que sigue sin moverse: el laboratorio de bisect y la sección 6
   del entregable.
+
+## Sesión 7 — Los patrones de lección, aplicados al Módulo 1
+- **Fase / semana:** F0 · semana 1
+- **Hecho:** se derivaron ocho patrones de diseño de lecciones (`CLAUDE.md` §2)
+  comparando nuestro material con el de otro tutor sobre la misma nota, y se
+  aplicaron los cuatro que le faltaban al Módulo 1:
+  - **P1** — la terminal de `reflog` ahora tiene la cadena de commits dibujada
+    al lado, y se mueve con cada comando: se ve la etiqueta saltar y los tres
+    commits quedarse huérfanos, en gris y tachados.
+  - **P2** — el glosario distingue tres estados: término ya trabajado
+    (subrayado discreto), término de este módulo, y término que llega más
+    adelante. El modal dice de dónde sale cada uno.
+  - **P3** — cada instrumento pide una predicción antes de abrirse. La de
+    bisect es la que más enseña: casi nadie acierta que 60 commits son 6
+    pruebas.
+  - **P4** — tarjeta de contraste en la capa 4 de los cuatro instrumentos, con
+    la creencia equivocada nombrada y refutada.
+- **Corregido de paso:** la sincronización solo fundía `hechos`, `vistas` y
+  `guiado`, así que las comprobaciones y las predicciones se habrían perdido al
+  pasar de un dispositivo a otro. Ahora funde cualquier grupo, en la página y
+  en el servidor: los números ganan por el mayor, los sí ganan al no.
+- **Pendiente:** sin cambios — el laboratorio de bisect y la sección 6.
