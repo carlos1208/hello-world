@@ -269,15 +269,15 @@ cuando aplica, y él puede explicar el mecanismo sin leer notas.
   interactiva (`app/modulo-1.html`, publicada en
   https://claude.ai/artifact/VB9pErnVpXhX4x8B9Brb4z y desplegable como sitio
   propio — ver `docs/despliegue.md`).
-- **Patrones de lección — pendiente de aplicar hacia atrás.** Se derivaron
-  comparando nuestro material con el de otro tutor. El Módulo 1 cumple P5, P7 y
-  P8, pero le faltan:
-  - **P1** — el rescate del `reflog` y el recorrido de `bisect` son cambios de
-    estado explicados en prosa. Piden diagrama en tres tiempos, y en la
-    plataforma un diagrama **vivo** que se mueva con los comandos.
-  - **P2** — el glosario aún no distingue el término ya enseñado del nuevo.
-  - **P3** — ningún instrumento pide predicción antes de revelar.
-  - **P4** — los pares que se confunden están en prosa, no en dos columnas.
+- **Patrones de lección — aplicados al Módulo 1.** Se derivaron comparando
+  nuestro material con el de otro tutor sobre la misma nota. Los ocho están en
+  §2 y el Módulo 1 los cumple: la terminal de `reflog` lleva la cadena de
+  commits dibujada y viva (P1), el glosario distingue término visto / de este
+  módulo / futuro (P2), cada instrumento pide predicción antes de abrirse (P3)
+  y la capa 4 de los cuatro lleva su tarjeta de contraste con la creencia
+  equivocada refutada (P4).
+  **Los módulos siguientes nacen ya con los ocho**: no se vuelve a aplicar
+  nada hacia atrás.
 - **Siguiente:** cerrar el entregable de bisect y pasar al Módulo 2 —
   OLTP/OLAP, Parquet por dentro, idempotencia.
 
