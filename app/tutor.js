@@ -48,8 +48,15 @@
           muestreo = s; disponible = !!s; return disponible;
         }).catch(function () { disponible = false; return false; });
       }
+      /* La función responde 200 aunque NO haya clave configurada: lo dice en
+         el cuerpo, no en el código de estado. Mirar solo el código haría
+         aparecer los botones en un sitio donde el tutor no puede responder. */
       return fetch("/api/tutor?ping=1")
-        .then(function (r) { disponible = r.ok || r.status === 401; return disponible; })
+        .then(function (r) {
+          if (r.status === 401) { disponible = true; return true; }   // hay tutor, pide clave
+          if (!r.ok) { disponible = false; return false; }
+          return r.json().then(function (d) { disponible = !!(d && d.ok); return disponible; });
+        })
         .catch(function () { disponible = false; return false; });
     },
 

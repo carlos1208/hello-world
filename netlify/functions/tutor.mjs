@@ -8,8 +8,15 @@
  *
  * Variables de entorno (Netlify → Site configuration → Environment variables):
  *   GEMINI_API_KEY    obligatoria · https://aistudio.google.com/apikey
- *   GEMINI_MODELO     opcional    · por defecto gemini-2.5-flash-lite
+ *   GEMINI_MODELO     opcional    · fuerza un modelo concreto
  *   CLAVE_PERSONAL    opcional    · si la pones, hay que mandarla en x-clave
+ *
+ * Sobre el modelo: Google retira modelos con cierta frecuencia y la API
+ * responde 404 cuando el nombre ya no existe. Por eso aquí NO hay un nombre
+ * fijo: se prueban varios candidatos en orden y el primero que responde se
+ * recuerda mientras la función siga caliente. Si un día fallan todos, el
+ * mensaje lo dice y basta con poner GEMINI_MODELO con un nombre vigente de
+ * https://ai.google.dev/gemini-api/docs/models
  */
 
 const INSTRUCCION = [
@@ -26,6 +33,15 @@ const INSTRUCCION = [
 ].join(" ");
 
 const TOPES = { contexto: 4000, pregunta: 500, cuerpo: 12000 };
+
+// En orden de preferencia: los «lite» traen la cuota gratuita más holgada.
+const CANDIDATOS = [
+  "gemini-3.5-flash-lite",
+  "gemini-3.1-flash-lite",
+  "gemini-3.8-flash",
+  "gemini-2.5-flash-lite"
+];
+let modeloQueSirve = null;   // se recuerda entre invocaciones en caliente
 
 function json(datos, estado = 200) {
   return new Response(JSON.stringify(datos), {
@@ -68,26 +84,46 @@ export default async (req) => {
     : "No lo entendió. Detecta cuál es el punto que probablemente se le atravesó y explícale ESE punto solo, más despacio, al nivel de esta capa.";
   if (pregunta) p += `\n\nSu pregunta textual: ${pregunta}`;
 
-  const modelo = process.env.GEMINI_MODELO || "gemini-2.5-flash-lite";
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelo)}:generateContent`;
+  const cuerpo = JSON.stringify({
+    systemInstruction: { parts: [{ text: INSTRUCCION }] },
+    contents: [{ role: "user", parts: [{ text: p }] }],
+    generationConfig: { temperature: 0.8, maxOutputTokens: 700 }
+  });
 
-  let r;
-  try {
-    r = await fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: INSTRUCCION }] },
-        contents: [{ role: "user", parts: [{ text: p }] }],
-        generationConfig: { temperature: 0.8, maxOutputTokens: 700 }
-      })
-    });
-  } catch {
-    return json({ error: "No se pudo alcanzar el servicio del tutor." }, 502);
+  const forzado = process.env.GEMINI_MODELO;
+  const aProbar = forzado ? [forzado] : (modeloQueSirve ? [modeloQueSirve, ...CANDIDATOS] : CANDIDATOS);
+
+  let r = null, ultimo404 = null;
+  for (const modelo of aProbar) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelo)}:generateContent`;
+    try {
+      r = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
+        body: cuerpo
+      });
+    } catch {
+      return json({ error: "No se pudo alcanzar el servicio del tutor." }, 502);
+    }
+    // 404 = ese modelo ya no existe. Con los demás no tiene sentido insistir.
+    if (r.status === 404) { ultimo404 = modelo; r = null; continue; }
+    modeloQueSirve = modelo;
+    break;
+  }
+
+  if (!r) {
+    return json({
+      error: forzado
+        ? `El modelo «${forzado}» no existe o ya fue retirado. Cambia GEMINI_MODELO por uno vigente de ai.google.dev/gemini-api/docs/models.`
+        : `Ninguno de los modelos conocidos respondió (el último probado fue «${ultimo404}»). Google los retira cada cierto tiempo: pon GEMINI_MODELO con un nombre vigente.`
+    }, 502);
   }
 
   if (r.status === 429) {
     return json({ error: "Se agotó la cuota gratuita del día. Vuelve mañana o lee la nota escrita del módulo." }, 429);
+  }
+  if (r.status === 400 || r.status === 403) {
+    return json({ error: "Google rechazó la clave de API. Revisa GEMINI_API_KEY en las variables de entorno." }, 502);
   }
   if (!r.ok) {
     return json({ error: `El servicio del tutor respondió ${r.status}.` }, 502);
