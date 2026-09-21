@@ -151,3 +151,32 @@ Formato: dónde estoy · qué hice · qué medí · qué sigue.
   pasar de un dispositivo a otro. Ahora funde cualquier grupo, en la página y
   en el servidor: los números ganan por el mayor, los sí ganan al no.
 - **Pendiente:** sin cambios — el laboratorio de bisect y la sección 6.
+
+## Sesión 8 — Cada instrumento se opera escribiendo
+- **Fase / semana:** F0 · semana 1
+- **Hallazgo suyo, y era de fondo:** el instrumento de `rebase -i` enseñaba el
+  concepto —ordenar y fusionar commits— pero **nunca hacía escribir
+  `git rebase -i`**. Un botón que hace por dentro lo que hace un comando
+  enseña la idea y no la herramienta.
+- **Reglas nuevas en `CLAUDE.md` §2:**
+  - **Regla 9** — todo instrumento se abre escribiendo el comando real; los
+    botones existen como atajo de algo ya escrito y llevan el nombre del
+    comando que ejecutan. Corolario: cada módulo tiene su ejercicio de
+    terminal, sin excepción.
+  - **Regla 7 ampliada** — los comandos se desarman la primera vez: verbo,
+    cada bandera, el argumento y de dónde sale su valor. Un comando suelto en
+    la capa 5 obliga a atar cabos que no se han dado.
+- **Aplicado:**
+  - Los cuatro instrumentos tienen terminal. `rebase` arranca con
+    `git rebase -i HEAD~5`, que es lo que abre el archivo de tareas; al
+    guardar imprime lo que imprimiría Git. `git rebase --abort` funciona.
+  - `objetos` se recorre escribiendo `git cat-file -p`; los hashes en azul
+    rellenan el comando en vez de saltar solos.
+  - `bisect` no empieza hasta escribir `git bisect start HEAD <bueno>`, y los
+    botones pasan a llamarse `git bisect good | bad | skip`.
+  - **Anatomía del comando** en la capa 5 de los cuatro: siete comandos
+    partidos en piezas, incluido de dónde sale cada valor.
+  - El tilde del instrumento no aparecía y no se decía por qué: ahora cada
+    objetivo muestra «Práctica ○/✓ · Comprobación ○/✓», y la pestaña marca
+    «·» cuando va media.
+- **Pendiente:** el laboratorio y la sección 6.

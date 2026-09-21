@@ -62,11 +62,22 @@ llevó algo completo, no un fragmento.
    tiempo perdido.
 6. **Nada de «obviamente», «simplemente» o «solo tienes que».** Si fuera obvio
    no haría falta explicarlo.
-7. **El código se explica línea por línea la primera vez** que aparece un
-   patrón nuevo. Después se puede asumir.
+7. **El código y los comandos se desarman la primera vez.** Un comando nuevo
+   no se menciona: se parte en piezas y se dice qué hace cada una —el verbo,
+   cada bandera, el argumento— y de dónde sale el valor que va ahí. Un comando
+   suelto en la capa 5 obliga a atar cabos que no se le han dado, y eso es
+   justo lo que el método existe para evitar. Después se puede asumir.
 8. **Se puede parar en cualquier capa.** Capas 1–3 ya son utilidad real; 4–5
    son el nivel que pide la ruta.
-9. **Toda palabra técnica lleva su definición a un clic.** En las plataformas
+9. **Todo instrumento se opera escribiendo el comando real.** Un botón que
+   hace por dentro lo que hace un comando enseña el concepto y **no enseña la
+   herramienta**: el día que esté frente a una terminal no va a haber botón.
+   Cada instrumento se abre escribiendo el comando que lo provoca, y lo que
+   imprime es lo que imprimiría Git. Los botones existen, pero como atajo de
+   algo que ya se escribió al menos una vez, y llevan el nombre del comando
+   que ejecutan.
+   Corolario: **cada módulo tiene su ejercicio de terminal.** Sin excepción.
+10. **Toda palabra técnica lleva su definición a un clic.** En las plataformas
    interactivas se subraya y abre un modal; en las notas escritas, la tabla de
    vocabulario de la capa 4 cumple esa función. El glosario es **uno solo y
    compartido**: `app/glosario.js`. Los módulos
@@ -269,15 +280,15 @@ cuando aplica, y él puede explicar el mecanismo sin leer notas.
   interactiva (`app/modulo-1.html`, publicada en
   https://claude.ai/artifact/VB9pErnVpXhX4x8B9Brb4z y desplegable como sitio
   propio — ver `docs/despliegue.md`).
-- **Patrones de lección — pendiente de aplicar hacia atrás.** Se derivaron
-  comparando nuestro material con el de otro tutor. El Módulo 1 cumple P5, P7 y
-  P8, pero le faltan:
-  - **P1** — el rescate del `reflog` y el recorrido de `bisect` son cambios de
-    estado explicados en prosa. Piden diagrama en tres tiempos, y en la
-    plataforma un diagrama **vivo** que se mueva con los comandos.
-  - **P2** — el glosario aún no distingue el término ya enseñado del nuevo.
-  - **P3** — ningún instrumento pide predicción antes de revelar.
-  - **P4** — los pares que se confunden están en prosa, no en dos columnas.
+- **Patrones de lección — aplicados al Módulo 1.** Se derivaron comparando
+  nuestro material con el de otro tutor sobre la misma nota. Los ocho están en
+  §2 y el Módulo 1 los cumple: la terminal de `reflog` lleva la cadena de
+  commits dibujada y viva (P1), el glosario distingue término visto / de este
+  módulo / futuro (P2), cada instrumento pide predicción antes de abrirse (P3)
+  y la capa 4 de los cuatro lleva su tarjeta de contraste con la creencia
+  equivocada refutada (P4).
+  **Los módulos siguientes nacen ya con los ocho**: no se vuelve a aplicar
+  nada hacia atrás.
 - **Siguiente:** cerrar el entregable de bisect y pasar al Módulo 2 —
   OLTP/OLAP, Parquet por dentro, idempotencia.
 
