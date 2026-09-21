@@ -18,7 +18,7 @@
   var RUTA_API = "/api/progreso";
   var ESPERA_GUARDADO = 700;   // ms; agrupa ráfagas de clics en un solo envío
 
-  var estado = { hechos: {}, vistas: {}, guiado: true };
+  var estado = { hechos: {}, vistas: {}, checks: {}, predicho: {}, guiado: true };
   var modo = "local";
   var docDB = null;
   var clave = null;
@@ -28,15 +28,28 @@
   function avisar(texto) {
     avisos.forEach(function (f) { try { f(estado, texto, modo); } catch (e) {} });
   }
+  /* Funde genérico: cualquier grupo nuevo (checks, predicho, lo que traigan
+     los módulos siguientes) se sincroniza sin tocar esta función. Los números
+     ganan por el mayor —las capas reveladas no retroceden— y los sí al no. */
   function fundir(entrante) {
     if (!entrante || typeof entrante !== "object") return;
-    estado.hechos = Object.assign({}, estado.hechos, entrante.hechos || {});
-    estado.vistas = Object.assign({}, estado.vistas, entrante.vistas || {});
-    Object.keys(estado.vistas).forEach(function (k) {
-      estado.vistas[k] = Math.max(estado.vistas[k] || 1, (entrante.vistas || {})[k] || 1);
+    Object.keys(entrante).forEach(function (grupo) {
+      if (grupo === "guiado") {
+        if (typeof entrante.guiado === "boolean") estado.guiado = entrante.guiado;
+        return;
+      }
+      if (grupo === "actualizado") return;
+      var v = entrante[grupo];
+      if (!v || typeof v !== "object") return;
+      estado[grupo] = estado[grupo] || {};
+      Object.keys(v).forEach(function (id) {
+        var actual = estado[grupo][id];
+        if (typeof v[id] === "number") estado[grupo][id] = Math.max(actual || 0, v[id]);
+        else if (!actual) estado[grupo][id] = v[id];
+      });
     });
-    if (typeof entrante.guiado === "boolean") estado.guiado = entrante.guiado;
   }
+
   function leerLocal() {
     try {
       var crudo = localStorage.getItem(LLAVE_LOCAL);
@@ -73,8 +86,7 @@
 
   function subirDB() {
     if (!docDB) return;
-    docDB.set({ hechos: estado.hechos, vistas: estado.vistas, guiado: estado.guiado,
-                actualizado: new Date().toISOString() })
+    docDB.set(Object.assign({}, estado, { actualizado: new Date().toISOString() }))
       .then(function () { avisar("Sincronizado · en todos tus dispositivos"); })
       .catch(function () { avisar("Guardado aquí; no se pudo sincronizar"); });
   }

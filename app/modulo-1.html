@@ -203,6 +203,65 @@
   .flota.mal { border-color: var(--bad); }
   .flota.saliendo { animation: bajaAviso .24s ease both; }
 
+
+  /* P1 · la cadena de commits, viva */
+  .cadena { list-style: none; margin: 0 0 6px; padding: 0; }
+  .cadena li {
+    display: grid; grid-template-columns: 13px auto 1fr auto; gap: 11px; align-items: center;
+    padding: 6px 0; transition: opacity .3s ease; min-width: 0;
+  }
+  .cadena .punto { width: 11px; height: 11px; border-radius: 50%; background: var(--accent);
+    position: relative; transition: background .3s ease, border-color .3s ease; }
+  .cadena li:not(:last-child) .punto::after {
+    content: ""; position: absolute; left: 50%; top: 11px; width: 2px; height: 24px;
+    background: var(--line); transform: translateX(-50%);
+  }
+  .cadena .sha { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  .cadena .msg { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cadena .ets { display: flex; gap: 5px; }
+  .cadena .et { font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    padding: 2px 7px; border-radius: 5px; }
+  .cadena .et.main { background: var(--accent-soft); color: var(--accent); }
+  .cadena .et.head { background: var(--good-soft); color: var(--good); }
+  .cadena li.huerfano { opacity: .5; }
+  .cadena li.huerfano .punto { background: transparent; border: 2px dashed var(--faint); }
+  .cadena li.huerfano .msg { text-decoration: line-through; text-decoration-thickness: 1px; }
+  .cadena li.latiendo { animation: latir .7s ease; }
+  @keyframes latir { 0%, 100% { background: transparent; } 35% { background: var(--good-soft); } }
+  .cadena-pie { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+
+  /* P4 · contraste en dos columnas */
+  .contraste { margin-top: 16px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+  .contraste .tit { padding: 9px 13px; background: var(--surface-2); font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: .11em; text-transform: uppercase; color: var(--faint); }
+  .contraste .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
+  .contraste .col { background: var(--surface); padding: 13px; }
+  .contraste .col b { display: block; font-family: var(--mono); font-size: 13px;
+    color: var(--ink); margin-bottom: 5px; }
+  .contraste .col span { display: block; font-size: 13.5px; color: var(--muted); }
+  .contraste .mito { padding: 12px 13px; background: var(--bad-soft);
+    border-top: 1px solid var(--line); font-size: 13.5px; color: var(--ink); }
+  .contraste .mito b { color: var(--bad); }
+  @media (max-width: 520px) { .contraste .cols { grid-template-columns: 1fr; } }
+
+  /* P3 · predecir antes de ver */
+  .prediccion {
+    background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 0 11px 11px 0; padding: 16px 17px; margin-bottom: 16px; box-shadow: var(--shadow);
+  }
+  .prediccion .et { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent); }
+  .prediccion .q { font-size: 15.5px; font-weight: 500; margin: 9px 0 2px; }
+  .prediccion .nota { font-size: 13px; color: var(--faint); margin: 6px 0 0; }
+  .velado { display: none !important; }
+
+  /* P2 · el glosario distingue lo ya enseñado de lo que falta */
+  dfn.g.visto { border-bottom-style: dotted; border-bottom-color: var(--faint); }
+  dfn.g.futuro { border-bottom-color: var(--faint); }
+  .glosa-origen { display: block; margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--line); font-family: var(--mono); font-size: 11px;
+    letter-spacing: .05em; color: var(--faint); }
+
   /* glosario: término subrayado, tooltip y modal */
   dfn.g {
     font-style: inherit; border-bottom: 1px dashed var(--accent);
@@ -463,6 +522,8 @@
       <div class="linea"></div>
     </div>
 
+    <div id="pred-objetos"></div>
+
     <div class="objetivo" id="obj-objetos">
       <span class="et">Objetivo</span>
       <span>Baja de commit a tree a blob, ejecuta un <code>amend</code>, y responde por qué reescribir un commit antiguo reescribe la historia posterior.</span>
@@ -507,6 +568,8 @@
       <div class="linea"></div>
     </div>
 
+    <div id="pred-reflog"></div>
+
     <div class="objetivo" id="obj-reflog">
       <span class="et">Escenario</span>
       <span>Alguien ejecutó <code>git reset --hard HEAD~3</code> y se llevó por delante tres commits de trabajo real. Recupéralos. La terminal es funcional: escribe comandos.</span>
@@ -518,7 +581,9 @@
         <button class="act ghost" id="reflog-reset" type="button">Reiniciar escenario</button>
       </div>
       <div class="ic-body">
-        <div class="term" id="rl-term"></div>
+        <ol class="cadena" id="rl-cadena" aria-label="estado de la rama"></ol>
+        <p class="cadena-pie" id="rl-pie"></p>
+        <div class="term" id="rl-term" style="margin-top:14px"></div>
         <form class="term-in" id="rl-form">
           <span>$</span>
           <input id="rl-input" autocomplete="off" spellcheck="false" placeholder="git reflog" aria-label="comando">
@@ -552,6 +617,8 @@
       <p>Cinco commits, dos de ellos trabajo sucio. Déjalo en tres que se lean.</p>
       <div class="linea"></div>
     </div>
+
+    <div id="pred-rebase"></div>
 
     <div class="objetivo" id="obj-rebase">
       <span class="et">Objetivo</span>
@@ -615,6 +682,8 @@
       <p>El simulador parte el rango a la mitad y tú respondes. Hay una tercera respuesta que decide el resultado.</p>
       <div class="linea"></div>
     </div>
+
+    <div id="pred-bisect"></div>
 
     <div class="objetivo" id="obj-bisect">
       <span class="et">Objetivo</span>
@@ -788,6 +857,7 @@ function marcar(id) {
   if (hechos()[id]) return;
   Almacen.marcar("hechos", id, true);
   pintarProgreso();
+  pintarTodasLasCapas();
   flotar("Práctica de " + (NOMBRES[id] || id) + " cerrada", "ok");
 }
 
@@ -857,6 +927,18 @@ const RX_G = TERMINOS.length
 const CLAVE = {};
 TERMINOS.forEach(t => { CLAVE[t.v.toLowerCase()] = t.k; });
 
+/* P2 · un término tiene tres estados según dónde se enseñe:
+     visto   — su instrumento ya está cerrado: se subraya discreto
+     nuevo   — se enseña en este módulo y todavía no lo cierras
+     futuro  — llega en una fase posterior de la ruta */
+function estadoTermino(clave) {
+  const m = (GL[clave] || {}).m;
+  if (!m) return "futuro";
+  return cerrado(m) ? "visto" : "nuevo";
+}
+const ORIGEN = { objetos: "01 · Objetos", reflog: "02 · reflog",
+                 rebase: "03 · rebase -i", bisect: "04 · bisect" };
+
 const SALTAR = new Set(["CODE", "PRE", "BUTTON", "SELECT", "OPTION", "DFN", "H1", "SCRIPT", "STYLE", "INPUT", "LABEL", "TH"]);
 const SALTAR_CLASE = ["term", "hash", "capa-n", "ph-tag", "eyebrow", "modo", "glosa-caja", "glosa-tip"];
 function limite(ch) { return !ch || !/[0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ_-]/.test(ch); }
@@ -889,7 +971,8 @@ function marcarGlosario(raiz) {
       piezas = piezas || document.createDocumentFragment();
       if (m.index > ultimo) piezas.appendChild(document.createTextNode(txt.slice(ultimo, m.index)));
       const d = document.createElement("dfn");
-      d.className = "g"; d.dataset.g = clave; d.textContent = m[0];
+      d.className = "g " + estadoTermino(clave);     // P2: visto / nuevo / futuro
+      d.dataset.g = clave; d.textContent = m[0];
       d.tabIndex = 0; d.setAttribute("role", "button");
       d.setAttribute("aria-label", m[0] + " — ver definición");
       piezas.appendChild(d);
@@ -913,7 +996,15 @@ function abrirGlosa(clave) {
   ocultarTip();
   document.getElementById("glosa-t").textContent = e.t;
   document.getElementById("glosa-c").textContent = e.c;
-  document.getElementById("glosa-d").innerHTML = e.d;
+  const cuerpo = document.getElementById("glosa-d");
+  cuerpo.innerHTML = e.d;
+  const origen = document.createElement("span");
+  origen.className = "glosa-origen";
+  origen.textContent = e.m
+    ? (cerrado(e.m) ? "Ya lo trabajaste en el instrumento " + ORIGEN[e.m]
+                    : "Se enseña en el instrumento " + ORIGEN[e.m])
+    : "Se trabaja más adelante en la ruta";
+  cuerpo.appendChild(origen);
   glosa.hidden = false;
   document.getElementById("glosa-x").focus();
 }
@@ -1033,7 +1124,7 @@ function cajaTutor(mid, capa, titulo) {
 /* ========================================================================
    capas de aprendizaje — se revelan de una en una
    ===================================================================== */
-const CAPAS = {"objetos": [{"t": "Empieza aquí", "s": "El problema, en tu mundo", "h": "<p>Llevas un informe. Cada semana lo modificas. Al mes alguien pregunta en qué momento cambió el criterio de cálculo, y en la carpeta hay <code>informe_final.xlsx</code>, <code>informe_final_BUENO.xlsx</code> y <code>informe_final_BUENO (1).xlsx</code>.</p><p><b>Git es una cámara, no un corrector.</b> Cada vez que le dices «guarda», no escribe encima de lo anterior: toma una <b>foto completa</b> de todos tus archivos, la archiva y le pone un número de serie. Nada se corrige nunca. Solo se archivan fotos nuevas.</p><p>Esa distinción —foto nueva en vez de corrección encima— explica casi todo lo que Git hace raro. Guárdala.</p>"}, {"t": "Cómo funciona", "s": "El número sale de la foto, y las fotos van encadenadas", "h": "<p>El número de cada foto <b>no es un consecutivo</b>. Se calcula a partir del contenido de la foto misma: los archivos, quién, cuándo y tu comentario. Cambia una coma y el número cambia. No es una regla que alguien decidió: es aritmética.</p><p>Además, cada foto lleva escrito <b>el número de la foto anterior</b>, como una cadena de custodia.</p><p>Junta las dos cosas y sale la consecuencia que vas a usar toda la vida: <b>cambiar una foto vieja cambia el número de todas las que vienen después.</b> En cascada. Por eso «corregir algo de la semana pasada» nunca es corregir: es regenerar la historia desde ahí.</p><p>Y cuando Git «reemplaza» una foto, archiva la nueva y deja de apuntar la vieja. <b>La vieja sigue en el archivo</b>, sin nadie que la señale. De ahí sale el rescate de la capa siguiente del módulo.</p>"}, {"t": "Hazlo", "s": "Tres saltos desde donde estás hasta el contenido", "h": "<p>Usa el explorador de aquí abajo: baja de la foto a la lista de archivos, y de ahí al contenido de uno. Son los mismos tres comandos que escribirías en la terminal:</p><p><code>git cat-file -p HEAD</code> — «muéstrame la foto en la que estoy parado». Luego el número del <code>tree</code>, luego el de un archivo.</p><p>Después pulsa <b>git commit --amend</b> y mira qué le pasa al número, y qué le pasa a la foto anterior.</p><p><b>Tres saltos y llegaste al contenido. Eso es todo lo que Git es por dentro.</b> No hay una cuarta cosa escondida.</p>"}, {"t": "El vocabulario", "s": "Ahora sí, los nombres reales", "h": "<table class=\"tk\"><tr><th>término</th><th>qué es</th><th>lo que ya sabes</th></tr><tr><td><code>commit</code></td><td>la foto completa, con fecha, autor y comentario</td><td>«la foto»</td></tr><tr><td><code>hash</code></td><td>el número calculado del contenido</td><td>«el número de serie»</td></tr><tr><td><code>blob</code></td><td>el contenido de un archivo, sin nombre</td><td>el archivo desnudo</td></tr><tr><td><code>tree</code></td><td>la lista que le pone nombre a los blobs</td><td>la carpeta</td></tr><tr><td><code>parent</code></td><td>el commit anterior de la cadena</td><td>«la foto anterior»</td></tr><tr><td><code>HEAD</code></td><td>dónde estás parado ahora</td><td>«la foto actual»</td></tr><tr><td>rama</td><td>un nombre que apunta a una foto</td><td>la etiqueta de la caja</td></tr></table><p style=\"margin-top:10px\">Una rama es literalmente un archivo de 41 bytes con un número dentro. Por eso ramificar es gratis.</p>"}, {"t": "Nivel profesional", "s": "Lo que sale de todo lo anterior", "h": "<p><b>1.</b> <code>amend</code>, <code>rebase</code> y <code>cherry-pick</code> no modifican nada: crean commits nuevos y mueven la rama. El original queda <b>huérfano</b>, pero sigue existiendo.</p><p><b>2.</b> Por eso el <code>reflog</code> puede rescatarte: los objetos están ahí, lo que perdiste fue el nombre que los apuntaba.</p><p><b>3.</b> Por eso reescribir historial publicado es agresivo: los números que tienen tus compañeros dejan de existir en tu versión de la historia.</p><p><b>4.</b> El nombre técnico de todo esto es <b>almacén de objetos direccionado por contenido</b>, y es el mismo principio de Delta Lake y Docker. Lo vas a reconocer en la Fase 2.</p><p class=\"ref\">Detalle completo: notas/01-modelo-de-objetos.md</p>"}], "reflog": [{"t": "Empieza aquí", "s": "Casi nunca borras: quitas la etiqueta", "h": "<p>Ejecutas un comando que viste en un tutorial para «volver atrás» y la pantalla se vacía: tres días de trabajo desaparecidos. No hay papelera. No hay Ctrl+Z.</p><p>Le pasa a todo el mundo la primera vez. Y la reacción típica —dejar de usar las herramientas potentes «por si acaso»— es justo la que te deja en nivel principiante para siempre.</p><p><b>En Git casi nunca borras: quitas la etiqueta. La caja sigue en la bodega.</b> Lo que un comando destructivo se lleva casi siempre es el nombre, no el contenido.</p>"}, {"t": "Cómo funciona", "s": "Una bitácora de turno, pero de tus movimientos", "h": "<p>Cada vez que te mueves —guardas, cambias de rama, deshaces— Git anota una línea en un registro privado con el número de la foto donde quedaste. Igual que la bitácora de un turno: no registra el estado de la red, registra <b>los movimientos</b>.</p><p>La distinción clave: <b>el reflog no registra qué fotos existen, sino dónde estuviste tú.</b> Cuando un comando deja fotos sin etiqueta, el reflog conserva sus números — y con el número recuperas todo.</p><p>Dos cosas que sí se pierden, para que la confianza sea informada: <b>lo que nunca guardaste</b> (el reflog salva fotos, no borradores) y <b>lo muy viejo</b> (caduca a los 90 días, 30 si está huérfano). Y es local: no se sube, no lo tienen tus compañeros.</p>"}, {"t": "Hazlo", "s": "Rompe algo a propósito", "h": "<p>En la terminal de aquí abajo alguien ya ejecutó <code>git reset --hard HEAD~3</code> y se llevó tres commits reales. Recupéralos.</p><p>Empieza mirando qué quedó (<code>git log --oneline</code>), luego abre la bitácora (<code>git reflog</code>) y usa lo que encuentres. <code>HEAD@{1}</code> significa «donde estaba parado hace un movimiento», y se puede usar como si fuera el nombre de una foto.</p><p>Hazlo una vez. Después de verlo, el resto del módulo deja de dar miedo — que es exactamente el objetivo.</p>"}, {"t": "El vocabulario", "s": "", "h": "<table class=\"tk\"><tr><th>término</th><th>qué es</th></tr><tr><td>referencia (<i>ref</i>)</td><td>un nombre que apunta a una foto</td></tr><tr><td><code>reflog</code></td><td>el registro de por dónde pasó tu posición</td></tr><tr><td><code>HEAD@{n}</code></td><td>donde estabas hace n movimientos</td></tr><tr><td><code>HEAD~n</code></td><td>n fotos hacia atrás en la cadena</td></tr><tr><td><code>ORIG_HEAD</code></td><td>donde estabas antes del último comando grande</td></tr><tr><td>objeto huérfano</td><td>foto archivada que ya nadie apunta</td></tr></table><p style=\"margin-top:10px\"><b><code>HEAD@{2}</code> y <code>HEAD~2</code> no son lo mismo:</b> el primero recorre tu bitácora de movimientos, el segundo la cadena de la historia. Después de un reset desordenado dejan de coincidir, y confundirlos es un error caro.</p>"}, {"t": "Nivel profesional", "s": "Los tres rescates", "h": "<p><b>Deshice commits con reset --hard:</b> <code>git reflog</code> para el número, <code>git reset --hard &lt;número&gt;</code>.</p><p><b>Borré una rama sin fusionar:</b> <code>git reflog show mi-rama</code> y <code>git branch mi-rama &lt;número&gt;</code>. Si el reflog ya no la tiene, <code>git fsck --lost-found</code>.</p><p><b>El rebase salió mal:</b> <code>git reset --hard ORIG_HEAD</code> — deshace el último rebase, merge o reset de un golpe.</p><p>Esto no es un truco de emergencia: es lo que te permite usar <code>rebase -i</code> sin miedo, y eso es la diferencia entre entregar un historial diagnosticable y uno ilegible.</p><p class=\"ref\">Detalle completo: notas/02-reflog.md</p>"}], "rebase": [{"t": "Empieza aquí", "s": "La forma en que trabajas no es la forma en que se entrega", "h": "<p>Mientras armas un informe tienes hojas sueltas, tachones, una versión con los números viejos. Todo eso es trabajo legítimo: así se piensa. Pero antes de mandarlo, juntas lo que va junto, quitas los borradores y pones títulos que se entienden.</p><p>En Git pasa igual, y nadie te lo dice: <b>la forma en que trabajas no es la forma en que se entrega.</b></p><p>Y no es cosmética. Cuando uses <code>bisect</code> para encontrar un defecto, te va a dejar parado en un commit preguntando «¿qué pasó aquí?». Si se llama <code>arreglo2</code> y mezcla tres cambios, el diagnóstico no avanzó. Si se llama «Simplificar el cálculo del MTTR», <b>el diagnóstico está hecho</b>.</p>"}, {"t": "Cómo funciona", "s": "Una lista de instrucciones que tú editas", "h": "<p>Le pides a Git «vamos a rehacer las últimas N fotos» y te abre una lista, una línea por foto. Cada línea empieza con un verbo: déjala, júntala con la anterior, cámbiale el comentario, elimínala. Si mueves líneas, cambias el orden.</p><p>Dos detalles que confunden la primera vez:</p><p><b>1.</b> La lista va <b>al revés</b> de <code>git log</code>: arriba la más vieja. Tiene lógica — Git las reproduce de arriba hacia abajo.</p><p><b>2.</b> Juntar es siempre <b>con la línea de arriba</b>. Si el borrador está lejos de la foto a la que pertenece, primero hay que moverlo.</p><p>Y esto no modifica nada: genera fotos nuevas y mueve la etiqueta. Si sale mal, el reflog las tiene.</p>"}, {"t": "Hazlo", "s": "Deja tres commits que se lean", "h": "<p>En el editor de aquí abajo hay cinco commits, dos de ellos trabajo sucio. Cambia verbos y orden hasta que el historial resultante sean los tres commits de la meta. El resultado se recalcula en vivo mientras editas.</p><p>El botón de pánico, que conviene aprender antes que el resto: en la terminal real, <code>git rebase --abort</code> deja todo como estaba, intacto.</p>"}, {"t": "El vocabulario", "s": "", "h": "<table class=\"tk\"><tr><th>verbo</th><th>qué hace</th></tr><tr><td><code>pick</code></td><td>déjala tal cual</td></tr><tr><td><code>reword</code></td><td>mismo cambio, comentario nuevo</td></tr><tr><td><code>squash</code></td><td>fúndela con la anterior, combinando ambos comentarios</td></tr><tr><td><code>fixup</code></td><td>fúndela con la anterior y descarta su comentario</td></tr><tr><td><code>drop</code></td><td>elimínala</td></tr></table><p style=\"margin-top:10px\"><b>squash o fixup:</b> si el comentario del borrador tenía algo que valga la pena conservar, <code>squash</code>. Si era «wip» o «arreglo», <code>fixup</code> — que es el caso normal.</p>"}, {"t": "Nivel profesional", "s": "El flujo real y la regla que no se rompe", "h": "<p>No se trata de trabajar limpio desde el principio, sino de <b>trabajar rápido y ordenar después</b>: <code>git commit --fixup &lt;foto&gt;</code> marca un arreglo, y <code>git rebase -i --autosquash</code> lo coloca junto a su commit y le pone el verbo solo.</p><p><b>La regla que no se rompe: no reescribas historial que otros ya tienen.</b> El rebase cambia números, y cambiar uno cambia todos los siguientes; el repositorio de tu compañero quedaría apuntando a fotos que ya no existen. Tu rama antes de fusionar: reescribe lo que quieras. <code>main</code>: nunca.</p><p>Y para republicar tu propia rama: <code>git push --force-with-lease</code>, nunca <code>--force</code> a secas. El primero <b>falla</b> si alguien subió algo que no has visto, en vez de pisarlo.</p><p class=\"ref\">Detalle completo: notas/03-rebase-interactivo.md</p>"}], "bisect": [{"t": "Empieza aquí", "s": "Adivinar un número del 1 al 100 en siete preguntas", "h": "<p>El tablero marca 4.11 h de MTTR. La semana pasada daba 2.83. El proceso corre sin un solo error: no hay alarma, no hay excepción. Simplemente entrega otro número. Hay 60 commits desde el último informe correcto.</p><p>Este es el caso más caro en datos: <b>un proceso que falla te avisa; uno que entrega mal, no.</b> Puede llevar semanas entregando mal mientras alguien decide con esos números.</p><p>La técnica es el juego de adivinar un número del 1 al 100 preguntando «¿mayor o menor?». Al azar tardas decenas de intentos; partiendo siempre por la mitad, <b>siete preguntas</b>.</p><table class=\"tk\" style=\"margin-top:10px\"><tr><th>commits</th><th>uno por uno</th><th>por la mitad</th></tr><tr><td>60</td><td>60</td><td><b>6</b></td></tr><tr><td>200</td><td>200</td><td><b>8</b></td></tr><tr><td>1000</td><td>1000</td><td><b>10</b></td></tr></table>"}, {"t": "Cómo funciona", "s": "Tres cosas, y la tercera es todo el trabajo", "h": "<p>Bisect necesita: <b>un punto donde está mal</b>, <b>un punto donde estaba bien</b>, y <b>una forma de decidir para cualquier punto intermedio</b>.</p><p>Los dos primeros los tienes: son fechas que conoces. El tercero es todo el trabajo.</p><p>Y aquí está la enseñanza real: «¿está mal?» parece obvio hasta que lo intentas. El proceso <b>no falla</b> — corre perfecto y entrega 4.11 en vez de 2.83. Así que la pregunta no es «¿arranca?» ni «¿da error?», sino:</p><p><b>¿El número que entrega sigue siendo el correcto?</b></p><p>Definir eso con precisión —qué número, con qué datos, con cuánta tolerancia— es la mitad del diagnóstico.</p>"}, {"t": "Hazlo", "s": "Manual primero, automático después", "h": "<p>En el simulador de aquí abajo, Git te deja parado en el commit de la mitad y tú respondes. Cada respuesta borra la mitad del rango.</p><p>Hay tres respuestas, no dos: <b>bueno</b>, <b>malo</b> y <b>no se puede probar</b>. Esa tercera es la que decide si converges en el commit correcto — pruébala.</p><p>El botón <b>bisect run</b> hace lo mismo en automático: es lo que pasa cuando la decisión cabe en un script.</p><p style=\"margin-top:10px\"><b>¿Qué es un script?</b> Un archivo de texto con comandos guardados para ejecutarlos de un tirón. No es «programar»: es anotar lo que ya harías a mano.<br><b>¿Qué es un código de salida?</b> El número que un comando deja al terminar: <code>0</code> es «bien», cualquier otro «mal». No se ve en pantalla, pero está ahí, y es el canal por el que <code>bisect run</code> entiende las respuestas.</p>"}, {"t": "El vocabulario", "s": "Y el código de salida que lo decide todo", "h": "<table class=\"tk\"><tr><th>código</th><th>significado</th></tr><tr><td><code>0</code></td><td>commit bueno</td></tr><tr><td><code>1</code>–<code>124</code>, <code>126</code>, <code>127</code></td><td>commit malo</td></tr><tr><td><code>125</code></td><td><b>no se puede probar</b> — sáltalo</td></tr><tr><td><code>≥128</code></td><td>aborta el bisect</td></tr></table><p style=\"margin-top:10px\"><b>El 125 separa un bisect correcto de uno que converge en el commit equivocado.</b> Un commit a mitad de un cambio grande puede no arrancar siquiera. Ese commit no es malo: es <i>no probable</i>. Si lo marcas malo, le dices a Git «el defecto ya existía aquí» y la búsqueda se va hacia atrás por una razón falsa.</p><p>Es lo mismo que en tu mundo: <b>una medición que no se pudo tomar no es una medición fuera de rango.</b> Registrarla como tal contamina el análisis.</p>"}, {"t": "Nivel profesional", "s": "Las trampas y lo que se entrega", "h": "<p><b>1.</b> El script de decisión vive <b>fuera</b> del repositorio que bisecas: bisect cambia la carpeta a versiones viejas y un script dentro desaparecería a mitad de la búsqueda.</p><p><b>2.</b> Los datos de prueba, congelados. Si cambian, la respuesta cambia sin que cambie el código y bisect converge en cualquier parte.</p><p><b>3.</b> <code>125</code> para lo no probable. Es la trampa que más resultados falsos produce.</p><p><b>4.</b> Acota por ruta cuando haya ruido: <code>git bisect start HEAD &lt;bueno&gt; -- ruta/del/pipeline</code>.</p><p>Y bisect no es solo para defectos: con <code>--term-old</code> y <code>--term-new</code> localiza <b>cualquier</b> cambio de comportamiento — cuándo se volvió lento, cuándo empezó a costar el doble.</p><p><b>Lo que se entrega es la traza, no el hash.</b> Localizar el commit es mecánico; explicar que el efecto es de 1.3 horas <i>porque la distribución de tiempos de resolución tiene cola larga</i> es lo que se sustenta en una entrevista.</p><p class=\"ref\">Detalle completo: notas/04-bisect.md</p>"}]};
+const CAPAS = {"objetos": [{"t": "Empieza aquí", "s": "El problema, en tu mundo", "h": "<p>Llevas un informe. Cada semana lo modificas. Al mes alguien pregunta en qué momento cambió el criterio de cálculo, y en la carpeta hay <code>informe_final.xlsx</code>, <code>informe_final_BUENO.xlsx</code> y <code>informe_final_BUENO (1).xlsx</code>.</p><p><b>Git es una cámara, no un corrector.</b> Cada vez que le dices «guarda», no escribe encima de lo anterior: toma una <b>foto completa</b> de todos tus archivos, la archiva y le pone un número de serie. Nada se corrige nunca. Solo se archivan fotos nuevas.</p><p>Esa distinción —foto nueva en vez de corrección encima— explica casi todo lo que Git hace raro. Guárdala.</p>"}, {"t": "Cómo funciona", "s": "El número sale de la foto, y las fotos van encadenadas", "h": "<p>El número de cada foto <b>no es un consecutivo</b>. Se calcula a partir del contenido de la foto misma: los archivos, quién, cuándo y tu comentario. Cambia una coma y el número cambia. No es una regla que alguien decidió: es aritmética.</p><p>Además, cada foto lleva escrito <b>el número de la foto anterior</b>, como una cadena de custodia.</p><p>Junta las dos cosas y sale la consecuencia que vas a usar toda la vida: <b>cambiar una foto vieja cambia el número de todas las que vienen después.</b> En cascada. Por eso «corregir algo de la semana pasada» nunca es corregir: es regenerar la historia desde ahí.</p><p>Y cuando Git «reemplaza» una foto, archiva la nueva y deja de apuntar la vieja. <b>La vieja sigue en el archivo</b>, sin nadie que la señale. De ahí sale el rescate de la capa siguiente del módulo.</p>"}, {"t": "Hazlo", "s": "Tres saltos desde donde estás hasta el contenido", "h": "<p>Usa el explorador de aquí abajo: baja de la foto a la lista de archivos, y de ahí al contenido de uno. Son los mismos tres comandos que escribirías en la terminal:</p><p><code>git cat-file -p HEAD</code> — «muéstrame la foto en la que estoy parado». Luego el número del <code>tree</code>, luego el de un archivo.</p><p>Después pulsa <b>git commit --amend</b> y mira qué le pasa al número, y qué le pasa a la foto anterior.</p><p><b>Tres saltos y llegaste al contenido. Eso es todo lo que Git es por dentro.</b> No hay una cuarta cosa escondida.</p>"}, {"t": "El vocabulario", "s": "Ahora sí, los nombres reales", "h": "<table class=\"tk\"><tr><th>término</th><th>qué es</th><th>lo que ya sabes</th></tr><tr><td><code>commit</code></td><td>la foto completa, con fecha, autor y comentario</td><td>«la foto»</td></tr><tr><td><code>hash</code></td><td>el número calculado del contenido</td><td>«el número de serie»</td></tr><tr><td><code>blob</code></td><td>el contenido de un archivo, sin nombre</td><td>el archivo desnudo</td></tr><tr><td><code>tree</code></td><td>la lista que le pone nombre a los blobs</td><td>la carpeta</td></tr><tr><td><code>parent</code></td><td>el commit anterior de la cadena</td><td>«la foto anterior»</td></tr><tr><td><code>HEAD</code></td><td>dónde estás parado ahora</td><td>«la foto actual»</td></tr><tr><td>rama</td><td>un nombre que apunta a una foto</td><td>la etiqueta de la caja</td></tr></table><p style=\"margin-top:10px\">Una rama es literalmente un archivo de 41 bytes con un número dentro. Por eso ramificar es gratis.</p><div class=\"contraste\"><div class=\"tit\">Lo que se confunde</div><div class=\"cols\"><div class=\"col\"><b>El editor</b><span>Los archivos como los estás viendo y editando ahora mismo. Pueden tener cambios que Git todavía no conoce.</span></div><div class=\"col\"><b>La foto</b><span>Lo que congeló el commit: exactamente lo que habías puesto en el <i>staging area</i> con <code>git add</code>.</span></div></div><div class=\"mito\"><b>La trampa:</b> Se cree que el commit fotografía lo que ves en el editor. Fotografía lo que hiciste <code>add</code>: por eso puedes tener cambios sin guardar y un commit limpio al mismo tiempo.</div></div>"}, {"t": "Nivel profesional", "s": "Lo que sale de todo lo anterior", "h": "<p><b>1.</b> <code>amend</code>, <code>rebase</code> y <code>cherry-pick</code> no modifican nada: crean commits nuevos y mueven la rama. El original queda <b>huérfano</b>, pero sigue existiendo.</p><p><b>2.</b> Por eso el <code>reflog</code> puede rescatarte: los objetos están ahí, lo que perdiste fue el nombre que los apuntaba.</p><p><b>3.</b> Por eso reescribir historial publicado es agresivo: los números que tienen tus compañeros dejan de existir en tu versión de la historia.</p><p><b>4.</b> El nombre técnico de todo esto es <b>almacén de objetos direccionado por contenido</b>, y es el mismo principio de Delta Lake y Docker. Lo vas a reconocer en la Fase 2.</p><p class=\"ref\">Detalle completo: notas/01-modelo-de-objetos.md</p>"}], "reflog": [{"t": "Empieza aquí", "s": "Casi nunca borras: quitas la etiqueta", "h": "<p>Ejecutas un comando que viste en un tutorial para «volver atrás» y la pantalla se vacía: tres días de trabajo desaparecidos. No hay papelera. No hay Ctrl+Z.</p><p>Le pasa a todo el mundo la primera vez. Y la reacción típica —dejar de usar las herramientas potentes «por si acaso»— es justo la que te deja en nivel principiante para siempre.</p><p><b>En Git casi nunca borras: quitas la etiqueta. La caja sigue en la bodega.</b> Lo que un comando destructivo se lleva casi siempre es el nombre, no el contenido.</p>"}, {"t": "Cómo funciona", "s": "Una bitácora de turno, pero de tus movimientos", "h": "<p>Cada vez que te mueves —guardas, cambias de rama, deshaces— Git anota una línea en un registro privado con el número de la foto donde quedaste. Igual que la bitácora de un turno: no registra el estado de la red, registra <b>los movimientos</b>.</p><p>La distinción clave: <b>el reflog no registra qué fotos existen, sino dónde estuviste tú.</b> Cuando un comando deja fotos sin etiqueta, el reflog conserva sus números — y con el número recuperas todo.</p><p>Dos cosas que sí se pierden, para que la confianza sea informada: <b>lo que nunca guardaste</b> (el reflog salva fotos, no borradores) y <b>lo muy viejo</b> (caduca a los 90 días, 30 si está huérfano). Y es local: no se sube, no lo tienen tus compañeros.</p>"}, {"t": "Hazlo", "s": "Rompe algo a propósito", "h": "<p>En la terminal de aquí abajo alguien ya ejecutó <code>git reset --hard HEAD~3</code> y se llevó tres commits reales. Recupéralos.</p><p>Empieza mirando qué quedó (<code>git log --oneline</code>), luego abre la bitácora (<code>git reflog</code>) y usa lo que encuentres. <code>HEAD@{1}</code> significa «donde estaba parado hace un movimiento», y se puede usar como si fuera el nombre de una foto.</p><p>Hazlo una vez. Después de verlo, el resto del módulo deja de dar miedo — que es exactamente el objetivo.</p>"}, {"t": "El vocabulario", "s": "", "h": "<table class=\"tk\"><tr><th>término</th><th>qué es</th></tr><tr><td>referencia (<i>ref</i>)</td><td>un nombre que apunta a una foto</td></tr><tr><td><code>reflog</code></td><td>el registro de por dónde pasó tu posición</td></tr><tr><td><code>HEAD@{n}</code></td><td>donde estabas hace n movimientos</td></tr><tr><td><code>HEAD~n</code></td><td>n fotos hacia atrás en la cadena</td></tr><tr><td><code>ORIG_HEAD</code></td><td>donde estabas antes del último comando grande</td></tr><tr><td>objeto huérfano</td><td>foto archivada que ya nadie apunta</td></tr></table><p style=\"margin-top:10px\"><b><code>HEAD@{2}</code> y <code>HEAD~2</code> no son lo mismo:</b> el primero recorre tu bitácora de movimientos, el segundo la cadena de la historia. Después de un reset desordenado dejan de coincidir, y confundirlos es un error caro.</p><div class=\"contraste\"><div class=\"tit\">Lo que se confunde</div><div class=\"cols\"><div class=\"col\"><b>HEAD~2</b><span>Mira el <b>árbol</b>: dos fotos hacia atrás por la cadena de padres. Es la historia, y es igual para todos.</span></div><div class=\"col\"><b>HEAD@{2}</b><span>Mira tu <b>bitácora</b>: donde estabas parado hace dos movimientos. Es tuyo, local, y depende de lo que hiciste hoy.</span></div></div><div class=\"mito\"><b>La trampa:</b> Se cree que son dos maneras de escribir lo mismo. Coinciden solo mientras avanzas en línea recta; después de un reset desordenado apuntan a sitios distintos, y ahí es donde se pierde trabajo.</div></div>"}, {"t": "Nivel profesional", "s": "Los tres rescates", "h": "<p><b>Deshice commits con reset --hard:</b> <code>git reflog</code> para el número, <code>git reset --hard &lt;número&gt;</code>.</p><p><b>Borré una rama sin fusionar:</b> <code>git reflog show mi-rama</code> y <code>git branch mi-rama &lt;número&gt;</code>. Si el reflog ya no la tiene, <code>git fsck --lost-found</code>.</p><p><b>El rebase salió mal:</b> <code>git reset --hard ORIG_HEAD</code> — deshace el último rebase, merge o reset de un golpe.</p><p>Esto no es un truco de emergencia: es lo que te permite usar <code>rebase -i</code> sin miedo, y eso es la diferencia entre entregar un historial diagnosticable y uno ilegible.</p><p class=\"ref\">Detalle completo: notas/02-reflog.md</p>"}], "rebase": [{"t": "Empieza aquí", "s": "La forma en que trabajas no es la forma en que se entrega", "h": "<p>Mientras armas un informe tienes hojas sueltas, tachones, una versión con los números viejos. Todo eso es trabajo legítimo: así se piensa. Pero antes de mandarlo, juntas lo que va junto, quitas los borradores y pones títulos que se entienden.</p><p>En Git pasa igual, y nadie te lo dice: <b>la forma en que trabajas no es la forma en que se entrega.</b></p><p>Y no es cosmética. Cuando uses <code>bisect</code> para encontrar un defecto, te va a dejar parado en un commit preguntando «¿qué pasó aquí?». Si se llama <code>arreglo2</code> y mezcla tres cambios, el diagnóstico no avanzó. Si se llama «Simplificar el cálculo del MTTR», <b>el diagnóstico está hecho</b>.</p>"}, {"t": "Cómo funciona", "s": "Una lista de instrucciones que tú editas", "h": "<p>Le pides a Git «vamos a rehacer las últimas N fotos» y te abre una lista, una línea por foto. Cada línea empieza con un verbo: déjala, júntala con la anterior, cámbiale el comentario, elimínala. Si mueves líneas, cambias el orden.</p><p>Dos detalles que confunden la primera vez:</p><p><b>1.</b> La lista va <b>al revés</b> de <code>git log</code>: arriba la más vieja. Tiene lógica — Git las reproduce de arriba hacia abajo.</p><p><b>2.</b> Juntar es siempre <b>con la línea de arriba</b>. Si el borrador está lejos de la foto a la que pertenece, primero hay que moverlo.</p><p>Y esto no modifica nada: genera fotos nuevas y mueve la etiqueta. Si sale mal, el reflog las tiene.</p>"}, {"t": "Hazlo", "s": "Deja tres commits que se lean", "h": "<p>En el editor de aquí abajo hay cinco commits, dos de ellos trabajo sucio. Cambia verbos y orden hasta que el historial resultante sean los tres commits de la meta. El resultado se recalcula en vivo mientras editas.</p><p>El botón de pánico, que conviene aprender antes que el resto: en la terminal real, <code>git rebase --abort</code> deja todo como estaba, intacto.</p>"}, {"t": "El vocabulario", "s": "", "h": "<table class=\"tk\"><tr><th>verbo</th><th>qué hace</th></tr><tr><td><code>pick</code></td><td>déjala tal cual</td></tr><tr><td><code>reword</code></td><td>mismo cambio, comentario nuevo</td></tr><tr><td><code>squash</code></td><td>fúndela con la anterior, combinando ambos comentarios</td></tr><tr><td><code>fixup</code></td><td>fúndela con la anterior y descarta su comentario</td></tr><tr><td><code>drop</code></td><td>elimínala</td></tr></table><p style=\"margin-top:10px\"><b>squash o fixup:</b> si el comentario del borrador tenía algo que valga la pena conservar, <code>squash</code>. Si era «wip» o «arreglo», <code>fixup</code> — que es el caso normal.</p><div class=\"contraste\"><div class=\"tit\">Lo que se confunde</div><div class=\"cols\"><div class=\"col\"><b>squash</b><span>Fusiona con la línea de arriba y <b>conserva</b> los dos mensajes para que los edites juntos.</span></div><div class=\"col\"><b>fixup</b><span>Fusiona con la línea de arriba y <b>descarta</b> el mensaje de esta. Es el caso normal para un «wip» o un «arreglo».</span></div></div><div class=\"mito\"><b>La trampa:</b> Se cree que <code>fixup</code> busca su commit por el mensaje. No busca nada: se fusiona con la línea inmediatamente anterior, sea cual sea. Si el borrador está lejos, primero hay que moverlo.</div></div>"}, {"t": "Nivel profesional", "s": "El flujo real y la regla que no se rompe", "h": "<p>No se trata de trabajar limpio desde el principio, sino de <b>trabajar rápido y ordenar después</b>: <code>git commit --fixup &lt;foto&gt;</code> marca un arreglo, y <code>git rebase -i --autosquash</code> lo coloca junto a su commit y le pone el verbo solo.</p><p><b>La regla que no se rompe: no reescribas historial que otros ya tienen.</b> El rebase cambia números, y cambiar uno cambia todos los siguientes; el repositorio de tu compañero quedaría apuntando a fotos que ya no existen. Tu rama antes de fusionar: reescribe lo que quieras. <code>main</code>: nunca.</p><p>Y para republicar tu propia rama: <code>git push --force-with-lease</code>, nunca <code>--force</code> a secas. El primero <b>falla</b> si alguien subió algo que no has visto, en vez de pisarlo.</p><p class=\"ref\">Detalle completo: notas/03-rebase-interactivo.md</p>"}], "bisect": [{"t": "Empieza aquí", "s": "Adivinar un número del 1 al 100 en siete preguntas", "h": "<p>El tablero marca 4.11 h de MTTR. La semana pasada daba 2.83. El proceso corre sin un solo error: no hay alarma, no hay excepción. Simplemente entrega otro número. Hay 60 commits desde el último informe correcto.</p><p>Este es el caso más caro en datos: <b>un proceso que falla te avisa; uno que entrega mal, no.</b> Puede llevar semanas entregando mal mientras alguien decide con esos números.</p><p>La técnica es el juego de adivinar un número del 1 al 100 preguntando «¿mayor o menor?». Al azar tardas decenas de intentos; partiendo siempre por la mitad, <b>siete preguntas</b>.</p><table class=\"tk\" style=\"margin-top:10px\"><tr><th>commits</th><th>uno por uno</th><th>por la mitad</th></tr><tr><td>60</td><td>60</td><td><b>6</b></td></tr><tr><td>200</td><td>200</td><td><b>8</b></td></tr><tr><td>1000</td><td>1000</td><td><b>10</b></td></tr></table>"}, {"t": "Cómo funciona", "s": "Tres cosas, y la tercera es todo el trabajo", "h": "<p>Bisect necesita: <b>un punto donde está mal</b>, <b>un punto donde estaba bien</b>, y <b>una forma de decidir para cualquier punto intermedio</b>.</p><p>Los dos primeros los tienes: son fechas que conoces. El tercero es todo el trabajo.</p><p>Y aquí está la enseñanza real: «¿está mal?» parece obvio hasta que lo intentas. El proceso <b>no falla</b> — corre perfecto y entrega 4.11 en vez de 2.83. Así que la pregunta no es «¿arranca?» ni «¿da error?», sino:</p><p><b>¿El número que entrega sigue siendo el correcto?</b></p><p>Definir eso con precisión —qué número, con qué datos, con cuánta tolerancia— es la mitad del diagnóstico.</p>"}, {"t": "Hazlo", "s": "Manual primero, automático después", "h": "<p>En el simulador de aquí abajo, Git te deja parado en el commit de la mitad y tú respondes. Cada respuesta borra la mitad del rango.</p><p>Hay tres respuestas, no dos: <b>bueno</b>, <b>malo</b> y <b>no se puede probar</b>. Esa tercera es la que decide si converges en el commit correcto — pruébala.</p><p>El botón <b>bisect run</b> hace lo mismo en automático: es lo que pasa cuando la decisión cabe en un script.</p><p style=\"margin-top:10px\"><b>¿Qué es un script?</b> Un archivo de texto con comandos guardados para ejecutarlos de un tirón. No es «programar»: es anotar lo que ya harías a mano.<br><b>¿Qué es un código de salida?</b> El número que un comando deja al terminar: <code>0</code> es «bien», cualquier otro «mal». No se ve en pantalla, pero está ahí, y es el canal por el que <code>bisect run</code> entiende las respuestas.</p>"}, {"t": "El vocabulario", "s": "Y el código de salida que lo decide todo", "h": "<table class=\"tk\"><tr><th>código</th><th>significado</th></tr><tr><td><code>0</code></td><td>commit bueno</td></tr><tr><td><code>1</code>–<code>124</code>, <code>126</code>, <code>127</code></td><td>commit malo</td></tr><tr><td><code>125</code></td><td><b>no se puede probar</b> — sáltalo</td></tr><tr><td><code>≥128</code></td><td>aborta el bisect</td></tr></table><p style=\"margin-top:10px\"><b>El 125 separa un bisect correcto de uno que converge en el commit equivocado.</b> Un commit a mitad de un cambio grande puede no arrancar siquiera. Ese commit no es malo: es <i>no probable</i>. Si lo marcas malo, le dices a Git «el defecto ya existía aquí» y la búsqueda se va hacia atrás por una razón falsa.</p><p>Es lo mismo que en tu mundo: <b>una medición que no se pudo tomar no es una medición fuera de rango.</b> Registrarla como tal contamina el análisis.</p><div class=\"contraste\"><div class=\"tit\">Lo que se confunde</div><div class=\"cols\"><div class=\"col\"><b>malo · exit 1</b><span>Lo probaste y el resultado está mal. Es una medición, y dice que el defecto ya existía aquí.</span></div><div class=\"col\"><b>no probable · exit 125</b><span>No pudiste probarlo: el commit ni siquiera arranca. No es una medición; bisect lo salta y prueba otro.</span></div></div><div class=\"mito\"><b>La trampa:</b> Se cree que un commit que revienta es «malo». Una medición que no se pudo tomar no es una medición fuera de rango — y confundirlas hace que la búsqueda converja en el commit vecino.</div></div>"}, {"t": "Nivel profesional", "s": "Las trampas y lo que se entrega", "h": "<p><b>1.</b> El script de decisión vive <b>fuera</b> del repositorio que bisecas: bisect cambia la carpeta a versiones viejas y un script dentro desaparecería a mitad de la búsqueda.</p><p><b>2.</b> Los datos de prueba, congelados. Si cambian, la respuesta cambia sin que cambie el código y bisect converge en cualquier parte.</p><p><b>3.</b> <code>125</code> para lo no probable. Es la trampa que más resultados falsos produce.</p><p><b>4.</b> Acota por ruta cuando haya ruido: <code>git bisect start HEAD &lt;bueno&gt; -- ruta/del/pipeline</code>.</p><p>Y bisect no es solo para defectos: con <code>--term-old</code> y <code>--term-new</code> localiza <b>cualquier</b> cambio de comportamiento — cuándo se volvió lento, cuándo empezó a costar el doble.</p><p><b>Lo que se entrega es la traza, no el hash.</b> Localizar el commit es mecánico; explicar que el efecto es de 1.3 horas <i>porque la distribución de tiempos de resolución tiene cola larga</i> es lo que se sustenta en una entrevista.</p><p class=\"ref\">Detalle completo: notas/04-bisect.md</p>"}]};
 function vistas() { return Almacen.leer().vistas || {}; }
 function esGuiado() { return Almacen.leer().guiado !== false; }
 function reveladas(mid) { return Math.max(1, vistas()[mid] || 1); }
@@ -1220,6 +1311,113 @@ pintarObjetos();
 
 /* comprobación */
 
+
+/* ========================================================================
+   P3 · predecir antes de ver — el instrumento no se abre hasta arriesgar
+   ===================================================================== */
+const PREDICCIONES = {
+  objetos: {
+    q: "Vas a pulsar <code>git commit --amend</code> para corregirle el mensaje a una foto. ¿Qué le pasa a su número de serie?",
+    o: [
+      { t: "Se queda igual: cambió el mensaje, no los archivos.", ok: false,
+        fb: "El mensaje entra en el cálculo del número, igual que los archivos y la fecha. Cambia una coma y cambia el número." },
+      { t: "Cambia, y la foto original queda archivada sin etiqueta.", ok: true,
+        fb: "Eso es. Míralo en el explorador: el número nuevo aparece y el viejo queda huérfano — sigue en la bodega." },
+      { t: "Se borra la foto vieja y la nueva hereda su número.", ok: false,
+        fb: "Dos contenidos distintos no pueden compartir número, y en Git casi nada se borra." }
+    ]
+  },
+  reflog: {
+    q: "Sobre una rama de 8 commits alguien acaba de ejecutar <code>git reset --hard HEAD~3</code>. ¿Qué les pasó a los tres últimos?",
+    o: [
+      { t: "Se borraron del disco.", ok: false,
+        fb: "Casi nunca se borra. Mira el dibujo de abajo: siguen dibujados, solo que en gris." },
+      { t: "Siguen archivados, pero ya nadie los apunta.", ok: true,
+        fb: "Exacto. Lo que se movió fue la etiqueta, no el contenido — y por eso se pueden recuperar." },
+      { t: "Se movieron solos a una rama oculta.", ok: false,
+        fb: "Git no crea ramas por su cuenta. Quedan sin ninguna etiqueta: eso es ser huérfano." }
+    ]
+  },
+  rebase: {
+    q: "En la lista hay un <code>wip</code> tres líneas por debajo del commit al que pertenece. Si le pones <code>fixup</code> sin moverlo, ¿con cuál se fusiona?",
+    o: [
+      { t: "Con el commit al que pertenece: Git lo reconoce por el contenido.", ok: false,
+        fb: "No reconoce nada. Pruébalo abajo y mira qué historial sale." },
+      { t: "Con la línea inmediatamente anterior, sea cual sea.", ok: true,
+        fb: "Correcto, y por eso hay que mover la línea antes de ponerle el verbo." },
+      { t: "Con ninguno: el rebase falla si no encuentra la pareja.", ok: false,
+        fb: "No falla. Hace algo peor: fusiona en silencio con quien no debía." }
+    ]
+  },
+  bisect: {
+    q: "Tienes <b>60 commits</b> en el rango y partes siempre por la mitad. ¿Cuántas pruebas hacen falta para encontrar el culpable?",
+    o: [
+      { t: "Unas 30: la mitad de los commits.", ok: false,
+        fb: "No es la mitad de los commits: es la mitad del rango en cada paso, que es muchísimo mejor." },
+      { t: "6.", ok: true,
+        fb: "log₂(60) ≈ 6. Cada respuesta descarta la mitad de lo que queda. Duplicar el problema cuesta una sola prueba más: 1000 commits son 10." },
+      { t: "60: hay que probarlos todos.", ok: false,
+        fb: "Eso es revisarlos uno por uno, que es justo lo que bisect evita." }
+    ]
+  }
+};
+
+function predicho(mid) { return !!(Almacen.leer().predicho || {})[mid]; }
+
+function velar(mid, velado) {
+  const st = document.getElementById("st-" + mid);
+  if (!st) return;
+  let despues = false;
+  Array.from(st.children).forEach(el => {
+    if (el.id === "pred-" + mid) { despues = true; return; }
+    if (despues) el.classList.toggle("velado", velado);
+  });
+}
+
+function pintarPrediccion(mid) {
+  const host = document.getElementById("pred-" + mid);
+  const d = PREDICCIONES[mid];
+  if (!host || !d) return;
+  if (predicho(mid)) { host.innerHTML = ""; velar(mid, false); return; }
+
+  velar(mid, true);
+  const caja = document.createElement("div");
+  caja.className = "prediccion";
+  caja.innerHTML = '<span class="et">Antes de verlo · arriesga</span>' +
+    '<p class="q">' + d.q + '</p>';
+  const ops = document.createElement("div");
+  ops.className = "quiz";
+  const fb = document.createElement("p");
+  fb.className = "nota";
+  fb.textContent = "No hay penalización: fallar aquí es la forma más barata de aprenderlo.";
+
+  d.o.forEach(o => {
+    const b = document.createElement("button");
+    b.type = "button"; b.innerHTML = o.t;
+    b.addEventListener("click", () => {
+      ops.querySelectorAll("button").forEach(x => { x.disabled = true; x.classList.remove("si", "no"); });
+      b.classList.add(o.ok ? "si" : "no");
+      fb.className = "fb"; fb.innerHTML = o.fb;
+      const seguir = document.createElement("button");
+      seguir.className = "act"; seguir.type = "button";
+      seguir.style.marginTop = "12px";
+      seguir.textContent = o.ok ? "Compruébalo abajo" : "Ver qué pasa de verdad";
+      seguir.addEventListener("click", () => {
+        Almacen.marcar("predicho", mid, true);
+        caja.remove();
+        velar(mid, false);
+        const obj = document.getElementById("obj-" + mid);
+        if (obj) obj.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      });
+      caja.appendChild(seguir);
+    });
+    ops.appendChild(b);
+  });
+  caja.appendChild(ops); caja.appendChild(fb);
+  host.innerHTML = "";
+  host.appendChild(caja);
+}
+
 /* ========================================================================
    comprobación — la misma mecánica en los cuatro instrumentos
    ===================================================================== */
@@ -1280,6 +1478,7 @@ function pintarComprobacion(mid) {
   if (cuenta) cuenta.textContent = (checks()[mid] ? preguntas.length : aciertos[mid].size) + " de " + preguntas.length;
 }
 Object.keys(COMPROBACIONES).forEach(pintarComprobacion);
+Object.keys(PREDICCIONES).forEach(pintarPrediccion);
 
 /* ========================================================================
    2 · terminal de reflog
@@ -1312,6 +1511,32 @@ function reiniciarRL() {
     'HEAD is now at ' + COMMITS_RL[4].h + ' Contar alarmas por nodo\n' +
     '<span class="err">Tres commits de trabajo real acaban de quedarse sin referencia.</span>\n' +
     '<span class="dim">Recupéralos. Empieza por ver qué quedó: git log --oneline</span>\n';
+  pintarCadena(false);
+}
+
+
+/* P1 · el mismo estado, dibujado. Se redibuja con cada comando: se ve la
+   etiqueta saltar y los commits quedarse sin nadie que los apunte. */
+function pintarCadena(movido) {
+  const ol = document.getElementById("rl-cadena");
+  if (!ol) return;
+  ol.innerHTML = "";
+  for (let i = COMMITS_RL.length - 1; i >= 0; i--) {
+    const c = COMMITS_RL[i];
+    const li = document.createElement("li");
+    const huerfano = i > headRL;
+    li.className = (huerfano ? "huerfano" : "") + (movido && i === headRL ? " latiendo" : "");
+    li.innerHTML = '<span class="punto"></span>' +
+      '<span class="sha">' + c.h + '</span>' +
+      '<span class="msg">' + esc(c.m) + '</span>' +
+      '<span class="ets">' + (i === headRL
+        ? '<span class="et main">main</span><span class="et head">HEAD</span>' : '') + '</span>';
+    ol.appendChild(li);
+  }
+  const sueltos = COMMITS_RL.length - 1 - headRL;
+  document.getElementById("rl-pie").innerHTML = sueltos > 0
+    ? "<b>" + sueltos + "</b> commit(s) sin ninguna etiqueta que los apunte. Siguen archivados: lo que se movió fue el nombre."
+    : "Todos los commits tienen quién los apunte.";
 }
 
 function outRL(html) {
@@ -1358,6 +1583,7 @@ function ejecutarRL(cmd) {
     reflogRL.unshift({ h: h, ref: "HEAD@{0}", q: "reset: moving to " + m[1] });
     reflogRL.forEach((e, k) => { e.ref = "HEAD@{" + k + "}"; });
     outRL("HEAD is now at " + h + " " + esc(COMMITS_RL[i].m));
+    pintarCadena(true);
     if (h === OBJETIVO_RL) {
       outRL('<span class="ok">\nRecuperado. Los tres commits vuelven a estar en la rama.\n' +
         'No hiciste magia: el reflog te devolvió el hash, y el hash siempre estuvo ahí.\n' +

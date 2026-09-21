@@ -60,15 +60,21 @@ export default async (req) => {
     try { entrante = JSON.parse(crudo); } catch { return json({ error: "JSON inválido." }, 400); }
 
     // Se funde con lo que ya había: dos dispositivos nunca se pisan el avance.
+    // Genérico a propósito: un grupo nuevo en la página no obliga a tocar esto.
     const previo = (await almacen.get(id, { type: "json" })) || {};
-    const fundido = {
-      hechos: { ...(previo.hechos || {}), ...(entrante.hechos || {}) },
-      vistas: { ...(previo.vistas || {}) },
-      guiado: typeof entrante.guiado === "boolean" ? entrante.guiado : previo.guiado !== false,
-      actualizado: new Date().toISOString()
-    };
-    for (const [k, v] of Object.entries(entrante.vistas || {})) {
-      fundido.vistas[k] = Math.max(fundido.vistas[k] || 1, v || 1);
+    const fundido = { ...previo, actualizado: new Date().toISOString() };
+    for (const [grupo, v] of Object.entries(entrante)) {
+      if (grupo === "guiado") {
+        fundido.guiado = typeof v === "boolean" ? v : previo.guiado !== false;
+        continue;
+      }
+      if (grupo === "actualizado" || !v || typeof v !== "object") continue;
+      fundido[grupo] = { ...(previo[grupo] || {}) };
+      for (const [clave, valor] of Object.entries(v)) {
+        fundido[grupo][clave] = typeof valor === "number"
+          ? Math.max(fundido[grupo][clave] || 0, valor)
+          : (fundido[grupo][clave] || valor);
+      }
     }
     await almacen.setJSON(id, fundido);
     return json(fundido);
