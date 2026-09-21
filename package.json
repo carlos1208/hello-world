@@ -1,0 +1,9 @@
+{
+  "name": "ruta-cloud-data-engineering",
+  "private": true,
+  "description": "Sitio de la ruta de 39 semanas hacia cloud y data engineering",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

@@ -64,3 +64,21 @@ Formato: dónde estoy · qué hice · qué medí · qué sigue.
   - `CLAUDE.md` §2 regla 9: ninguna palabra técnica sin definición a un clic.
 - **Pendiente para la siguiente sesión:** sin cambios — leer las capas 1 a 3,
   hacer el lab real y llenar `traza-bisect.md`.
+
+## Sesión 4 — La plataforma sale de Claude
+- **Fase / semana:** F0 · semana 1
+- **Hecho:** la plataforma pasa de ser solo un artefacto a un sitio propio, sin
+  dejar de funcionar como artefacto.
+  - `app/` — el sitio entero. La misma página corre en los tres sitios y en los
+    tres guarda: `almacenamiento.js` detecta si está dentro de Claude (db), en
+    el sitio propio (`/api/progreso`) o en un archivo suelto (solo local).
+  - `netlify/functions/tutor.mjs` — el botón «no entendí», contra Gemini.
+    **La clave vive en variables de entorno, nunca en la página:** una clave de
+    API en el JavaScript del navegador es pública.
+  - `netlify/functions/progreso.mjs` — avance sincronizado en Netlify Blobs,
+    indexado por la huella SHA-256 de una clave personal. Funde en vez de pisar,
+    así dos dispositivos no se borran el avance.
+  - PWA: instalable en el celular y funciona sin señal.
+  - `docs/despliegue.md` — los cuatro pasos manuales, explicados por capas.
+- **Pendiente:** los pasos manuales son suyos (cuenta de Netlify, clave de
+  Gemini, clave personal). Y sigue pendiente el lab real y `traza-bisect.md`.

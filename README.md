@@ -9,6 +9,9 @@ operación NOC.
   fases, reglas del repositorio. Se lee al inicio de cada sesión.
 - **El avance sesión a sesión está en [`BITACORA.md`](BITACORA.md).**
 - **Cada fase vive en [`fases/`](fases/)** con su temario, labs y entregable.
+- **La plataforma de práctica está en [`app/`](app/)** — se publica como
+  artefacto de Claude y se despliega como sitio propio:
+  [`docs/despliegue.md`](docs/despliegue.md).
 
 | Fase | Tema | Semanas |
 |---|---|---|

@@ -67,7 +67,7 @@ llevó algo completo, no un fragmento.
 9. **Toda palabra técnica lleva su definición a un clic.** En las plataformas
    interactivas se subraya y abre un modal; en las notas escritas, la tabla de
    vocabulario de la capa 4 cumple esa función. El glosario es **uno solo y
-   compartido**: `fases/f0-git-fundamentos/plataforma/glosario.js`. Los módulos
+   compartido**: `app/glosario.js`. Los módulos
    siguientes **agregan términos ahí**, no en su propia página, y lo publican
    como archivo de apoyo del artefacto.
 
@@ -150,6 +150,10 @@ cuando aplica, y él puede explicar el mecanismo sin leer notas.
 - **Los supuestos van separados de los cálculos** en cualquier estimación de
   costo.
 - La documentación pública final (Fase 7) va **en inglés**.
+- **Ninguna clave de API entra al repositorio.** Las de la plataforma viven en
+  las variables de entorno de Netlify (`docs/despliegue.md`). Una clave
+  commiteada se da por quemada: se revoca y se genera otra, porque quitarla del
+  árbol no la quita del historial.
 
 ## 8. Notas de calibración
 
@@ -162,8 +166,9 @@ cuando aplica, y él puede explicar el mecanismo sin leer notas.
   seguir. Ya está: modelo de objetos, `reflog`, rebase interactivo y `bisect`,
   con material escrito (`fases/f0-git-fundamentos/notas/`), laboratorio
   ejecutable (`labs/lab-bisect/`), entregable con plantilla y plataforma
-  interactiva (`plataforma/modulo-1.html`, publicada en
-  https://claude.ai/artifact/VB9pErnVpXhX4x8B9Brb4z).
+  interactiva (`app/modulo-1.html`, publicada en
+  https://claude.ai/artifact/VB9pErnVpXhX4x8B9Brb4z y desplegable como sitio
+  propio — ver `docs/despliegue.md`).
 - **Siguiente:** cerrar el entregable de bisect y pasar al Módulo 2 —
   OLTP/OLAP, Parquet por dentro, idempotencia.
 
@@ -173,8 +178,15 @@ cuando aplica, y él puede explicar el mecanismo sin leer notas.
 .
 ├── CLAUDE.md              # este contrato
 ├── BITACORA.md            # dónde va, qué sigue, decisiones de sesión
+├── app/                   # el sitio: se publica como artefacto Y en Netlify
+│   ├── index.html            # índice de la ruta
+│   ├── modulo-1.html         # plataforma de la Fase 0
+│   ├── glosario.js           # glosario compartido de toda la ruta
+│   ├── almacenamiento.js     # progreso: local / artefacto / nube
+│   └── tutor.js              # el botón «no entendí»
+├── netlify/functions/     # lo que corre en el servidor: progreso y tutor
 ├── fases/                 # una carpeta por fase: notas, labs, entregable
-│   ├── f0-git-fundamentos/   # + notas/, plataforma/ (simulador interactivo)
+│   ├── f0-git-fundamentos/   # + notas/
 │   ├── f1-nube-costos/
 │   ├── f2-delta-lake/
 │   ├── f3-spark-internals/
