@@ -1,94 +1,200 @@
-# 4 · `git bisect`: búsqueda binaria del commit que rompió el pipeline
+# 4 · `git bisect`: encontrar el commit culpable
 
-> La técnica más subestimada de Git. Encuentra el culpable entre 200 commits en
-> ~8 pasos. Es la fase *Analyze* de DMAIC, ejecutada sobre un repositorio.
+> La técnica más rentable de todo el módulo, y la que casi nadie usa.
 
-## El problema real
+---
 
-Lunes. El tablero de KPIs muestra un MTTR de 4.2 horas. La semana pasada eran
-2.8. Nadie tocó «eso». Hay 60 commits desde el último informe correcto.
+## Capa 1 · Empieza aquí
 
-Leer 60 diffs es fuerza bruta: 60 revisiones. Probar commit por commit hacia
-atrás, igual. **Bisect es búsqueda binaria: log₂(60) ≈ 6 pruebas.** Con 200
-commits, 8. Con 1000, 10. La escala es la gracia.
+### El problema, en tu mundo
 
-## El método
+Lunes por la mañana. El tablero de KPIs marca un MTTR de **4.11 horas**. El
+informe de la semana pasada daba **2.83**. Nadie tocó «eso». El proceso corre
+sin un solo error: no hay alarma, no hay excepción, no hay traza. Simplemente
+entrega otro número.
 
-Bisect necesita tres cosas y nada más:
+Hay 60 commits desde el último informe correcto.
 
-1. Un commit donde **está mal** (`bad`) — normalmente `HEAD`.
-2. Un commit donde **estaba bien** (`good`) — el último informe correcto.
-3. Una forma de decidir, para cualquier commit intermedio, si está bien o mal.
+Este es el caso más caro de ingeniería de datos, y conviene entender por qué:
+**un proceso que falla te avisa; uno que entrega mal, no.** Puede llevar
+semanas entregando mal mientras alguien toma decisiones con esos números.
 
-El punto 3 es todo el trabajo. Si puedes escribirlo como un script que devuelve
-0 (bien) o 1 (mal), bisect corre solo.
+### La idea en una frase
 
-## Manual
+Es el juego de adivinar un número del 1 al 100 preguntando «¿es mayor o
+menor?». Con preguntas al azar tardas decenas de intentos. Partiendo siempre
+por la mitad, **siete preguntas bastan**.
+
+`git bisect` juega ese juego sobre tu historial: parte el rango a la mitad,
+descarta media historia por pregunta, y te deja en el commit culpable.
+
+### Los números, que son la razón de todo
+
+| Commits a revisar | Uno por uno | Partiendo a la mitad |
+|---|---|---|
+| 60 | 60 | **6** |
+| 200 | 200 | **8** |
+| 1000 | 1000 | **10** |
+
+De 200 revisiones a 8. Ese es el retorno de aprender esto, y es la misma
+matemática de la fase *Analyze* de DMAIC: aislar la causa dividiendo el espacio
+de búsqueda, no recorriéndolo.
+
+---
+
+## Capa 2 · Cómo funciona
+
+Bisect necesita **tres cosas** y ninguna más:
+
+1. **Un punto donde está mal.** Normalmente, hoy.
+2. **Un punto donde estaba bien.** El último informe correcto.
+3. **Una forma de decidir, para cualquier punto intermedio, si está bien o
+   mal.**
+
+Los puntos 1 y 2 los tienes: son fechas que conoces. **El punto 3 es todo el
+trabajo**, y es donde está la enseñanza real de este módulo.
+
+### La pregunta que hay que saber formular
+
+«¿Está mal?» parece obvio hasta que lo intentas. Aquí el proceso **no falla**:
+corre perfecto y entrega 4.11 en vez de 2.83. Así que la pregunta no es
+«¿arranca?» ni «¿da error?». Es:
+
+> **¿El número que entrega sigue siendo el correcto?**
+
+Definir eso con precisión —qué número, con qué datos, con cuánta tolerancia—
+es la mitad del diagnóstico. Y si consigues escribirlo de forma que la
+respuesta sea automática, bisect recorre la historia solo, sin ti.
+
+---
+
+## Capa 3 · Hazlo
+
+### Primero, a mano, para ver el mecanismo
 
 ```bash
 git bisect start
-git bisect bad                  # HEAD está mal
-git bisect good <hash-bueno>    # aquí estaba bien
-# Git te deja en el commit de en medio. Pruebas. Y respondes:
-git bisect good     # o  git bisect bad
-# ... repites ~log2(n) veces
+git bisect bad                  # donde estoy ahora, está mal
+git bisect good <número-bueno>  # aquí estaba bien
+```
+
+Git te deja parado en el commit de la mitad. Pruebas lo que tengas que probar
+y respondes una de dos:
+
+```bash
+git bisect good     # aquí todavía estaba bien
+git bisect bad      # aquí ya estaba mal
+```
+
+Repites. Cada respuesta borra la mitad del rango. En 6 o 7 vueltas Git imprime:
+
+```
+<número> is the first bad commit
+```
+
+Y al terminar, siempre:
+
+```bash
 git bisect reset    # vuelve a donde estabas
 ```
 
-Al terminar, Git imprime `<hash> is the first bad commit` con su diff.
+### Después, automático, que es lo que vas a usar
 
-## Automático — el que vas a usar
+Si la decisión cabe en un archivo de instrucciones que se pueda ejecutar
+—un **script**—, bisect corre solo:
 
 ```bash
-git bisect start HEAD <hash-bueno>   # bad y good en una línea
+git bisect start HEAD <número-bueno>
 git bisect run ../prueba.sh
 ```
 
-`bisect run` ejecuta el script en cada paso y lee su **código de salida**:
+> **¿Qué es un script?** Un archivo de texto con una lista de comandos, como
+> los que escribes en la terminal, guardados para ejecutarlos de un tirón. No
+> es «programar»: es anotar lo que ya harías a mano.
+
+> **¿Qué es un código de salida?** Cuando un comando termina, deja un número
+> que dice cómo le fue. `0` significa «bien»; cualquier otro, «mal». Nunca lo
+> ves porque la terminal no lo muestra, pero está ahí: `echo $?` lo imprime.
+> Es el canal por el que los programas se avisan entre sí que algo salió mal.
+
+---
+
+## Capa 4 · El vocabulario
+
+| Término | Qué es |
+|---|---|
+| **bisect** | partir en dos; aquí, búsqueda binaria sobre el historial |
+| **`good` / `bad`** | las dos respuestas: aquí estaba bien / aquí ya estaba mal |
+| **`skip`** | «este no se puede probar», distinto de «está mal» |
+| **`bisect run`** | modo automático: un script responde por ti |
+| **`bisect reset`** | terminar y volver a donde estabas |
+
+### Los códigos de salida que lee `bisect run`
 
 | Código | Significado |
 |---|---|
 | `0` | commit bueno |
 | `1`–`124`, `126`, `127` | commit malo |
-| `125` | **no se puede probar** — sáltalo (no compila, falta un archivo) |
+| **`125`** | **no se puede probar** — sáltalo |
 | `≥128` | aborta el bisect |
 
-Aquí se ve por qué la Fase 0 insiste en códigos de salida: bisect es
-literalmente un consumidor de códigos de salida.
+**El `125` es el que separa un bisect correcto de uno que converge en el commit
+equivocado**, y merece su propia explicación. Un commit a mitad de un cambio
+grande puede no arrancar siquiera. Ese commit **no es malo**: es *no probable*.
+Si lo marcas `bad`, le estás diciendo a Git «el defecto ya existía aquí», y la
+búsqueda se va hacia atrás por una razón falsa. El resultado será un commit
+vecino, y el diagnóstico completo se construye sobre él.
 
-## Las cuatro trampas
+Esto es exactamente lo mismo que en tu mundo: una medición que no se pudo tomar
+no es una medición fuera de rango. Registrarla como fuera de rango contamina el
+análisis.
 
-1. **El script de prueba debe vivir FUERA del árbol bisecado.** Bisect hace
-   checkout de commits viejos; si el script está dentro del repo, desaparece o
-   vuelve a una versión antigua a mitad de la búsqueda. Guárdalo un nivel
-   arriba y llámalo por ruta: `git bisect run ../prueba.sh`.
-2. **El script debe ser determinista.** Si la prueba depende de datos que
-   cambian, bisect converge en cualquier parte. Datos congelados, siempre.
-3. **Usa `125` para lo no probable.** Un commit a mitad de refactor que ni
-   siquiera arranca no es «malo»: es no probable. Confundirlos mueve el
-   resultado al commit equivocado.
-4. **`git bisect skip`** hace lo mismo a mano. Si te toca saltar muchos,
-   acota el rango con `git bisect start HEAD <bueno> -- ruta/del/pipeline`.
+---
 
-## Lo que entregas
+## Capa 5 · Nivel profesional
 
-**La traza, no la respuesta.** Un hash suelto no demuestra método. Lo que se
-entrega es: rango inicial, número de pasos, script de decisión usado, commit
-culpable con su diff, y **por qué ese cambio produce el síntoma**.
+### Las cuatro trampas
 
-## Un detalle que te va a servir
+1. **El script de decisión debe vivir FUERA del repositorio que bisecas.**
+   Bisect va cambiando el contenido de la carpeta a versiones viejas; si el
+   script está dentro, desaparece o vuelve a una versión antigua a mitad de la
+   búsqueda. Se guarda un nivel arriba: `git bisect run ../prueba.sh`.
+2. **Los datos de prueba deben estar congelados.** Si la prueba corre sobre
+   datos que cambian, la respuesta cambia sin que el código cambie, y bisect
+   converge en cualquier parte. Mismo archivo, mismos números, siempre.
+3. **`125` para lo no probable** (capa 4). Es la trampa que más resultados
+   falsos produce.
+4. **Acota por ruta cuando haya mucho ruido:**
+   `git bisect start HEAD <bueno> -- ruta/del/pipeline` ignora los commits que
+   no tocaron esa carpeta.
 
-Cuando el defecto no es «se rompió» sino «cambió el comportamiento», la prueba
-no es «¿corre?»: es **«¿el número sigue siendo el correcto?»**. Un pipeline que
-corre perfecto y entrega mal es el caso común en datos, y también el más caro,
-porque nadie recibe una alerta. La prueba de bisect es tu alerta retroactiva.
+### Bisect no es solo para defectos
 
-Y al revés: `git bisect start` acepta `--term-old`/`--term-new` cuando el
-cambio no es «bueno→malo» sino «rápido→lento». Bisect sirve para localizar
-cualquier cambio de comportamiento, no solo defectos.
+`git bisect start --term-old rapido --term-new lento` cambia las etiquetas.
+Sirve para localizar **cualquier cambio de comportamiento**: cuándo se volvió
+lento, cuándo empezó a costar el doble, cuándo cambió el conteo de filas. Es
+una herramienta de localización, no de depuración.
 
-## Autoevaluación
+### Lo que se entrega
 
-- ¿Por qué el script de prueba no puede vivir dentro del repositorio?
-- ¿Cuántos pasos toma bisect sobre 500 commits?
-- ¿Qué diferencia hay entre responder `bad` y responder `skip`?
+**La traza, no el hash.** Un número suelto no demuestra método. El entregable
+es: rango inicial, pasos contra log₂(n), criterio de decisión usado, commit
+culpable con su cambio, y **por qué ese cambio produce ese síntoma sobre estos
+datos**.
+
+Esa última parte es el trabajo de verdad. En el laboratorio de este módulo, el
+commit culpable cambia la mediana por el promedio. Localizarlo es mecánico.
+Explicar que el efecto es de 1.3 horas **porque la distribución de tiempos de
+resolución tiene cola larga** —y que en datos simétricos habría pasado
+inadvertido— es lo que se sustenta en una entrevista.
+
+---
+
+## ✓ Comprobación
+
+1. ¿Por qué el script de prueba no puede vivir dentro del repositorio? → *capa 5*
+2. ¿Cuántos pasos toma bisect sobre 500 commits? → *capa 1*
+3. Diferencia entre responder `bad` y `skip`, y qué pasa si los confundes → *capa 4*
+4. ¿Por qué la pregunta aquí no es «¿da error?»? → *capa 2*
+
+Ahora sí: el [laboratorio](../labs/lab-bisect/), con un repositorio real.

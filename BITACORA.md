@@ -33,3 +33,20 @@ Formato: dónde estoy · qué hice · qué medí · qué sigue.
 - **Pendiente para la siguiente sesión:** hacer el lab en el repositorio real,
   llenar `traza-bisect.md` y escribir `resumen-en.md`. Después, Módulo 2:
   OLTP/OLAP, Parquet por dentro, idempotencia.
+
+## Sesión 2 — Ajuste de método: aprendizaje guiado por capas
+- **Fase / semana:** F0 · semana 1
+- **Hecho:** el material asumía fluidez de desarrollador. Se corrigió antes de
+  avanzar al Módulo 2.
+  - `CLAUDE.md` §2 — método de seis capas (empieza aquí → cómo funciona → hazlo
+    → vocabulario → nivel profesional → comprobación) y las ocho reglas que lo
+    sostienen. Aplica a notas, labs, plataformas y conversación.
+  - Las cuatro notas del Módulo 1, reescritas por capas. Cada comprobación
+    indica a qué capa volver si se falla, no «relee todo».
+  - `labs/lab-bisect/README.md` — capa base: qué es una terminal, un script y
+    un código de salida.
+  - Plataforma: cada instrumento se abre capa por capa, con control de ritmo
+    («capa por capa» / «ver todo»).
+- **Medido:** nada nuevo; el laboratorio sigue convergiendo en 4 pruebas.
+- **Pendiente para la siguiente sesión:** leer las capas 1 a 3 de las cuatro
+  notas, hacer el lab real y llenar `traza-bisect.md`. Después, Módulo 2.

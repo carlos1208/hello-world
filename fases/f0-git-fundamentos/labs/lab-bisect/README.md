@@ -2,6 +2,23 @@
 
 **Tiempo:** 45–60 min · **Prerrequisito:** notas 1 a 4 leídas.
 
+## Antes de empezar, por si hace falta
+
+Tres cosas que el laboratorio usa y que no son parte de Git. Si ya las tienes
+claras, sáltate esta sección.
+
+- **Terminal.** La ventana donde escribes comandos en vez de hacer clic. Lo que
+  escribes se ejecuta al dar Enter, y la respuesta se imprime debajo.
+- **Script.** Un archivo de texto con una lista de comandos guardados para
+  ejecutarlos de un tirón. `montar-laboratorio.py` es uno: construye el
+  escenario para que tú no tengas que crear 19 commits a mano. **No necesitas
+  leerlo ni entender Python** — de hecho, no lo abras hasta terminar, porque
+  contiene la respuesta.
+- **Código de salida.** El número que un comando deja al terminar para decir
+  cómo le fue: `0` es «bien», cualquier otro es «mal». No se muestra en
+  pantalla; se consulta con `echo $?`. Es el canal por el que `git bisect run`
+  entiende las respuestas de `prueba.sh`, y por eso aparece tanto en esta fase.
+
 ## El caso
 
 Lunes por la mañana. El tablero de KPIs de operación marca un **MTTR de 4.11 h**.
