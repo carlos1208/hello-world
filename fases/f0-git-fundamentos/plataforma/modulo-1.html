@@ -154,6 +154,51 @@
     border: 1px solid var(--line); border-radius: 6px; padding: 4px 9px; cursor: pointer; }
   .modo button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
 
+
+  /* glosario: término subrayado, tooltip y modal */
+  dfn.g {
+    font-style: inherit; border-bottom: 1px dashed var(--accent);
+    cursor: help; padding-bottom: .5px;
+  }
+  dfn.g:hover, dfn.g:focus-visible { background: var(--accent-soft); border-bottom-style: solid; }
+  .glosa-tip {
+    position: fixed; z-index: 60; max-width: 280px;
+    background: var(--panel); color: var(--panel-ink);
+    font-size: 13px; line-height: 1.45; padding: 9px 11px; border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.28); pointer-events: none;
+  }
+  .glosa-tip b { color: #fff; display: block; font-size: 12px; font-family: var(--mono);
+    letter-spacing: .03em; margin-bottom: 3px; }
+  .glosa-tip .pista { display: block; margin-top: 6px; font-size: 11.5px; color: #8890A8; }
+  .glosa-fondo[hidden], .glosa-tip[hidden] { display: none !important; }
+  .glosa-fondo {
+    position: fixed; inset: 0; z-index: 70; background: rgba(11,15,23,.55);
+    display: flex; align-items: center; justify-content: center; padding: 16px;
+    padding-top: calc(16px + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+  .glosa-caja {
+    position: relative; background: var(--surface); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 13px; box-shadow: var(--shadow);
+    max-width: 460px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 20px 20px 22px;
+  }
+  .glosa-et { font-family: var(--mono); font-size: 10.5px; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 6px; }
+  .glosa-caja h3 { margin: 0 0 4px; font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+  .glosa-caja .corta { margin: 0 0 12px; font-size: 14.5px; color: var(--ink); font-weight: 500;
+    padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .glosa-caja p { margin: 0 0 10px; font-size: 14.5px; color: var(--muted); }
+  .glosa-caja p:last-child { margin-bottom: 0; }
+  .glosa-caja p b { color: var(--ink); font-weight: 600; }
+  .glosa-x { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px;
+    border: 1px solid var(--line); background: var(--surface-2); color: var(--muted);
+    border-radius: 7px; cursor: pointer; font-size: 13px; line-height: 1; }
+  @media (max-width: 480px) {
+    .glosa-fondo { align-items: flex-end; padding: 0; }
+    .glosa-caja { border-radius: 14px 14px 0 0; max-height: 86vh;
+      padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
+  }
+
   /* instrument */
   .ic { background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
         overflow: hidden; box-shadow: var(--shadow); margin-bottom: 16px; }
@@ -275,7 +320,7 @@
     <p class="eyebrow">Fase 0 · Módulo 1 · capa profesional</p>
     <h1>Git Forense</h1>
     <p class="lede">El pipeline corre sin un solo error y entrega <b>4.11 h de MTTR</b> donde la semana pasada entregaba <b>2.83</b>. No hay excepción, no hay alerta, no hay traza. Hay 11 commits desde el último informe correcto. Cuatro instrumentos para aprender a encontrar el culpable.</p>
-    <p class="lede">Cada uno va <b>por capas</b>: empieza en tu mundo, sin una palabra técnica, y termina en los internals. Abres la siguiente cuando la anterior te cuadre — o pasas el ritmo a <b>ver todo</b> si prefieres leerlo de corrido.</p>
+    <p class="lede">Cada uno va <b>por capas</b>: empieza en tu mundo, sin una palabra técnica, y termina en los internals. Abres la siguiente cuando la anterior te cuadre — o pasas el ritmo a <b>ver todo</b> si prefieres leerlo de corrido. Las palabras técnicas van subrayadas —como <dfn class="g" data-g="pipeline" tabindex="0" role="button">pipeline</dfn>—: pásales el cursor o tócalas y se abre su definición.</p>
   </header>
 
   <nav class="stations" aria-label="Instrumentos">
@@ -436,6 +481,18 @@ git bisect run ../prueba.sh</div>
   </footer>
 </div>
 
+<div class="glosa-tip" id="glosa-tip" hidden></div>
+<div class="glosa-fondo" id="glosa" hidden>
+  <div class="glosa-caja" role="dialog" aria-modal="true" aria-labelledby="glosa-t">
+    <button class="glosa-x" id="glosa-x" type="button" aria-label="Cerrar">&#10005;</button>
+    <p class="glosa-et">Glosario</p>
+    <h3 id="glosa-t"></h3>
+    <p class="corta" id="glosa-c"></p>
+    <div id="glosa-d"></div>
+  </div>
+</div>
+
+<script src="glosario.js"></script>
 <script>
 /* ========================================================================
    estado y persistencia
@@ -504,6 +561,125 @@ MODS.forEach((m, i) => {
 });
 
 
+
+/* ========================================================================
+   glosario — subraya los términos y abre su definición
+   ===================================================================== */
+const GL = (typeof GLOSARIO !== "undefined" && GLOSARIO) ? GLOSARIO : {};
+const TERMINOS = [];
+Object.keys(GL).forEach(k => (GL[k].v || [k]).forEach(v => TERMINOS.push({ v: v, k: k })));
+TERMINOS.sort((a, b) => b.v.length - a.v.length);
+const RX_G = TERMINOS.length
+  ? new RegExp("(" + TERMINOS.map(t => t.v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")", "gi")
+  : null;
+const CLAVE = {};
+TERMINOS.forEach(t => { CLAVE[t.v.toLowerCase()] = t.k; });
+
+const SALTAR = new Set(["CODE", "PRE", "BUTTON", "SELECT", "OPTION", "DFN", "H1", "SCRIPT", "STYLE", "INPUT", "LABEL", "TH"]);
+const SALTAR_CLASE = ["term", "hash", "capa-n", "ph-tag", "eyebrow", "modo", "glosa-caja", "glosa-tip"];
+function limite(ch) { return !ch || !/[0-9A-Za-zÁÉÍÓÚÜÑáéíóúüñ_-]/.test(ch); }
+
+function marcarGlosario(raiz) {
+  if (!RX_G || !raiz) return;
+  const puestos = new Set();
+  const anda = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, {
+    acceptNode(n) {
+      if (!n.nodeValue || n.nodeValue.length < 2) return NodeFilter.FILTER_REJECT;
+      for (let e = n.parentElement; e && e !== raiz.parentElement; e = e.parentElement) {
+        if (SALTAR.has(e.tagName)) return NodeFilter.FILTER_REJECT;
+        for (const c of SALTAR_CLASE) if (e.classList && e.classList.contains(c)) return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nodos = [];
+  while (anda.nextNode()) nodos.push(anda.currentNode);
+
+  nodos.forEach(nodo => {
+    const txt = nodo.nodeValue;
+    RX_G.lastIndex = 0;
+    let m, piezas = null, ultimo = 0;
+    while ((m = RX_G.exec(txt)) !== null) {
+      const antes = txt[m.index - 1], despues = txt[m.index + m[0].length];
+      const clave = CLAVE[m[0].toLowerCase()];
+      if (!limite(antes) || !limite(despues) || !clave || puestos.has(clave)) continue;
+      puestos.add(clave);
+      piezas = piezas || document.createDocumentFragment();
+      if (m.index > ultimo) piezas.appendChild(document.createTextNode(txt.slice(ultimo, m.index)));
+      const d = document.createElement("dfn");
+      d.className = "g"; d.dataset.g = clave; d.textContent = m[0];
+      d.tabIndex = 0; d.setAttribute("role", "button");
+      d.setAttribute("aria-label", m[0] + " — ver definición");
+      piezas.appendChild(d);
+      ultimo = m.index + m[0].length;
+    }
+    if (piezas) {
+      if (ultimo < txt.length) piezas.appendChild(document.createTextNode(txt.slice(ultimo)));
+      nodo.parentNode.replaceChild(piezas, nodo);
+    }
+  });
+}
+
+/* modal */
+const glosa = document.getElementById("glosa");
+const glosaTip = document.getElementById("glosa-tip");
+let devolverFoco = null;
+
+function abrirGlosa(clave) {
+  const e = GL[clave];
+  if (!e) return;
+  ocultarTip();
+  document.getElementById("glosa-t").textContent = e.t;
+  document.getElementById("glosa-c").textContent = e.c;
+  document.getElementById("glosa-d").innerHTML = e.d;
+  glosa.hidden = false;
+  document.getElementById("glosa-x").focus();
+}
+function cerrarGlosa() {
+  glosa.hidden = true;
+  if (devolverFoco) { devolverFoco.focus(); devolverFoco = null; }
+}
+document.getElementById("glosa-x").addEventListener("click", cerrarGlosa);
+glosa.addEventListener("click", e => { if (e.target === glosa) cerrarGlosa(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !glosa.hidden) cerrarGlosa(); });
+
+/* tooltip: solo donde hay cursor de verdad */
+const hayCursor = window.matchMedia && window.matchMedia("(hover: hover)").matches;
+function ocultarTip() { glosaTip.hidden = true; }
+function mostrarTip(el, clave) {
+  const e = GL[clave];
+  if (!e) return;
+  glosaTip.innerHTML = "<b>" + e.t + "</b>" + e.c +
+    '<span class="pista">Clic para la definición completa</span>';
+  glosaTip.hidden = false;
+  const r = el.getBoundingClientRect(), t = glosaTip.getBoundingClientRect();
+  let x = Math.min(Math.max(8, r.left), window.innerWidth - t.width - 8);
+  let y = r.top - t.height - 8;
+  if (y < 8) y = r.bottom + 8;
+  glosaTip.style.left = x + "px";
+  glosaTip.style.top = y + "px";
+}
+
+document.addEventListener("click", e => {
+  const d = e.target.closest && e.target.closest("dfn.g");
+  if (!d) return;
+  devolverFoco = d;
+  abrirGlosa(d.dataset.g);
+});
+document.addEventListener("keydown", e => {
+  const d = document.activeElement;
+  if (d && d.classList && d.classList.contains("g") && (e.key === "Enter" || e.key === " ")) {
+    e.preventDefault(); devolverFoco = d; abrirGlosa(d.dataset.g);
+  }
+});
+if (hayCursor) {
+  document.addEventListener("mouseover", e => {
+    const d = e.target.closest && e.target.closest("dfn.g");
+    if (d) mostrarTip(d, d.dataset.g); else ocultarTip();
+  });
+  window.addEventListener("scroll", ocultarTip, { passive: true });
+}
+
 /* ========================================================================
    capas de aprendizaje — se revelan de una en una
    ===================================================================== */
@@ -549,6 +725,8 @@ function pintarCapas(mid) {
     host.appendChild(sec);
   });
 
+  host.querySelectorAll(".capa-body").forEach(marcarGlosario);
+
   if (guiado && hasta < lista.length) {
     const pie = document.createElement("div");
     pie.className = "siguiente";
@@ -583,6 +761,7 @@ function sincronizarModo() {
 }
 sincronizarModo();
 pintarTodasLasCapas();
+document.querySelectorAll(".lede, .objetivo, footer.cierre").forEach(marcarGlosario);
 
 /* ========================================================================
    1 · explorador de objetos

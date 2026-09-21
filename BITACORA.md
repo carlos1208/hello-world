@@ -50,3 +50,17 @@ Formato: dónde estoy · qué hice · qué medí · qué sigue.
 - **Medido:** nada nuevo; el laboratorio sigue convergiendo en 4 pruebas.
 - **Pendiente para la siguiente sesión:** leer las capas 1 a 3 de las cuatro
   notas, hacer el lab real y llenar `traza-bisect.md`. Después, Módulo 2.
+
+## Sesión 3 — Glosario a un clic
+- **Fase / semana:** F0 · semana 1
+- **Hecho:**
+  - `plataforma/glosario.js` — 45 términos con definición corta (la del tooltip)
+    y completa (la del modal), cada una en lenguaje llano y con su puente a la
+    ruta. Se publica como archivo de apoyo del artefacto, así que los módulos
+    siguientes lo reutilizan en vez de duplicarlo.
+  - La plataforma subraya los términos **automáticamente**: recorre el texto,
+    marca la primera aparición de cada término por bloque y le pone tooltip
+    (cursor) y modal (clic o toque). Funciona también con teclado.
+  - `CLAUDE.md` §2 regla 9: ninguna palabra técnica sin definición a un clic.
+- **Pendiente para la siguiente sesión:** sin cambios — leer las capas 1 a 3,
+  hacer el lab real y llenar `traza-bisect.md`.

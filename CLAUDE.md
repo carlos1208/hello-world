@@ -64,6 +64,12 @@ llevó algo completo, no un fragmento.
    patrón nuevo. Después se puede asumir.
 8. **Se puede parar en cualquier capa.** Capas 1–3 ya son utilidad real; 4–5
    son el nivel que pide la ruta.
+9. **Toda palabra técnica lleva su definición a un clic.** En las plataformas
+   interactivas se subraya y abre un modal; en las notas escritas, la tabla de
+   vocabulario de la capa 4 cumple esa función. El glosario es **uno solo y
+   compartido**: `fases/f0-git-fundamentos/plataforma/glosario.js`. Los módulos
+   siguientes **agregan términos ahí**, no en su propia página, y lo publican
+   como archivo de apoyo del artefacto.
 
 Esto aplica a todo: notas, laboratorios, plataformas interactivas y la
 conversación de cada sesión.
