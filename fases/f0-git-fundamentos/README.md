@@ -8,18 +8,22 @@ dominar el historial como herramienta forense, que es lo que usarás cuando un
 pipeline empiece a entregar datos malos y haya que encontrar cuándo se rompió.
 
 ## Git como herramienta de diagnóstico
-- [ ] El modelo de objetos: blob, tree, commit y por qué un commit es inmutable
-      — *sin esto, rebase y reset se aprenden de memoria en vez de entenderse*
-- [ ] `reflog`: recuperar trabajo que creías perdido — *Git casi nunca borra;
-      saberlo cambia cuánto te arriesgas a experimentar*
-- [ ] Rebase interactivo: reescribir, fusionar y reordenar commits antes de publicarlos
-- [ ] `git bisect`: búsqueda binaria del commit que rompió el pipeline
-      — encuentra el culpable entre 200 en ~8 pasos · https://git-scm.com/docs/git-bisect
+**Material escrito: [`notas/`](notas/00-indice.md) · Plataforma interactiva: ver abajo.**
+
+- [ ] [El modelo de objetos](notas/01-modelo-de-objetos.md): blob, tree, commit y por qué
+      un commit es inmutable — *sin esto, rebase y reset se aprenden de memoria*
+- [ ] [`reflog`](notas/02-reflog.md): recuperar trabajo que creías perdido — *Git casi
+      nunca borra; saberlo cambia cuánto te arriesgas a experimentar*
+- [ ] [Rebase interactivo](notas/03-rebase-interactivo.md): reescribir, fusionar y
+      reordenar commits antes de publicarlos
+- [ ] [`git bisect`](notas/04-bisect.md): búsqueda binaria del commit que rompió el
+      pipeline — el culpable entre 200 en ~8 pasos · https://git-scm.com/docs/git-bisect
 - [ ] Hooks de pre-commit para validar datos y limpiar salidas de notebooks
 - [ ] Modelo de ramas para un proyecto de datos y estrategia de `.gitignore`
       — *datos fuera del repo, siempre*
-- [ ] **Lab** · Romper el pipeline a propósito, hacer 15 commits encima y encontrar
-      el culpable con `bisect`. *Entregas la traza del bisect, no la respuesta.*
+- [ ] **[Lab · Encontrar el commit que rompió el MTTR](labs/lab-bisect/)** — un pipeline
+      que corre sin errores y entrega un número equivocado; 11 commits de rango.
+      *Entregas [la traza](entregable/traza-bisect.md), no el hash.*
 
 ## Shell para ingeniería de datos
 - [ ] MIT Missing Semester — Shell Tools y Version Control · https://missing.csail.mit.edu/2020/
@@ -44,6 +48,17 @@ Git a este nivel es análisis de causa raíz sobre código. `bisect` es literalm
 una búsqueda binaria para aislar la causa de un defecto: el mismo razonamiento de
 la fase *Analyze* de DMAIC, aplicado a un repositorio.
 
-## Estado del módulo ya trabajado
-El Módulo 1 cubrió las cuatro zonas, los comandos y el pipeline de shell a nivel
-Associate. **Falta la capa profesional: `reflog`, rebase interactivo y `bisect`.**
+## Estado del módulo
+El Módulo 1 cubrió primero las cuatro zonas, los comandos y el pipeline de shell
+(nivel Associate). **La capa profesional ya está completa:** modelo de objetos,
+`reflog`, rebase interactivo y `bisect`, con laboratorio ejecutable y entregable.
+
+- **Material escrito:** [`notas/`](notas/00-indice.md) — cuatro notas, cada una
+  con su autoevaluación.
+- **Laboratorio:** [`labs/lab-bisect/`](labs/lab-bisect/) — `montar-laboratorio.py`
+  construye un repositorio desechable con el defecto sembrado.
+- **Plataforma interactiva:** simulador de bisect paso a paso, rescates de
+  `reflog` y editor de rebase interactivo. Enlace en [`../../BITACORA.md`](../../BITACORA.md).
+
+Pendiente de la fase: hooks de pre-commit, modelo de ramas, el bloque de shell y
+el de conceptos de datos (Módulo 2).

@@ -1,0 +1,990 @@
+<title>Git Forense</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #EDF0F6;
+    --surface: #FFFFFF;
+    --surface-2: #E2E7F1;
+    --panel: #131A29;
+    --panel-ink: #D8DFF0;
+    --ink: #131A29;
+    --muted: #5A6482;
+    --faint: #8890A8;
+    --line: #D3D9E8;
+    --accent: #2F4DC4;
+    --accent-soft: #DFE5FA;
+    --on-accent: #FFFFFF;
+    --good: #14705A;
+    --good-soft: #D8EDE6;
+    --bad: #A6332A;
+    --bad-soft: #F6DFDC;
+    --skip: #8A6210;
+    --skip-soft: #F5E8CF;
+    --shadow: 0 1px 2px rgba(19,26,41,.06), 0 8px 24px rgba(19,26,41,.06);
+    --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0B0F17; --surface: #141B28; --surface-2: #1C2433;
+      --panel: #080C14; --panel-ink: #C9D3E8;
+      --ink: #E7ECF6; --muted: #98A2BC; --faint: #6B7490; --line: #242D3F;
+      --accent: #7D9AFF; --accent-soft: #1A2440; --on-accent: #0B0F17;
+      --good: #4FBE94; --good-soft: #102A23;
+      --bad: #E28178; --bad-soft: #2E1614;
+      --skip: #D9A44B; --skip-soft: #2B2010;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0B0F17; --surface: #141B28; --surface-2: #1C2433;
+    --panel: #080C14; --panel-ink: #C9D3E8;
+    --ink: #E7ECF6; --muted: #98A2BC; --faint: #6B7490; --line: #242D3F;
+    --accent: #7D9AFF; --accent-soft: #1A2440; --on-accent: #0B0F17;
+    --good: #4FBE94; --good-soft: #102A23;
+    --bad: #E28178; --bad-soft: #2E1614;
+    --skip: #D9A44B; --skip-soft: #2B2010;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.28);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.55;
+    margin: 0; padding-inline: 16px; padding-block: 0 72px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+  /* masthead */
+  header.top { padding-block: 32px 4px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin: 0 0 10px;
+  }
+  h1 { font-size: clamp(28px, 7vw, 40px); font-weight: 700; letter-spacing: -.028em;
+       line-height: 1.08; margin: 0 0 12px; text-wrap: balance; }
+  .lede { color: var(--muted); margin: 0 0 20px; max-width: 62ch; font-size: 15.5px; }
+  .lede b { color: var(--ink); font-weight: 600; }
+
+  /* nav */
+  nav.stations {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    background: var(--bg); padding-block: 10px 11px; margin-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: none; display: flex; align-items: center; gap: 7px;
+    font-family: var(--sans); font-size: 13.5px; font-weight: 500;
+    color: var(--muted); background: var(--surface); border: 1px solid var(--line);
+    padding: 7px 12px; border-radius: 7px; cursor: pointer; white-space: nowrap;
+    transition: border-color .15s, color .15s;
+  }
+  .tab[aria-selected="true"] { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); }
+  .tab .num { font-family: var(--mono); font-size: 11.5px; color: var(--faint); }
+  .tab[aria-selected="true"] .num { color: var(--accent); }
+  .tab .tick { color: var(--good); font-weight: 700; }
+  .progress { display: flex; align-items: center; gap: 10px; margin-top: 9px; }
+  .progress .bar { flex: 1; height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; }
+  .progress .bar > i { display: block; height: 100%; width: 0; background: var(--good); transition: width .25s ease; }
+  .progress .lab {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--faint); white-space: nowrap;
+  }
+
+  /* station */
+  section.station { display: none; }
+  section.station.on { display: block; }
+  .brief {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
+    padding: 18px 18px 16px; margin-bottom: 16px; box-shadow: var(--shadow);
+  }
+  .brief h2 { font-size: 21px; font-weight: 600; letter-spacing: -.02em; margin: 0 0 8px; }
+  .brief p { margin: 0 0 10px; font-size: 15px; color: var(--muted); max-width: 64ch; }
+  .brief p:last-child { margin-bottom: 0; }
+  .brief b { color: var(--ink); font-weight: 600; }
+  .brief code, .ic code, li code, td code { font-family: var(--mono); font-size: .88em;
+    background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+  .ref { font-family: var(--mono); font-size: 11.5px; color: var(--faint); margin-top: 12px; display: block; }
+
+  .objetivo {
+    display: flex; gap: 10px; align-items: flex-start;
+    border-left: 3px solid var(--accent); background: var(--accent-soft);
+    border-radius: 0 7px 7px 0; padding: 11px 13px; margin-bottom: 16px; font-size: 14.5px;
+  }
+  .objetivo.listo { border-left-color: var(--good); background: var(--good-soft); }
+  .objetivo .et { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent); flex: none; padding-top: 3px; }
+  .objetivo.listo .et { color: var(--good); }
+
+  /* instrument */
+  .ic { background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
+        overflow: hidden; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .ic-head { display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--surface-2); flex-wrap: wrap; }
+  .ic-head h3 { margin: 0; font-size: 13px; font-family: var(--mono); font-weight: 600;
+    letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  .ic-body { padding: 16px; }
+
+  button.act {
+    font-family: var(--sans); font-size: 13.5px; font-weight: 500;
+    background: var(--accent); color: var(--on-accent); border: 1px solid transparent;
+    padding: 7px 13px; border-radius: 7px; cursor: pointer;
+  }
+  button.act.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  button.act.good { background: var(--good); }
+  button.act.bad { background: var(--bad); }
+  button.act.skip { background: var(--skip); }
+  button.act:disabled { opacity: .45; cursor: not-allowed; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  /* terminal */
+  .term { background: var(--panel); color: var(--panel-ink); font-family: var(--mono);
+    font-size: 13px; line-height: 1.6; padding: 14px 15px; border-radius: 8px;
+    max-height: 320px; overflow-y: auto; overflow-x: auto; white-space: pre; }
+  .term .p { color: #7D9AFF; }
+  .term .dim { color: #6B7490; }
+  .term .ok { color: #4FBE94; }
+  .term .err { color: #E28178; }
+  .term-in { display: flex; gap: 8px; align-items: center; margin-top: 10px;
+    border: 1px solid var(--line); border-radius: 8px; padding: 8px 11px; background: var(--surface-2); }
+  .term-in span { font-family: var(--mono); color: var(--accent); font-size: 13px; }
+  .term-in input { flex: 1; min-width: 0; background: none; border: none; color: var(--ink);
+    font-family: var(--mono); font-size: 13px; }
+  .term-in input:focus { outline: none; }
+
+  /* object explorer */
+  .obj-path { font-family: var(--mono); font-size: 12px; color: var(--faint); margin-bottom: 10px; }
+  .obj-path b { color: var(--ink); font-weight: 600; }
+  .hash { font-family: var(--mono); font-size: 12.5px; color: var(--accent);
+    background: var(--accent-soft); border: 1px solid transparent; border-radius: 5px;
+    padding: 1px 6px; cursor: pointer; }
+  .hash:hover, .hash:focus-visible { border-color: var(--accent); }
+  .hash.flat { background: none; color: var(--muted); cursor: default; }
+
+  /* rebase editor */
+  ol.todo { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  ol.todo li { display: grid; grid-template-columns: auto auto 1fr auto; gap: 9px; align-items: center;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; }
+  ol.todo select { font-family: var(--mono); font-size: 12.5px; padding: 3px 5px;
+    border-radius: 5px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+  ol.todo .msg { font-size: 14px; overflow: hidden; text-overflow: ellipsis; }
+  ol.todo .sha { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+  ol.todo .mv { display: flex; gap: 3px; }
+  ol.todo .mv button { font-family: var(--mono); font-size: 12px; line-height: 1; width: 24px; height: 24px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 5px; cursor: pointer; }
+  li.drop-line .msg, li.drop-line .sha { text-decoration: line-through; opacity: .5; }
+
+  .result { margin-top: 14px; }
+  .result h4 { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--faint); margin: 0 0 7px; font-weight: 500; }
+  ul.hist { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 13px; }
+  ul.hist li { padding: 3px 0; display: flex; gap: 9px; }
+  ul.hist .n { color: var(--faint); }
+
+  /* bisect */
+  .rango { display: flex; gap: 2px; margin-bottom: 14px; }
+  .rango i { flex: 1; height: 26px; border-radius: 2px; background: var(--surface-2); position: relative; }
+  .rango i.g { background: var(--good); }
+  .rango i.b { background: var(--bad); }
+  .rango i.u { background: var(--skip); }
+  .rango i.now { outline: 2px solid var(--accent); outline-offset: 1px; z-index: 1; }
+  .metricas { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px;
+    overflow: hidden; margin-bottom: 14px; }
+  .metricas div { background: var(--surface); padding: 10px 12px; }
+  .metricas dt { font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--faint); margin-bottom: 3px; }
+  .metricas dd { margin: 0; font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em; }
+  .probe { border: 1px solid var(--line); border-radius: 8px; padding: 13px 14px;
+    background: var(--surface-2); margin-bottom: 13px; }
+  .probe .k { font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--faint); }
+  .probe .m { font-size: 15.5px; font-weight: 600; margin: 4px 0 2px; }
+  .probe .h { font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+  .veredicto { padding: 13px 14px; border-radius: 8px; font-size: 14.5px; margin-bottom: 13px; }
+  .veredicto.ok { background: var(--good-soft); border: 1px solid var(--good); }
+  .veredicto.no { background: var(--bad-soft); border: 1px solid var(--bad); }
+  .veredicto b { font-weight: 600; }
+
+  /* quiz */
+  .quiz { display: flex; flex-direction: column; gap: 7px; margin-top: 6px; }
+  .quiz button {
+    text-align: left; font-family: var(--sans); font-size: 14.5px; color: var(--ink);
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px 13px; cursor: pointer;
+  }
+  .quiz button:hover { border-color: var(--accent); }
+  .quiz button.si { background: var(--good-soft); border-color: var(--good); }
+  .quiz button.no { background: var(--bad-soft); border-color: var(--bad); }
+  .quiz .fb { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+  table.tk { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.tk th, table.tk td { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--line); }
+  table.tk th { font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em;
+    text-transform: uppercase; color: var(--faint); font-weight: 500; }
+  .scroll-x { overflow-x: auto; }
+
+  footer.cierre { margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--line);
+    font-size: 14px; color: var(--muted); }
+  footer.cierre p { margin: 0 0 9px; max-width: 64ch; }
+  footer.cierre b { color: var(--ink); }
+  .sync { font-family: var(--mono); font-size: 10.5px; color: var(--faint); margin-top: 14px; }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Fase 0 · Módulo 1 · capa profesional</p>
+    <h1>Git Forense</h1>
+    <p class="lede">El pipeline corre sin un solo error y entrega <b>4.11 h de MTTR</b> donde la semana pasada entregaba <b>2.83</b>. No hay excepción, no hay alerta, no hay traza. Hay 11 commits desde el último informe correcto. Cuatro instrumentos para aprender a encontrar el culpable.</p>
+  </header>
+
+  <nav class="stations" aria-label="Instrumentos">
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="progress">
+      <div class="bar"><i id="fill"></i></div>
+      <span class="lab" id="pcount">0 de 4</span>
+    </div>
+  </nav>
+
+  <!-- ============ 1 · OBJETOS ============ -->
+  <section class="station on" id="st-objetos" role="tabpanel" aria-labelledby="tab-objetos">
+    <div class="brief">
+      <h2>El commit es inmutable, y de ahí sale todo lo demás</h2>
+      <p>Git no guarda diferencias: guarda objetos direccionados por el hash de su propio contenido. Un <b>blob</b> es el contenido de un archivo sin nombre; un <b>tree</b> es la carpeta que le pone nombre; un <b>commit</b> es un tree más el padre, el autor y el mensaje.</p>
+      <p>Como el hash del padre entra en el cálculo del hash del hijo, <b>cambiar un commit cambia todos los que vienen después</b>. Nada se edita: <code>amend</code>, <code>rebase</code> y <code>cherry-pick</code> crean objetos nuevos y mueven la rama. Los viejos siguen en la base de objetos, sin nombre que los apunte.</p>
+      <span class="ref">notas/01-modelo-de-objetos.md · git cat-file -p HEAD</span>
+    </div>
+
+    <div class="objetivo" id="obj-objetos">
+      <span class="et">Objetivo</span>
+      <span>Baja de commit a tree a blob, ejecuta un <code>amend</code>, y responde por qué reescribir un commit antiguo reescribe la historia posterior.</span>
+    </div>
+
+    <div class="ic">
+      <div class="ic-head">
+        <h3>git cat-file — explorador de objetos</h3>
+        <button class="act ghost" id="amend-btn" type="button">git commit --amend</button>
+      </div>
+      <div class="ic-body">
+        <p class="obj-path" id="obj-path"></p>
+        <div class="term" id="obj-term"></div>
+        <p class="ref" id="obj-hint">Los hashes en azul son navegables.</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ic-head"><h3>Comprobación</h3></div>
+      <div class="ic-body">
+        <p style="margin:0 0 4px; font-size:15px;">Reescribes el commit número 3 de una rama de 20. ¿Por qué Git tiene que reescribir los 17 siguientes?</p>
+        <div class="quiz" id="quiz-objetos"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2 · REFLOG ============ -->
+  <section class="station" id="st-reflog" role="tabpanel" aria-labelledby="tab-reflog">
+    <div class="brief">
+      <h2>Git casi nunca borra. Solo pierde el nombre</h2>
+      <p>Cada vez que una referencia se mueve, Git lo anota en <code>.git/logs/HEAD</code>. Ese registro es el <b>reflog</b>, y registra dónde estuvo <code>HEAD</code>, no qué commits existen. Cuando un <code>reset --hard</code> deja commits huérfanos, los objetos siguen ahí: lo único que perdiste fue la referencia que los apuntaba.</p>
+      <p>Por eso el reflog se aprende <b>antes</b> que rebase: es la red debajo del trapecio. Un ingeniero que conoce el reflog experimenta; uno que no, evita la herramienta.</p>
+      <span class="ref">notas/02-reflog.md · el reflog es local, personal y caduca a los 90 días</span>
+    </div>
+
+    <div class="objetivo" id="obj-reflog">
+      <span class="et">Escenario</span>
+      <span>Alguien ejecutó <code>git reset --hard HEAD~3</code> y se llevó por delante tres commits de trabajo real. Recupéralos. La terminal es funcional: escribe comandos.</span>
+    </div>
+
+    <div class="ic">
+      <div class="ic-head">
+        <h3>terminal — repo de KPIs NOC</h3>
+        <button class="act ghost" id="reflog-reset" type="button">Reiniciar escenario</button>
+      </div>
+      <div class="ic-body">
+        <div class="term" id="rl-term"></div>
+        <form class="term-in" id="rl-form">
+          <span>$</span>
+          <input id="rl-input" autocomplete="off" spellcheck="false" placeholder="git reflog" aria-label="comando">
+        </form>
+        <p class="ref">Comandos disponibles: <code>git log --oneline</code> · <code>git reflog</code> · <code>git reset --hard &lt;ref&gt;</code> · <code>git branch &lt;nombre&gt; &lt;hash&gt;</code> · <code>ayuda</code></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3 · REBASE ============ -->
+  <section class="station" id="st-rebase" role="tabpanel" aria-labelledby="tab-rebase">
+    <div class="brief">
+      <h2>Un historial que se pueda bisecar</h2>
+      <p>Bisect te deja parado en un commit y te pregunta qué pasó ahí. Si ese commit se llama <code>arreglo2</code>, el diagnóstico no avanzó. Si se llama <b>«Simplificar el cálculo del MTTR»</b>, el diagnóstico está hecho.</p>
+      <p>Rebase interactivo es lo que convierte un historial de exploración en uno de decisiones, <b>antes de publicarlo</b>. La regla que no se rompe: nunca reescribas lo que otros ya tienen.</p>
+      <span class="ref">notas/03-rebase-interactivo.md · el archivo de tareas va del más viejo al más nuevo, al revés que git log</span>
+    </div>
+
+    <div class="objetivo" id="obj-rebase">
+      <span class="et">Objetivo</span>
+      <span>Deja exactamente tres commits, en este orden: <b>Calcular el MTTR como mediana</b> · <b>Contar alarmas por nodo</b> · <b>Ordenar el resumen por nodo</b>. Los dos commits de trabajo sucio deben absorberse en el commit al que pertenecen.</span>
+    </div>
+
+    <div class="ic">
+      <div class="ic-head">
+        <h3>git rebase -i HEAD~5</h3>
+        <div class="row">
+          <button class="act ghost" id="rb-reset" type="button">Reiniciar</button>
+          <button class="act" id="rb-check" type="button">Guardar y salir</button>
+        </div>
+      </div>
+      <div class="ic-body">
+        <ol class="todo" id="rb-list"></ol>
+        <div class="result">
+          <h4>Historial resultante</h4>
+          <ul class="hist" id="rb-preview"></ul>
+        </div>
+        <div id="rb-fb"></div>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ic-head"><h3>Los verbos</h3></div>
+      <div class="ic-body scroll-x">
+        <table class="tk">
+          <tr><th>verbo</th><th>qué hace</th></tr>
+          <tr><td><code>pick</code></td><td>déjalo tal cual</td></tr>
+          <tr><td><code>reword</code></td><td>mismo cambio, mensaje nuevo</td></tr>
+          <tr><td><code>squash</code></td><td>fusiona con el anterior, combinando los dos mensajes</td></tr>
+          <tr><td><code>fixup</code></td><td>fusiona con el anterior y descarta este mensaje</td></tr>
+          <tr><td><code>drop</code></td><td>elimínalo</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4 · BISECT ============ -->
+  <section class="station" id="st-bisect" role="tabpanel" aria-labelledby="tab-bisect">
+    <div class="brief">
+      <h2>Búsqueda binaria sobre el historial</h2>
+      <p>Bisect necesita tres cosas: un commit donde está mal, uno donde estaba bien, y una forma de decidir para cualquier commit intermedio. El punto tres es todo el trabajo: si lo escribes como un script que devuelve <code>0</code> o <code>1</code>, bisect corre solo.</p>
+      <p>Leer 200 diffs son 200 revisiones. Bisect son <b>ocho</b>. Y hay un tercer código de salida que decide si converges en el commit correcto o en uno vecino: <code>125</code> — <b>no se puede probar</b>.</p>
+      <span class="ref">notas/04-bisect.md · el script de prueba vive FUERA del árbol bisecado</span>
+    </div>
+
+    <div class="objetivo" id="obj-bisect">
+      <span class="et">Objetivo</span>
+      <span>Encuentra el commit que subió el MTTR. Uno de los commits del rango <b>ni siquiera ejecuta</b>: si lo marcas malo en vez de no probable, vas a converger en el commit equivocado — y el simulador te lo va a decir.</span>
+    </div>
+
+    <div class="ic">
+      <div class="ic-head">
+        <h3>git bisect — simulador</h3>
+        <div class="row">
+          <label class="ref" for="bs-n" style="margin:0">commits</label>
+          <select id="bs-n" style="font-family:var(--mono);font-size:12.5px;padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink)">
+            <option value="12">12</option>
+            <option value="60" selected>60</option>
+            <option value="200">200</option>
+          </select>
+          <button class="act ghost" id="bs-auto" type="button">bisect run</button>
+          <button class="act ghost" id="bs-reset" type="button">Reiniciar</button>
+        </div>
+      </div>
+      <div class="ic-body">
+        <div class="rango" id="bs-rango" aria-hidden="true"></div>
+        <dl class="metricas">
+          <div><dt>Rango vivo</dt><dd id="bs-vivos">—</dd></div>
+          <div><dt>Pruebas hechas</dt><dd id="bs-pasos">0</dd></div>
+          <div><dt>Máximo teórico</dt><dd id="bs-teorico">—</dd></div>
+          <div><dt>Fuerza bruta</dt><dd id="bs-bruta">—</dd></div>
+        </dl>
+        <div id="bs-zona"></div>
+        <div class="term" id="bs-term"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="cierre">
+    <p><b>Esto es el simulador. El entregable es el repositorio.</b> Cuando los cuatro instrumentos estén en verde, monta el laboratorio real y bisecta un repositorio de verdad, con un pipeline de verdad:</p>
+    <div class="term" style="margin-bottom:12px">python3 fases/f0-git-fundamentos/labs/lab-bisect/montar-laboratorio.py
+cd datos/lab-bisect/repo
+git bisect start HEAD informe-semana-40
+git bisect run ../prueba.sh</div>
+    <p>Después llenas <code>fases/f0-git-fundamentos/entregable/traza-bisect.md</code>. <b>Entregas la traza, no el hash:</b> localizar el commit es mecánico, explicar por qué ese cambio produce ese síntoma sobre estos datos es el trabajo.</p>
+    <p class="sync" id="sync">Sin sincronizar</p>
+  </footer>
+</div>
+
+<script>
+/* ========================================================================
+   estado y persistencia
+   ===================================================================== */
+const MODS = [
+  { id: "objetos", n: "01", t: "Objetos" },
+  { id: "reflog",  n: "02", t: "reflog" },
+  { id: "rebase",  n: "03", t: "rebase -i" },
+  { id: "bisect",  n: "04", t: "bisect" }
+];
+const LS = "f0-git-forense";
+let hechos = {};
+let dbRef = null, guardar = null;
+
+function leerLocal() {
+  try { const r = localStorage.getItem(LS); if (r) hechos = JSON.parse(r) || {}; }
+  catch (e) { /* sin almacenamiento: la página funciona igual */ }
+}
+function escribirLocal() {
+  try { localStorage.setItem(LS, JSON.stringify(hechos)); } catch (e) {}
+}
+function sync(msg) { document.getElementById("sync").textContent = msg; }
+
+function marcar(id) {
+  if (hechos[id]) return;
+  hechos[id] = true;
+  escribirLocal();
+  if (dbRef) {
+    clearTimeout(guardar);
+    guardar = setTimeout(() => {
+      dbRef.set({ hechos: hechos, actualizado: new Date().toISOString() })
+        .then(() => sync("Sincronizado · disponible en todos tus dispositivos"))
+        .catch(() => sync("Guardado en este dispositivo; no se pudo sincronizar"));
+    }, 500);
+  }
+  pintarProgreso();
+}
+
+function pintarProgreso() {
+  const n = MODS.filter(m => hechos[m.id]).length;
+  document.getElementById("fill").style.width = (n / MODS.length * 100) + "%";
+  document.getElementById("pcount").textContent = n + " de " + MODS.length;
+  MODS.forEach(m => {
+    const tick = document.getElementById("tick-" + m.id);
+    if (tick) tick.textContent = hechos[m.id] ? "✓" : "";
+    const obj = document.getElementById("obj-" + m.id);
+    if (obj) obj.classList.toggle("listo", !!hechos[m.id]);
+  });
+}
+
+/* pestañas */
+const tabs = document.getElementById("tabs");
+MODS.forEach((m, i) => {
+  const b = document.createElement("button");
+  b.className = "tab"; b.type = "button"; b.role = "tab"; b.id = "tab-" + m.id;
+  b.setAttribute("aria-selected", String(i === 0));
+  b.setAttribute("aria-controls", "st-" + m.id);
+  b.innerHTML = '<span class="num">' + m.n + '</span>' + m.t + '<span class="tick" id="tick-' + m.id + '"></span>';
+  b.addEventListener("click", () => {
+    MODS.forEach(o => {
+      document.getElementById("st-" + o.id).classList.toggle("on", o.id === m.id);
+      document.getElementById("tab-" + o.id).setAttribute("aria-selected", String(o.id === m.id));
+    });
+  });
+  tabs.appendChild(b);
+});
+
+/* ========================================================================
+   1 · explorador de objetos
+   ===================================================================== */
+const OBJ = {
+  commit: {
+    hash: "c7f4a19",
+    lineas: [
+      ["tree", "9d3f1a2"],
+      ["parent", "4c7b8e1"],
+      ["autor", "Carlos Villanueva  1758412800 -0500"],
+      ["mensaje", "Calcular el MTTR como mediana de la duración"]
+    ]
+  },
+  tree: {
+    hash: "9d3f1a2",
+    entradas: [
+      ["100644", "blob", "2e0f77c", "pipeline.py"],
+      ["100644", "blob", "8ab19d5", "README.md"],
+      ["040000", "tree", "b41c0a9", "kpis/"]
+    ]
+  },
+  blobs: {
+    "2e0f77c": ["import csv, statistics, sys", "", "def main(ruta):",
+      "    filas = leer(ruta)", '    cerradas = [f for f in filas if f["fin"]]',
+      '    duraciones = [float(f["minutos"]) for f in cerradas]',
+      "    mttr = statistics.median(duraciones) / 60",
+      '    print(f"MTTR_HORAS={mttr:.2f}")'],
+    "8ab19d5": ["# Pipeline KPIs NOC", "", "MTTR = mediana de la duración de las alarmas cerradas.",
+      "Mediana y no promedio: la cola de tiempos de resolución es larga."]
+  }
+};
+let objVista = "commit", objAmend = false, objBlobVisto = false;
+
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+function chip(h, nav) {
+  return nav ? '<button class="hash" type="button" data-h="' + h + '">' + h + '</button>'
+             : '<span class="hash flat">' + h + '</span>';
+}
+
+function pintarObjetos() {
+  const term = document.getElementById("obj-term");
+  const path = document.getElementById("obj-path");
+  const hint = document.getElementById("obj-hint");
+  let html = "", ruta = "";
+
+  if (objVista === "commit") {
+    const c = OBJ.commit;
+    const h = objAmend ? "e83b0d5" : c.hash;
+    ruta = "<b>commit</b> " + h;
+    html = '<span class="dim">$ git cat-file -p ' + h + '</span>\n\n';
+    c.lineas.forEach(([k, v]) => {
+      if (k === "tree") html += 'tree   ' + chip(v, true) + '\n';
+      else if (k === "parent") html += 'parent ' + chip(v, false) + '\n';
+      else if (k === "autor") html += 'author ' + esc(v) + '\n';
+      else html += '\n' + esc(objAmend ? v + " (mensaje corregido)" : v) + '\n';
+    });
+    if (objAmend) {
+      html += '\n<span class="dim">El commit ' + c.hash + ' sigue en .git/objects/.\n' +
+        'Ya no hay rama que lo apunte: es huérfano. El reflog sí lo conoce.</span>\n';
+    }
+    hint.textContent = "El hash del tree es navegable. El del padre no: es otro commit.";
+  } else if (objVista === "tree") {
+    ruta = "<b>tree</b> " + OBJ.tree.hash;
+    html = '<span class="dim">$ git cat-file -p ' + OBJ.tree.hash + '</span>\n\n';
+    OBJ.tree.entradas.forEach(([modo, tipo, h, nombre]) => {
+      html += modo + ' ' + tipo + ' ' + chip(h, tipo === "blob") + '    ' + esc(nombre) + '\n';
+    });
+    html += '\n<span class="dim">El nombre del archivo vive aquí, no en el blob.\n' +
+      'Por eso renombrar sin cambiar contenido no crea un blob nuevo.</span>\n';
+    hint.textContent = "Los blobs son navegables. Abre pipeline.py.";
+  } else {
+    const b = OBJ.blobs[objVista];
+    ruta = "<b>blob</b> " + objVista;
+    html = '<span class="dim">$ git cat-file -p ' + objVista + '</span>\n\n' +
+      b.map(esc).join("\n") + '\n\n<span class="dim">Contenido puro: sin nombre, sin ruta, sin fecha.</span>\n';
+    hint.textContent = "Tres saltos desde HEAD hasta el contenido. Eso es todo lo que Git es por dentro.";
+    objBlobVisto = true;
+  }
+
+  path.innerHTML = 'HEAD → ' + ruta +
+    (objVista !== "commit" ? ' &nbsp; <button class="act ghost" type="button" id="obj-back" style="padding:2px 9px;font-size:12px">volver</button>' : '');
+  term.innerHTML = html;
+
+  term.querySelectorAll(".hash[data-h]").forEach(el => {
+    el.addEventListener("click", () => {
+      objVista = el.dataset.h === OBJ.tree.hash ? "tree" : el.dataset.h;
+      pintarObjetos();
+    });
+  });
+  const back = document.getElementById("obj-back");
+  if (back) back.addEventListener("click", () => {
+    objVista = objVista === "tree" ? "commit" : "tree";
+    pintarObjetos();
+  });
+}
+document.getElementById("amend-btn").addEventListener("click", () => {
+  objAmend = true; objVista = "commit"; pintarObjetos();
+  document.getElementById("amend-btn").disabled = true;
+});
+pintarObjetos();
+
+/* comprobación */
+const QUIZ = [
+  { t: "Porque Git recalcula las diferencias acumuladas desde ese punto.",
+    ok: false, fb: "Git no guarda diferencias: guarda fotos completas. Las diferencias las calcula al vuelo cuando se las pides." },
+  { t: "Porque el hash de cada commit incluye el hash de su padre.",
+    ok: true, fb: "Exacto. El hash es del contenido completo, padre incluido. Cambia el padre y cambia el hijo, en cascada hasta la punta. De ahí sale la regla de no reescribir lo publicado." },
+  { t: "Porque rebase copia el working tree en cada paso.",
+    ok: false, fb: "Rebase reproduce cambios, pero eso no explica el cambio de hashes. La razón es el encadenamiento del hash del padre." }
+];
+const qz = document.getElementById("quiz-objetos");
+QUIZ.forEach(o => {
+  const b = document.createElement("button"); b.type = "button"; b.textContent = o.t;
+  b.addEventListener("click", () => {
+    qz.querySelectorAll("button").forEach(x => { x.classList.remove("si", "no"); });
+    b.classList.add(o.ok ? "si" : "no");
+    let fb = document.getElementById("quiz-fb");
+    if (!fb) { fb = document.createElement("p"); fb.className = "fb"; fb.id = "quiz-fb"; qz.appendChild(fb); }
+    fb.textContent = o.fb;
+    if (o.ok && objAmend && objBlobVisto) marcar("objetos");
+    else if (o.ok) fb.textContent = o.fb + " Te falta recorrer el explorador: baja hasta un blob y ejecuta el amend.";
+  });
+  qz.appendChild(b);
+});
+
+/* ========================================================================
+   2 · terminal de reflog
+   ===================================================================== */
+const COMMITS_RL = [
+  { h: "3a91f0c", m: "Leer el CSV de alarmas y contar registros" },
+  { h: "8d2e4b7", m: "Descartar las alarmas sin cierre" },
+  { h: "c5f1a83", m: "Calcular la duración de cada alarma" },
+  { h: "1b7d902", m: "Calcular el MTTR como mediana" },
+  { h: "f04c6ae", m: "Contar alarmas por nodo" },
+  { h: "9e3b15d", m: "Ordenar el resumen por nodo" },
+  { h: "2c8a740", m: "Agregar el porcentaje de alarmas críticas" },
+  { h: "b3e9d40", m: "Agregar la disponibilidad por zona" }
+];
+const OBJETIVO_RL = "b3e9d40";
+let headRL, reflogRL;
+
+function reiniciarRL() {
+  headRL = 4;  // HEAD~3 desde el índice 7
+  reflogRL = [
+    { h: COMMITS_RL[4].h, ref: "HEAD@{0}", q: "reset: moving to HEAD~3" },
+    { h: COMMITS_RL[7].h, ref: "HEAD@{1}", q: "commit: Agregar la disponibilidad por zona" },
+    { h: COMMITS_RL[6].h, ref: "HEAD@{2}", q: "commit: Agregar el porcentaje de alarmas críticas" },
+    { h: COMMITS_RL[5].h, ref: "HEAD@{3}", q: "commit: Ordenar el resumen por nodo" },
+    { h: COMMITS_RL[4].h, ref: "HEAD@{4}", q: "commit: Contar alarmas por nodo" }
+  ];
+  const t = document.getElementById("rl-term");
+  t.innerHTML =
+    '<span class="dim">$ git reset --hard HEAD~3</span>\n' +
+    'HEAD is now at ' + COMMITS_RL[4].h + ' Contar alarmas por nodo\n' +
+    '<span class="err">Tres commits de trabajo real acaban de quedarse sin referencia.</span>\n' +
+    '<span class="dim">Recupéralos. Empieza por ver qué quedó: git log --oneline</span>\n';
+}
+
+function outRL(html) {
+  const t = document.getElementById("rl-term");
+  t.innerHTML += "\n" + html;
+  t.scrollTop = t.scrollHeight;
+}
+function hashRefRL(ref) {
+  const m = ref.match(/^HEAD@\{(\d+)\}$/);
+  if (m) { const e = reflogRL[Number(m[1])]; return e ? e.h : null; }
+  const m2 = ref.match(/^HEAD~(\d+)$/);
+  if (m2) { const i = headRL - Number(m2[1]); return i >= 0 ? COMMITS_RL[i].h : null; }
+  if (ref === "HEAD") return COMMITS_RL[headRL].h;
+  const c = COMMITS_RL.find(c => c.h.startsWith(ref) && ref.length >= 4);
+  return c ? c.h : null;
+}
+
+function ejecutarRL(cmd) {
+  const c = cmd.trim().replace(/\s+/g, " ");
+  outRL('<span class="p">$ ' + esc(c) + '</span>');
+  if (!c) return;
+
+  if (c === "ayuda" || c === "help") {
+    outRL('git log --oneline\ngit reflog\ngit reset --hard &lt;ref&gt;\ngit branch &lt;nombre&gt; &lt;hash&gt;');
+    return;
+  }
+  if (c === "git log --oneline" || c === "git log") {
+    let s = "";
+    for (let i = headRL; i >= 0; i--) s += COMMITS_RL[i].h + " " + esc(COMMITS_RL[i].m) + "\n";
+    outRL(s.trimEnd());
+    return;
+  }
+  if (c === "git reflog" || c === "git reflog show HEAD") {
+    outRL(reflogRL.map(e => e.h + " " + e.ref + ": " + esc(e.q)).join("\n") +
+      '\n<span class="dim">Los commits siguen ahí. Lo que perdiste fue el nombre.</span>');
+    return;
+  }
+  let m = c.match(/^git reset --hard (\S+)$/);
+  if (m) {
+    const h = hashRefRL(m[1]);
+    if (!h) { outRL('<span class="err">fatal: ambiguous argument \'' + esc(m[1]) + '\'</span>'); return; }
+    const i = COMMITS_RL.findIndex(c => c.h === h);
+    headRL = i;
+    reflogRL.unshift({ h: h, ref: "HEAD@{0}", q: "reset: moving to " + m[1] });
+    reflogRL.forEach((e, k) => { e.ref = "HEAD@{" + k + "}"; });
+    outRL("HEAD is now at " + h + " " + esc(COMMITS_RL[i].m));
+    if (h === OBJETIVO_RL) {
+      outRL('<span class="ok">\nRecuperado. Los tres commits vuelven a estar en la rama.\n' +
+        'No hiciste magia: el reflog te devolvió el hash, y el hash siempre estuvo ahí.\n' +
+        'Atajo para la próxima: git reset --hard ORIG_HEAD deshace el último reset, merge o rebase.</span>');
+      marcar("reflog");
+    }
+    return;
+  }
+  m = c.match(/^git branch (\S+) (\S+)$/);
+  if (m) {
+    const h = hashRefRL(m[2]);
+    if (!h) { outRL('<span class="err">fatal: not a valid object name: \'' + esc(m[2]) + '\'</span>'); return; }
+    outRL('Rama ' + esc(m[1]) + ' creada sobre ' + h + '.\n' +
+      '<span class="dim">Así se rescata una rama borrada sin fusionar. Aquí querías mover HEAD: usa reset --hard.</span>');
+    return;
+  }
+  outRL('<span class="err">Comando no reconocido en este simulador. Escribe "ayuda".</span>');
+}
+
+document.getElementById("rl-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const i = document.getElementById("rl-input");
+  ejecutarRL(i.value); i.value = "";
+});
+document.getElementById("reflog-reset").addEventListener("click", reiniciarRL);
+reiniciarRL();
+
+/* ========================================================================
+   3 · editor de rebase
+   ===================================================================== */
+const BASE_RB = [
+  { h: "1b7d902", m: "Calcular el MTTR como mediana", v: "pick" },
+  { h: "f04c6ae", m: "Contar alarmas por nodo", v: "pick" },
+  { h: "7c2e881", m: "wip: probar la mediana", v: "pick" },
+  { h: "9e3b15d", m: "Ordenar el resumen por nodo", v: "pick" },
+  { h: "4a0db63", m: "arreglo del conteo por nodo", v: "pick" }
+];
+const META_RB = ["Calcular el MTTR como mediana", "Contar alarmas por nodo", "Ordenar el resumen por nodo"];
+let todo = [];
+
+function reiniciarRB() {
+  todo = BASE_RB.map(c => Object.assign({}, c));
+  pintarRB();
+  document.getElementById("rb-fb").innerHTML = "";
+}
+function resultadoRB() {
+  const out = [];
+  todo.forEach(c => {
+    if (c.v === "drop") return;
+    if ((c.v === "fixup" || c.v === "squash") && out.length) {
+      if (c.v === "squash") out[out.length - 1].extra = (out[out.length - 1].extra || 0) + 1;
+      return;
+    }
+    out.push({ m: c.v === "reword" ? c.m + " (reescrito)" : c.m, extra: 0 });
+  });
+  return out;
+}
+function pintarRB() {
+  const ol = document.getElementById("rb-list");
+  ol.innerHTML = "";
+  todo.forEach((c, i) => {
+    const li = document.createElement("li");
+    if (c.v === "drop") li.className = "drop-line";
+    const sel = document.createElement("select");
+    ["pick", "reword", "squash", "fixup", "drop"].forEach(v => {
+      const o = document.createElement("option"); o.value = v; o.textContent = v;
+      if (v === c.v) o.selected = true; sel.appendChild(o);
+    });
+    sel.setAttribute("aria-label", "verbo para " + c.m);
+    sel.addEventListener("change", () => { c.v = sel.value; pintarRB(); });
+    const sha = document.createElement("span"); sha.className = "sha"; sha.textContent = c.h;
+    const msg = document.createElement("span"); msg.className = "msg"; msg.textContent = c.m;
+    const mv = document.createElement("span"); mv.className = "mv";
+    const up = document.createElement("button"); up.type = "button"; up.textContent = "↑";
+    up.setAttribute("aria-label", "subir " + c.m); up.disabled = i === 0;
+    up.addEventListener("click", () => { todo.splice(i - 1, 0, todo.splice(i, 1)[0]); pintarRB(); });
+    const dn = document.createElement("button"); dn.type = "button"; dn.textContent = "↓";
+    dn.setAttribute("aria-label", "bajar " + c.m); dn.disabled = i === todo.length - 1;
+    dn.addEventListener("click", () => { todo.splice(i + 1, 0, todo.splice(i, 1)[0]); pintarRB(); });
+    mv.appendChild(up); mv.appendChild(dn);
+    li.appendChild(sel); li.appendChild(sha); li.appendChild(msg); li.appendChild(mv);
+    ol.appendChild(li);
+  });
+  const pv = document.getElementById("rb-preview");
+  pv.innerHTML = "";
+  const res = resultadoRB();
+  if (!res.length) { pv.innerHTML = '<li><span class="n">—</span>historial vacío</li>'; return; }
+  res.forEach((c, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = '<span class="n">' + (i + 1) + '</span><span>' + esc(c.m) +
+      (c.extra ? ' <span class="n">(+' + c.extra + ' squash)</span>' : '') + '</span>';
+    pv.appendChild(li);
+  });
+}
+document.getElementById("rb-reset").addEventListener("click", reiniciarRB);
+document.getElementById("rb-check").addEventListener("click", () => {
+  const res = resultadoRB().map(c => c.m);
+  const fb = document.getElementById("rb-fb");
+  const ok = res.length === META_RB.length && res.every((m, i) => m === META_RB[i]);
+  if (ok) {
+    fb.className = "veredicto ok";
+    fb.style.marginTop = "14px";
+    fb.innerHTML = "<b>Successfully rebased and updated refs/heads/main.</b><br>" +
+      "Tres commits, cada uno un cambio de comportamiento completo, cada mensaje una decisión. " +
+      "Un bisect sobre esto te deja parado en una frase que explica el defecto. " +
+      "Y si te arrepientes: <code>git reflog</code> y <code>git reset --hard ORIG_HEAD</code> — el historial anterior sigue ahí.";
+    marcar("rebase");
+  } else {
+    fb.className = "veredicto no";
+    fb.style.marginTop = "14px";
+    const dif = res.length !== META_RB.length
+      ? "Quedaron " + res.length + " commits; la meta son " + META_RB.length + "."
+      : "El orden o los mensajes no coinciden con la meta.";
+    fb.innerHTML = "<b>Todavía no.</b> " + dif +
+      "<br>Pista: <code>fixup</code> fusiona con el commit <b>inmediatamente anterior</b> en la lista. " +
+      "Si el trabajo sucio no está junto a su commit, muévelo primero.";
+  }
+});
+reiniciarRB();
+
+/* ========================================================================
+   4 · simulador de bisect
+   ===================================================================== */
+const MSG_BS = [
+  "Ajustar el formato del resumen", "Agregar el conteo de tipos de alarma",
+  "Documentar el criterio de MTTR", "Ordenar el resumen por nodo",
+  "Simplificar el cálculo del MTTR", "Agregar el porcentaje de alarmas críticas",
+  "Renombrar el resumen por nodo", "Mover el umbral a una constante",
+  "Agregar la disponibilidad por zona", "Limpiar importaciones no usadas",
+  "Anotar el alcance del resumen", "Redondear la salida a dos decimales",
+  "Separar la lectura del CSV en una función", "Agregar cabecera al resumen"
+];
+let bs = null;
+
+function sha(i) {
+  let x = (i * 2654435761) % 268435456;
+  return x.toString(16).padStart(7, "0").slice(0, 7);
+}
+function nuevoBS(n) {
+  const culpable = 2 + Math.floor(Math.random() * (n - 3));
+  let noEjec;
+  do { noEjec = 1 + Math.floor(Math.random() * (n - 2)); } while (noEjec === culpable);
+  bs = { n: n, culpable: culpable, noEjec: noEjec, lo: 0, hi: n - 1, pasos: 0,
+         fin: false, saltados: {}, mid: null };
+  bs.mid = (bs.lo + bs.hi) >> 1;
+  document.getElementById("bs-term").innerHTML =
+    '<span class="dim">$ git bisect start HEAD informe-semana-40</span>\n' +
+    'Bisecting: ' + Math.floor((n - 2) / 2) + ' revisions left to test after this (roughly ' +
+    Math.ceil(Math.log2(n - 1)) + ' steps)\n';
+  pintarBS();
+}
+function logBS(html) {
+  const t = document.getElementById("bs-term");
+  t.innerHTML += html + "\n";
+  t.scrollTop = t.scrollHeight;
+}
+function siguienteMid() {
+  let m = (bs.lo + bs.hi) >> 1;
+  let d = 0;
+  while (bs.saltados[m] && d < bs.n) {
+    d++;
+    const a = m + d, b = m - d;
+    if (a < bs.hi && !bs.saltados[a]) { m = a; break; }
+    if (b > bs.lo && !bs.saltados[b]) { m = b; break; }
+    if (a >= bs.hi && b <= bs.lo) return null;
+  }
+  return (m > bs.lo && m < bs.hi && !bs.saltados[m]) ? m : null;
+}
+function pintarBS() {
+  const rango = document.getElementById("bs-rango");
+  rango.innerHTML = "";
+  const paso = Math.max(1, Math.ceil(bs.n / 60));
+  for (let i = 0; i < bs.n; i += paso) {
+    const el = document.createElement("i");
+    if (i <= bs.lo) el.className = "g";
+    else if (i >= bs.hi) el.className = "b";
+    if (bs.saltados[i]) el.className = "u";
+    if (!bs.fin && bs.mid !== null && i <= bs.mid && bs.mid < i + paso) el.className += " now";
+    rango.appendChild(el);
+  }
+  const vivos = Math.max(0, bs.hi - bs.lo - 1);
+  document.getElementById("bs-vivos").textContent = bs.fin ? "0" : vivos;
+  document.getElementById("bs-pasos").textContent = bs.pasos;
+  document.getElementById("bs-teorico").textContent = Math.ceil(Math.log2(bs.n - 1));
+  document.getElementById("bs-bruta").textContent = bs.n - 1;
+
+  const zona = document.getElementById("bs-zona");
+  if (bs.fin) return;
+  if (bs.mid === null) {
+    zona.innerHTML = '<div class="veredicto no"><b>Sin commits probables en el rango.</b> ' +
+      'Saltaste todo lo que quedaba. En un caso real acotarías el rango por ruta: ' +
+      '<code>git bisect start HEAD &lt;bueno&gt; -- ruta/del/pipeline</code>.</div>';
+    return;
+  }
+  const i = bs.mid;
+  zona.innerHTML =
+    '<div class="probe"><span class="k">probando — commit ' + (i + 1) + ' de ' + bs.n + '</span>' +
+    '<p class="m">' + esc(MSG_BS[i % MSG_BS.length]) + '</p>' +
+    '<p class="h">' + sha(i) + ' · $ ../prueba.sh</p></div>' +
+    '<div class="row" style="margin-bottom:13px">' +
+    '<button class="act good" type="button" data-r="g">bueno · exit 0</button>' +
+    '<button class="act bad" type="button" data-r="b">malo · exit 1</button>' +
+    '<button class="act skip" type="button" data-r="u">no se puede probar · exit 125</button>' +
+    '<button class="act ghost" type="button" data-r="run">correr prueba.sh</button></div>';
+  zona.querySelectorAll("button[data-r]").forEach(b => {
+    b.addEventListener("click", () => responderBS(b.dataset.r));
+  });
+}
+function verdad(i) {
+  if (i === bs.noEjec) return "u";
+  return i >= bs.culpable ? "b" : "g";
+}
+function responderBS(r) {
+  const i = bs.mid;
+  if (r === "run") {
+    const v = verdad(i);
+    logBS('<span class="dim">running ../prueba.sh sobre ' + sha(i) + '</span>' +
+      (v === "u" ? '\n<span class="err">NameError: name \'resumen_nodos\' is not defined</span> <span class="dim">→ exit 125</span>'
+        : v === "b" ? '\nMTTR_HORAS=4.11 <span class="dim">→ exit 1</span>'
+          : '\nMTTR_HORAS=2.83 <span class="dim">→ exit 0</span>'));
+    return responderBS(v);
+  }
+  bs.pasos++;
+  logBS('<span class="p">' + sha(i) + '</span> ' +
+    (r === "g" ? '<span class="ok">bueno</span>' : r === "b" ? '<span class="err">malo</span>'
+      : '<span class="dim">no probable — saltado</span>'));
+  if (r === "g") bs.lo = i;
+  else if (r === "b") bs.hi = i;
+  else bs.saltados[i] = true;
+
+  if (bs.hi - bs.lo <= 1) return terminarBS();
+  bs.mid = siguienteMid();
+  if (bs.mid === null) return terminarBS();
+  pintarBS();
+}
+function terminarBS() {
+  bs.fin = true;
+  const encontrado = bs.hi;
+  const acierto = encontrado === bs.culpable;
+  logBS('\n<span class="ok">' + sha(encontrado) + ' is the first bad commit</span>\n' +
+    esc(MSG_BS[encontrado % MSG_BS.length]));
+  const zona = document.getElementById("bs-zona");
+  if (acierto) {
+    zona.innerHTML = '<div class="veredicto ok"><b>' + sha(encontrado) + ' — ' +
+      esc(MSG_BS[encontrado % MSG_BS.length]) + '</b><br>' +
+      bs.pasos + ' pruebas sobre ' + bs.n + ' commits. Revisarlos uno por uno habrían sido ' + (bs.n - 1) +
+      '. La escala es la gracia: con 1000 commits serían 10 pruebas.<br>' +
+      'Y fíjate en el mensaje: perfectamente razonable. El defecto no llega anunciado como defecto.</div>';
+    marcar("bisect");
+  } else {
+    zona.innerHTML = '<div class="veredicto no"><b>Convergiste en el commit equivocado.</b><br>' +
+      'Bisect señala ' + sha(encontrado) + ', pero el culpable era ' + sha(bs.culpable) + ' — ' +
+      esc(MSG_BS[bs.culpable % MSG_BS.length]) + '.<br>' +
+      'Marcaste como <b>malo</b> un commit que no se podía probar. Un commit que ni siquiera ejecuta no es ' +
+      'malo: es no probable, y va con <code>125</code> o <code>git bisect skip</code>. ' +
+      'Confundirlos mueve el resultado al commit vecino.</div>';
+  }
+  pintarBS();
+}
+document.getElementById("bs-auto").addEventListener("click", () => {
+  if (!bs || bs.fin) return;
+  let guardia = 0;
+  const tic = () => {
+    if (!bs || bs.fin || bs.mid === null || guardia++ > 40) return;
+    responderBS("run");
+    setTimeout(tic, 420);
+  };
+  tic();
+});
+document.getElementById("bs-reset").addEventListener("click", () =>
+  nuevoBS(Number(document.getElementById("bs-n").value)));
+document.getElementById("bs-n").addEventListener("change", () =>
+  nuevoBS(Number(document.getElementById("bs-n").value)));
+nuevoBS(60);
+
+/* ========================================================================
+   arranque
+   ===================================================================== */
+leerLocal();
+pintarProgreso();
+
+const usar = (typeof claude !== "undefined" && claude && claude.use)
+  ? claude.use("db")
+  : Promise.resolve(null);
+
+usar.then(d => {
+  if (!d) { sync("Guardado solo en este dispositivo"); return; }
+  dbRef = d.doc("modulo1/progreso");
+  dbRef.onSnapshot(snap => {
+    if (snap.exists) {
+      const data = snap.data() || {};
+      hechos = Object.assign({}, hechos, data.hechos || {});
+      escribirLocal();
+      pintarProgreso();
+      sync("Sincronizado · disponible en todos tus dispositivos");
+    } else {
+      sync("Listo para sincronizar");
+    }
+  }, () => sync("Guardado en este dispositivo; sincronización no disponible"));
+}).catch(() => sync("Guardado solo en este dispositivo"));
+</script>

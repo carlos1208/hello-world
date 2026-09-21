@@ -14,3 +14,22 @@ Formato: dónde estoy · qué hice · qué medí · qué sigue.
   profesional del Módulo 1 (`reflog`, rebase interactivo, `bisect`) antes de
   pasar al Módulo 2 (OLTP/OLAP, Parquet por dentro, idempotencia).
   *Recomendación del mentor: completarlo ahora.*
+
+## Sesión 1 — Módulo 1, capa profesional
+- **Fase / semana:** F0 · semana 1
+- **Hecho:** completada la capa profesional del Módulo 1.
+  - `notas/01..04` — modelo de objetos, `reflog`, rebase interactivo, `bisect`,
+    cada una con autoevaluación.
+  - `labs/lab-bisect/montar-laboratorio.py` — genera un repositorio desechable
+    de 19 commits con un defecto silencioso sembrado (el MTTR pasa de mediana a
+    promedio), datos congelados y `prueba.sh` fuera del árbol bisecado.
+  - `entregable/traza-bisect.md` — plantilla de la traza.
+  - **Plataforma interactiva:** https://claude.ai/artifact/VB9pErnVpXhX4x8B9Brb4z
+    (explorador de objetos, terminal de reflog, editor de rebase, simulador de
+    bisect con el caso del commit no probable).
+- **Medido:** el laboratorio converge en 4 pruebas sobre 11 commits de rango y
+  señala «Simplificar el cálculo del MTTR». MTTR correcto 2.83 h, defectuoso
+  4.11 h.
+- **Pendiente para la siguiente sesión:** hacer el lab en el repositorio real,
+  llenar `traza-bisect.md` y escribir `resumen-en.md`. Después, Módulo 2:
+  OLTP/OLAP, Parquet por dentro, idempotencia.

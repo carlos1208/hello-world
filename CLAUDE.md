@@ -108,13 +108,14 @@ cuando aplica, y él puede explicar el mecanismo sin leer notas.
   cuesta unas 130 horas adicionales; manteniendo 8–12 h/semana, el costo se
   pagó en calendario: **39 semanas**. Es la decisión correcta si el objetivo
   es sostener una entrevista técnica, no aprobar un examen.
-- **Pendiente abierto:** el Módulo 1 ya trabajado quedó a nivel Associate
-  (cuatro zonas, comandos, pipeline de shell). Le falta la capa profesional
-  de la Fase 0: `reflog`, rebase interactivo y `bisect`. Está bien como
-  primera pasada, no como el estándar fijado. Decisión pendiente: completar
-  el Módulo 1 ahora o seguir al Módulo 2 y volver después.
-  **Recomendación del mentor: completarlo ahora.** `bisect` es la técnica de
-  mayor rendimiento de todo el módulo y es justo la que falta.
+- **Módulo 1 — resuelto.** Se decidió completar la capa profesional antes de
+  seguir. Ya está: modelo de objetos, `reflog`, rebase interactivo y `bisect`,
+  con material escrito (`fases/f0-git-fundamentos/notas/`), laboratorio
+  ejecutable (`labs/lab-bisect/`), entregable con plantilla y plataforma
+  interactiva (`plataforma/modulo-1.html`, publicada en
+  https://claude.ai/artifact/VB9pErnVpXhX4x8B9Brb4z).
+- **Siguiente:** cerrar el entregable de bisect y pasar al Módulo 2 —
+  OLTP/OLAP, Parquet por dentro, idempotencia.
 
 ## 8. Estructura del repositorio
 
@@ -123,7 +124,7 @@ cuando aplica, y él puede explicar el mecanismo sin leer notas.
 ├── CLAUDE.md              # este contrato
 ├── BITACORA.md            # dónde va, qué sigue, decisiones de sesión
 ├── fases/                 # una carpeta por fase: notas, labs, entregable
-│   ├── f0-git-fundamentos/
+│   ├── f0-git-fundamentos/   # + notas/, plataforma/ (simulador interactivo)
 │   ├── f1-nube-costos/
 │   ├── f2-delta-lake/
 │   ├── f3-spark-internals/
