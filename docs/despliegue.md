@@ -31,22 +31,24 @@ nunca la ve. Esto no es opcional; es la razón de que el proyecto tenga funcione
 
 ---
 
-## Paso 0 · La rama (30 segundos, pero si te lo saltas no funciona nada)
+## Paso 0 · La rama — ya resuelto
 
-El trabajo vive en la rama `claude/cloud-data-eng-setup-6qj2dq`, y la rama por
-defecto del repositorio es `master`, que **todavía no tiene la carpeta `app/`**.
-Netlify publica la rama de producción, así que si no le dices cuál es, va a
-publicar `master` y verás el README viejo del repositorio, o un error.
+Esto hizo falta mientras el trabajo vivía en una rama y `master` todavía no
+tenía la carpeta `app/`. **Al fusionar el PR #2 dejó de aplicar:** `master` ya
+tiene el sitio, y Netlify publica la rama por defecto sin configurar nada.
 
-Dos maneras de resolverlo, y da igual cuál elijas:
+Se deja anotado por si algún día trabajas en una rama y quieres verla publicada
+antes de fusionar: **Project configuration → Build & deploy → Branches and
+deploy contexts → Production branch**.
 
-- **La rápida:** en Netlify, **Site configuration → Build & deploy → Branches
-  and deploy contexts → Production branch** → escribe
-  `claude/cloud-data-eng-setup-6qj2dq`. Se hace después del paso 1.
-- **La definitiva:** fusionar esa rama a `master` en GitHub (un *pull request*).
-  A partir de ahí Netlify publica `master` sin configurar nada.
+---
 
-Empieza con la rápida. La fusión se hace cuando cierres la Fase 0.
+### Nota sobre los nombres de la interfaz
+
+Netlify renombró *Sites* a **Projects**. Donde otras guías (y capturas viejas)
+digan «Site configuration», en la interfaz de hoy dice **Project
+configuration**. Es el mismo sitio: el botón está en la portada del proyecto,
+junto a *Share*, y también como primera opción del menú lateral.
 
 ---
 
@@ -60,12 +62,11 @@ Empieza con la rápida. La fusión se hace cuando cierres la Fase 0.
    el archivo `netlify.toml` del repositorio (publica `app/`, las funciones
    salen de `netlify/functions/`).
 4. **Deploy site**.
-5. **Ahora sí, el paso 0:** Site configuration → Build & deploy → Branches →
-   Production branch → `claude/cloud-data-eng-setup-6qj2dq` → guardar, y
-   **Deploys → Trigger deploy**.
 
 En un minuto tienes una dirección tipo `algo-random-123.netlify.app`. Para
-cambiarla: **Site configuration → Site details → Change site name**.
+cambiarla: **Project configuration → General → Project details →
+**Change project name**. Un nombre como `ruta-data-engineering` se lee mejor
+que el que Netlify inventa solo.
 
 Con esto la plataforma ya funciona: se ve, se usa, y guarda el avance **en ese
 dispositivo**. Faltan las dos piezas que la conectan.
@@ -78,7 +79,8 @@ dispositivo**. Faltan las dos piezas que la conectan.
    tu cuenta de Google.
 2. **Create API key** → cópiala. Es una cadena larga; trátala como una
    contraseña: no la pegues en un chat, ni en un archivo del repositorio.
-3. En Netlify: **Site configuration → Environment variables → Add a variable**:
+3. En Netlify: **Project configuration → Environment variables → Add a
+   variable** (también está como acceso directo en el menú lateral):
 
    | Key | Value |
    |---|---|
@@ -151,7 +153,7 @@ es sincronizar el avance y el botón del tutor.
 | «Clave personal incorrecta» | no coincide con `CLAVE_PERSONAL` | revisa mayúsculas y espacios |
 | El avance no pasa al celular | clave distinta en cada aparato | escribe la misma en los dos |
 | El sitio quedó pausado | se acabaron los créditos del mes gratis | espera al ciclo siguiente (ver abajo) |
-| Se publicó un README suelto en vez de la plataforma | Netlify está publicando `master` | cambia la rama de producción (paso 0) |
+| Se publicó un README suelto en vez de la plataforma | Netlify publica una rama sin `app/` | revisa la rama de producción (paso 0) |
 | El despliegue falla en «Installing dependencies» | versión de `@netlify/blobs` | mira el registro del despliegue: dice qué versión falta |
 
 **El límite real del plan gratuito de Netlify.** Son créditos mensuales, y
