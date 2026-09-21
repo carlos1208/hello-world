@@ -31,6 +31,25 @@ nunca la ve. Esto no es opcional; es la razón de que el proyecto tenga funcione
 
 ---
 
+## Paso 0 · La rama (30 segundos, pero si te lo saltas no funciona nada)
+
+El trabajo vive en la rama `claude/cloud-data-eng-setup-6qj2dq`, y la rama por
+defecto del repositorio es `master`, que **todavía no tiene la carpeta `app/`**.
+Netlify publica la rama de producción, así que si no le dices cuál es, va a
+publicar `master` y verás el `hello world` viejo o un error.
+
+Dos maneras de resolverlo, y da igual cuál elijas:
+
+- **La rápida:** en Netlify, **Site configuration → Build & deploy → Branches
+  and deploy contexts → Production branch** → escribe
+  `claude/cloud-data-eng-setup-6qj2dq`. Se hace después del paso 1.
+- **La definitiva:** fusionar esa rama a `master` en GitHub (un *pull request*).
+  A partir de ahí Netlify publica `master` sin configurar nada.
+
+Empieza con la rápida. La fusión se hace cuando cierres la Fase 0.
+
+---
+
 ## Paso 1 · Cuenta de Netlify y conectar el repositorio
 
 1. Entra a [netlify.com](https://www.netlify.com/) → **Sign up** → elige
@@ -41,6 +60,9 @@ nunca la ve. Esto no es opcional; es la razón de que el proyecto tenga funcione
    el archivo `netlify.toml` del repositorio (publica `app/`, las funciones
    salen de `netlify/functions/`).
 4. **Deploy site**.
+5. **Ahora sí, el paso 0:** Site configuration → Build & deploy → Branches →
+   Production branch → `claude/cloud-data-eng-setup-6qj2dq` → guardar, y
+   **Deploys → Trigger deploy**.
 
 En un minuto tienes una dirección tipo `algo-random-123.netlify.app`. Para
 cambiarla: **Site configuration → Site details → Change site name**.
@@ -129,6 +151,8 @@ es sincronizar el avance y el botón del tutor.
 | «Clave personal incorrecta» | no coincide con `CLAVE_PERSONAL` | revisa mayúsculas y espacios |
 | El avance no pasa al celular | clave distinta en cada aparato | escribe la misma en los dos |
 | El sitio quedó pausado | se acabaron los créditos del mes gratis | espera al ciclo siguiente (ver abajo) |
+| Se publicó el «hello world» viejo | Netlify está publicando `master` | cambia la rama de producción (paso 0) |
+| El despliegue falla en «Installing dependencies» | versión de `@netlify/blobs` | mira el registro del despliegue: dice qué versión falta |
 
 **El límite real del plan gratuito de Netlify.** Son créditos mensuales, y
 cuando se acaban **el sitio se pausa** hasta el mes siguiente. Para una persona
