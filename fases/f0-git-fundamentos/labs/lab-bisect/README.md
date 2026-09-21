@@ -30,10 +30,19 @@ Nadie tocó «eso». Hay 11 commits desde el último informe correcto.
 
 ## Montar
 
+**En Windows, todo esto va en Git Bash**, no en PowerShell ni en el símbolo del
+sistema. Git Bash viene con Git para Windows: búscalo en el menú de inicio, o
+haz clic derecho en la carpeta del repositorio → *Open Git Bash here*.
+
 ```bash
 python3 fases/f0-git-fundamentos/labs/lab-bisect/montar-laboratorio.py
 cd datos/lab-bisect/repo
 ```
+
+Si `python3` responde «command not found», prueba con `python` o con `py -3`:
+en Windows el intérprete se llama distinto según cómo se haya instalado. El
+script de prueba ya resuelve eso solo; el que tienes que ajustar es este
+primer comando.
 
 Se monta en `datos/lab-bisect/` (ignorado por git). Puedes rehacerlo cuantas
 veces quieras; los datos son deterministas, así que el resultado siempre es el
@@ -67,6 +76,13 @@ Verifícalo **antes**, siempre. Es el paso que la gente se salta.
 ```bash
 git bisect start HEAD informe-semana-40
 git bisect run ../prueba.sh
+```
+
+En Windows, si responde *permission denied*, llama al intérprete de forma
+explícita — `bisect run` acepta un comando con argumentos:
+
+```bash
+git bisect run bash ../prueba.sh
 ```
 
 **3. Antes de `reset`, guarda la traza.** Y cuenta el rango, que hace falta para
