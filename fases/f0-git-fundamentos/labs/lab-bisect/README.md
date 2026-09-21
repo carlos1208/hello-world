@@ -69,7 +69,8 @@ git bisect start HEAD informe-semana-40
 git bisect run ../prueba.sh
 ```
 
-**3. Antes de `reset`, guarda la traza.**
+**3. Antes de `reset`, guarda la traza.** Y cuenta el rango, que hace falta para
+comparar tus pasos contra log₂(n): `git rev-list --count informe-semana-40..HEAD`.
 
 ```bash
 git bisect log > /tmp/traza-bisect.txt
@@ -106,6 +107,8 @@ mecanismo es el trabajo.
 ## Regla de cierre
 
 **Entregas la traza, no el hash.** Plantilla en
-[`../../entregable/traza-bisect.md`](../../entregable/traza-bisect.md).
+[`../../entregable/traza-bisect.md`](../../entregable/traza-bisect.md), y la
+pestaña **Entregable** de la plataforma arma el borrador a partir de tu
+`git bisect log`.
 
 > No abras `montar-laboratorio.py` antes de terminar: contiene la respuesta.

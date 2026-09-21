@@ -221,6 +221,47 @@
   .clave input { font-family: var(--mono); font-size: 13px; padding: 6px 9px; border-radius: 6px;
     border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); min-width: 0; flex: 0 1 160px; }
 
+
+  /* tramos del recorrido: entender · practicar · comprobar */
+  .tramo { margin: 30px 0 14px; }
+  .tramo:first-of-type { margin-top: 8px; }
+  .tramo .paso {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent);
+    background: var(--accent-soft); padding: 4px 9px; border-radius: 5px;
+  }
+  .tramo.listo .paso { color: var(--good); background: var(--good-soft); }
+  .tramo h2 {
+    font-size: 22px; font-weight: 600; letter-spacing: -.022em;
+    margin: 10px 0 5px; text-wrap: balance;
+  }
+  .tramo p { margin: 0; font-size: 14.5px; color: var(--muted); max-width: 62ch; }
+  .tramo .linea { height: 1px; background: var(--line); margin-top: 14px; }
+
+  /* generador de la traza */
+  .campo { margin-bottom: 14px; }
+  .campo label { display: block; font-size: 14.5px; margin-bottom: 6px; }
+  .campo .ayuda { display: block; font-size: 13px; color: var(--muted); margin-top: 3px; }
+  .campo textarea, .campo input {
+    width: 100%; font-family: var(--mono); font-size: 12.5px; line-height: 1.5;
+    padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--surface-2); color: var(--ink); resize: vertical;
+  }
+  .campo textarea { min-height: 150px; white-space: pre; overflow-x: auto; }
+  .campo textarea:focus, .campo input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  .lectura { display: none; }
+  .lectura.on { display: block; }
+  .salida-md {
+    background: var(--panel); color: var(--panel-ink); font-family: var(--mono);
+    font-size: 12px; line-height: 1.55; padding: 14px 15px; border-radius: 8px;
+    max-height: 340px; overflow: auto; white-space: pre-wrap; word-break: break-word;
+  }
+  .aviso { font-size: 14px; padding: 11px 13px; border-radius: 8px; margin-bottom: 13px; }
+  .aviso.bien { background: var(--good-soft); border: 1px solid var(--good); }
+  .aviso.ojo { background: var(--skip-soft); border: 1px solid var(--skip); }
+  .aviso.mal { background: var(--bad-soft); border: 1px solid var(--bad); }
+
   /* instrument */
   .ic { background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
         overflow: hidden; box-shadow: var(--shadow); margin-bottom: 16px; }
@@ -360,7 +401,21 @@
 
   <!-- ============ 1 · OBJETOS ============ -->
   <section class="station on" id="st-objetos" role="tabpanel" aria-labelledby="tab-objetos">
+    <div class="tramo" id="tramo-objetos-1">
+      <span class="paso">Paso 1 de 3 · Entender</span>
+      <h2>Primero, cómo guarda Git tu trabajo</h2>
+      <p>Cinco capas, de tu mundo a los internals. Abres la siguiente cuando la anterior te cuadre.</p>
+      <div class="linea"></div>
+    </div>
+
     <div class="capas" id="capas-objetos"></div>
+
+    <div class="tramo" id="tramo-objetos-2">
+      <span class="paso">Paso 2 de 3 · Practicar</span>
+      <h2>Ahora practiquemos lo aprendido</h2>
+      <p>Vas a recorrer con las manos lo que acabas de leer: de la foto a la carpeta, y de la carpeta al contenido.</p>
+      <div class="linea"></div>
+    </div>
 
     <div class="objetivo" id="obj-objetos">
       <span class="et">Objetivo</span>
@@ -379,18 +434,32 @@
       </div>
     </div>
 
-    <div class="ic">
-      <div class="ic-head"><h3>Comprobación</h3></div>
-      <div class="ic-body">
-        <p style="margin:0 0 4px; font-size:15px;">Reescribes el commit número 3 de una rama de 20. ¿Por qué Git tiene que reescribir los 17 siguientes?</p>
-        <div class="quiz" id="quiz-objetos"></div>
-      </div>
+    <div class="tramo" id="tramo-objetos-3">
+      <span class="paso">Paso 3 de 3 · Comprobar</span>
+      <h2>Comprobemos que quedó</h2>
+      <p>Una pregunta, sin buscar. Si fallas, te digo a qué capa volver — no «reléelo».</p>
     </div>
+
+    <div id="check-objetos"></div>
   </section>
 
   <!-- ============ 2 · REFLOG ============ -->
   <section class="station" id="st-reflog" role="tabpanel" aria-labelledby="tab-reflog">
+    <div class="tramo" id="tramo-reflog-1">
+      <span class="paso">Paso 1 de 3 · Entender</span>
+      <h2>Primero, por qué casi nada se pierde</h2>
+      <p>La idea que hace que puedas experimentar sin miedo el resto del módulo.</p>
+      <div class="linea"></div>
+    </div>
+
     <div class="capas" id="capas-reflog"></div>
+
+    <div class="tramo" id="tramo-reflog-2">
+      <span class="paso">Paso 2 de 3 · Practicar</span>
+      <h2>Ahora practiquemos lo aprendido</h2>
+      <p>Una terminal funcional con el desastre ya hecho. Tú lo arreglas, escribiendo comandos de verdad.</p>
+      <div class="linea"></div>
+    </div>
 
     <div class="objetivo" id="obj-reflog">
       <span class="et">Escenario</span>
@@ -411,11 +480,32 @@
         <p class="ref">Comandos disponibles: <code>git log --oneline</code> · <code>git reflog</code> · <code>git reset --hard &lt;ref&gt;</code> · <code>git branch &lt;nombre&gt; &lt;hash&gt;</code> · <code>ayuda</code></p>
       </div>
     </div>
+    <div class="tramo" id="tramo-reflog-3">
+      <span class="paso">Paso 3 de 3 · Comprobar</span>
+      <h2>Comprobemos que quedó</h2>
+      <p>Dos preguntas. La segunda es la que más se confunde en la práctica.</p>
+    </div>
+
+    <div id="check-reflog"></div>
   </section>
 
   <!-- ============ 3 · REBASE ============ -->
   <section class="station" id="st-rebase" role="tabpanel" aria-labelledby="tab-rebase">
+    <div class="tramo" id="tramo-rebase-1">
+      <span class="paso">Paso 1 de 3 · Entender</span>
+      <h2>Primero, para qué se ordena el historial</h2>
+      <p>No es estética: es dejar preparada la herramienta que vas a usar en el instrumento siguiente.</p>
+      <div class="linea"></div>
+    </div>
+
     <div class="capas" id="capas-rebase"></div>
+
+    <div class="tramo" id="tramo-rebase-2">
+      <span class="paso">Paso 2 de 3 · Practicar</span>
+      <h2>Ahora practiquemos lo aprendido</h2>
+      <p>Cinco commits, dos de ellos trabajo sucio. Déjalo en tres que se lean.</p>
+      <div class="linea"></div>
+    </div>
 
     <div class="objetivo" id="obj-rebase">
       <span class="et">Objetivo</span>
@@ -453,11 +543,32 @@
         </table>
       </div>
     </div>
+    <div class="tramo" id="tramo-rebase-3">
+      <span class="paso">Paso 3 de 3 · Comprobar</span>
+      <h2>Comprobemos que quedó</h2>
+      <p>Dos preguntas sobre las trampas que se llevan a todo el mundo la primera vez.</p>
+    </div>
+
+    <div id="check-rebase"></div>
   </section>
 
   <!-- ============ 4 · BISECT ============ -->
   <section class="station" id="st-bisect" role="tabpanel" aria-labelledby="tab-bisect">
+    <div class="tramo" id="tramo-bisect-1">
+      <span class="paso">Paso 1 de 3 · Entender</span>
+      <h2>Primero, la técnica</h2>
+      <p>De 200 revisiones a 8. Y la pregunta que hay que saber formular para que funcione.</p>
+      <div class="linea"></div>
+    </div>
+
     <div class="capas" id="capas-bisect"></div>
+
+    <div class="tramo" id="tramo-bisect-2">
+      <span class="paso">Paso 2 de 3 · Practicar</span>
+      <h2>Ahora practiquemos lo aprendido</h2>
+      <p>El simulador parte el rango a la mitad y tú respondes. Hay una tercera respuesta que decide el resultado.</p>
+      <div class="linea"></div>
+    </div>
 
     <div class="objetivo" id="obj-bisect">
       <span class="et">Objetivo</span>
@@ -490,15 +601,81 @@
         <div class="term" id="bs-term"></div>
       </div>
     </div>
+    <div class="tramo" id="tramo-bisect-3">
+      <span class="paso">Paso 3 de 3 · Comprobar</span>
+      <h2>Comprobemos que quedó</h2>
+      <p>Dos preguntas. Si fallas la segunda, vas a converger en el commit equivocado en el laboratorio real.</p>
+    </div>
+
+    <div id="check-bisect"></div>
   </section>
 
-  <footer class="cierre">
-    <p><b>Esto es el simulador. El entregable es el repositorio.</b> Cuando los cuatro instrumentos estén en verde, monta el laboratorio real y bisecta un repositorio de verdad, con un pipeline de verdad:</p>
-    <div class="term" style="margin-bottom:12px">python3 fases/f0-git-fundamentos/labs/lab-bisect/montar-laboratorio.py
+  <!-- ============ 5 · ENTREGABLE ============ -->
+  <section class="station" id="st-entregable" role="tabpanel" aria-labelledby="tab-entregable">
+    <div class="tramo" id="tramo-entregable">
+      <span class="paso">Último paso · Cerrar</span>
+      <h2>Ahora hazlo de verdad</h2>
+      <p>El simulador ya lo sabes. Lo que se entrega es la traza de un repositorio real: rango, pasos, criterio de decisión y —lo único que no se puede automatizar— por qué ese cambio produce ese síntoma.</p>
+      <div class="linea"></div>
+    </div>
+
+    <div class="ic">
+      <div class="ic-head"><h3>1 · monta el laboratorio</h3></div>
+      <div class="ic-body">
+        <p style="margin:0 0 12px;font-size:15px;color:var(--muted)">Cuatro líneas en la terminal. El primer comando construye un repositorio desechable con el defecto ya sembrado; se puede rehacer las veces que quieras.</p>
+        <div class="term">python3 fases/f0-git-fundamentos/labs/lab-bisect/montar-laboratorio.py
 cd datos/lab-bisect/repo
 git bisect start HEAD informe-semana-40
 git bisect run ../prueba.sh</div>
-    <p>Después llenas <code>fases/f0-git-fundamentos/entregable/traza-bisect.md</code>. <b>Entregas la traza, no el hash:</b> localizar el commit es mecánico, explicar por qué ese cambio produce ese síntoma sobre estos datos es el trabajo.</p>
+        <p class="ref">Antes de <code>git bisect reset</code>: <code>git bisect log &gt; /tmp/traza.txt</code>. Eso es lo que vas a pegar aquí abajo.</p>
+      </div>
+    </div>
+
+    <div class="ic">
+      <div class="ic-head"><h3>2 · pega lo que devolvió bisect</h3></div>
+      <div class="ic-body">
+        <div class="campo">
+          <label for="tz-log">Salida de <code>git bisect log</code></label>
+          <textarea id="tz-log" spellcheck="false" placeholder="git bisect start HEAD informe-semana-40&#10;# bad: [...] ...&#10;git bisect good ...&#10;# first bad commit: [...] ..."></textarea>
+          <span class="ayuda">Se lee aquí en tu navegador. No se envía a ningún lado.</span>
+        </div>
+        <div class="campo">
+          <label for="tz-n">Commits que había en el rango</label>
+          <input id="tz-n" type="number" min="2" max="100000" inputmode="numeric" placeholder="11">
+          <span class="ayuda">Lo da <code>git rev-list --count informe-semana-40..HEAD</code>. Sirve para comparar tus pasos con log₂(n).</span>
+        </div>
+        <div class="row">
+          <button class="act" id="tz-leer" type="button">Leer la traza</button>
+          <button class="act ghost" id="tz-ejemplo" type="button">Ver con un ejemplo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="lectura" id="tz-lectura">
+      <div class="ic">
+        <div class="ic-head"><h3>3 · lo que dice tu traza</h3></div>
+        <div class="ic-body">
+          <div id="tz-avisos"></div>
+          <dl class="metricas" id="tz-metricas"></dl>
+        </div>
+      </div>
+
+      <div class="ic">
+        <div class="ic-head">
+          <h3>4 · borrador del entregable</h3>
+          <button class="act" id="tz-copiar" type="button">Copiar</button>
+        </div>
+        <div class="ic-body">
+          <p style="margin:0 0 12px;font-size:15px;color:var(--muted)">Cópialo en <code>fases/f0-git-fundamentos/entregable/traza-bisect.md</code>. Casi todo viene lleno: <b>la sección 6 está vacía a propósito</b>, porque es la única parte que no sale de la traza — y es la que se sustenta en una entrevista.</p>
+          <div class="salida-md" id="tz-md"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="cierre">
+    <p><b>Esto es el simulador.</b> Sirve para entender el mecanismo sin miedo a romper nada. Pero lo que cierra la Fase 0 es el laboratorio real y su traza, y eso está en la pestaña <b>Entregable</b>.</p>
+    <p>El material escrito de cada instrumento está en <code>fases/f0-git-fundamentos/notas/</code>, con su comprobación al final. Si algo aquí y una nota se contradicen, manda la nota.</p>
     <p class="sync" id="sync">Sin sincronizar</p>
     <div class="clave" id="caja-clave" hidden>
       <label for="clave-input">Para que el avance te siga entre la computadora y el celular, escribe una clave personal. La misma en los dos aparatos.</label>
@@ -527,14 +704,19 @@ git bisect run ../prueba.sh</div>
    estado y persistencia
    ===================================================================== */
 const MODS = [
-  { id: "objetos", n: "01", t: "Objetos" },
-  { id: "reflog",  n: "02", t: "reflog" },
-  { id: "rebase",  n: "03", t: "rebase -i" },
-  { id: "bisect",  n: "04", t: "bisect" }
+  { id: "objetos",    n: "01", t: "Objetos" },
+  { id: "reflog",     n: "02", t: "reflog" },
+  { id: "rebase",     n: "03", t: "rebase -i" },
+  { id: "bisect",     n: "04", t: "bisect" },
+  { id: "entregable", n: "→",  t: "Entregable", cierre: true }
 ];
+const INSTRUMENTOS = MODS.filter(m => !m.cierre);
 /* El progreso lo lleva Almacen (almacenamiento.js): decide solo si guarda
    en este dispositivo, en el artefacto o en el servidor del sitio. */
 function hechos() { return Almacen.leer().hechos || {}; }
+function checks() { return Almacen.leer().checks || {}; }
+/* un instrumento está cerrado cuando lo practicaste Y lo comprobaste */
+function cerrado(mid) { return !!hechos()[mid] && !!checks()[mid]; }
 function sync(msg) { document.getElementById("sync").textContent = msg; }
 
 function marcar(id) {
@@ -544,20 +726,37 @@ function marcar(id) {
 }
 
 function pintarProgreso() {
-  const h = hechos();
-  const n = MODS.filter(m => h[m.id]).length;
-  document.getElementById("fill").style.width = (n / MODS.length * 100) + "%";
-  document.getElementById("pcount").textContent = n + " de " + MODS.length;
+  const h = hechos(), c = checks();
+  const n = INSTRUMENTOS.filter(m => h[m.id] && c[m.id]).length;
+  document.getElementById("fill").style.width = (n / INSTRUMENTOS.length * 100) + "%";
+  document.getElementById("pcount").textContent = n + " de " + INSTRUMENTOS.length;
   MODS.forEach(m => {
+    const listo = m.cierre ? !!h[m.id] : (h[m.id] && c[m.id]);
     const tick = document.getElementById("tick-" + m.id);
-    if (tick) tick.textContent = h[m.id] ? "✓" : "";
+    if (tick) tick.textContent = listo ? "✓" : "";
     const obj = document.getElementById("obj-" + m.id);
     if (obj) obj.classList.toggle("listo", !!h[m.id]);
+    // los tramos se marcan uno a uno: entender, practicar, comprobar
+    const t1 = document.getElementById("tramo-" + m.id + "-1");
+    if (t1 && CAPAS[m.id]) t1.classList.toggle("listo", reveladas(m.id) >= CAPAS[m.id].length || !esGuiado());
+    const t2 = document.getElementById("tramo-" + m.id + "-2");
+    if (t2) t2.classList.toggle("listo", !!h[m.id]);
+    const t3 = document.getElementById("tramo-" + m.id + "-3");
+    if (t3) t3.classList.toggle("listo", !!c[m.id]);
+    const tc = document.getElementById("tramo-entregable");
+    if (tc) tc.classList.toggle("listo", !!h.entregable);
   });
 }
 
 /* pestañas */
 const tabs = document.getElementById("tabs");
+function abrir(mid) {
+  MODS.forEach(o => {
+    document.getElementById("st-" + o.id).classList.toggle("on", o.id === mid);
+    document.getElementById("tab-" + o.id).setAttribute("aria-selected", String(o.id === mid));
+  });
+}
+
 MODS.forEach((m, i) => {
   const b = document.createElement("button");
   b.className = "tab"; b.type = "button"; b.role = "tab"; b.id = "tab-" + m.id;
@@ -565,13 +764,17 @@ MODS.forEach((m, i) => {
   b.setAttribute("aria-controls", "st-" + m.id);
   b.innerHTML = '<span class="num">' + m.n + '</span>' + m.t + '<span class="tick" id="tick-' + m.id + '"></span>';
   b.addEventListener("click", () => {
-    MODS.forEach(o => {
-      document.getElementById("st-" + o.id).classList.toggle("on", o.id === m.id);
-      document.getElementById("tab-" + o.id).setAttribute("aria-selected", String(o.id === m.id));
-    });
+    abrir(m.id);
+    history.replaceState(null, "", "#" + m.id);
   });
   tabs.appendChild(b);
 });
+
+/* se puede llegar directo a un instrumento: modulo-1.html#entregable */
+(function () {
+  const pedido = (location.hash || "").replace("#", "");
+  if (pedido && MODS.some(m => m.id === pedido)) abrir(pedido);
+})();
 
 
 
@@ -916,6 +1119,7 @@ function pintarObjetos() {
       b.map(esc).join("\n") + '\n\n<span class="dim">Contenido puro: sin nombre, sin ruta, sin fecha.</span>\n';
     hint.textContent = "Tres saltos desde HEAD hasta el contenido. Eso es todo lo que Git es por dentro.";
     objBlobVisto = true;
+    setTimeout(revisarObjetos, 0);
   }
 
   path.innerHTML = 'HEAD → ' + ruta +
@@ -934,35 +1138,78 @@ function pintarObjetos() {
     pintarObjetos();
   });
 }
+function revisarObjetos() {
+  if (objAmend && objBlobVisto) marcar("objetos");
+}
 document.getElementById("amend-btn").addEventListener("click", () => {
   objAmend = true; objVista = "commit"; pintarObjetos();
   document.getElementById("amend-btn").disabled = true;
+  revisarObjetos();
 });
 pintarObjetos();
 
 /* comprobación */
-const QUIZ = [
-  { t: "Porque Git recalcula las diferencias acumuladas desde ese punto.",
-    ok: false, fb: "Git no guarda diferencias: guarda fotos completas. Las diferencias las calcula al vuelo cuando se las pides." },
-  { t: "Porque el hash de cada commit incluye el hash de su padre.",
-    ok: true, fb: "Exacto. El hash es del contenido completo, padre incluido. Cambia el padre y cambia el hijo, en cascada hasta la punta. De ahí sale la regla de no reescribir lo publicado." },
-  { t: "Porque rebase copia el working tree en cada paso.",
-    ok: false, fb: "Rebase reproduce cambios, pero eso no explica el cambio de hashes. La razón es el encadenamiento del hash del padre." }
-];
-const qz = document.getElementById("quiz-objetos");
-QUIZ.forEach(o => {
-  const b = document.createElement("button"); b.type = "button"; b.textContent = o.t;
-  b.addEventListener("click", () => {
-    qz.querySelectorAll("button").forEach(x => { x.classList.remove("si", "no"); });
-    b.classList.add(o.ok ? "si" : "no");
-    let fb = document.getElementById("quiz-fb");
-    if (!fb) { fb = document.createElement("p"); fb.className = "fb"; fb.id = "quiz-fb"; qz.appendChild(fb); }
-    fb.textContent = o.fb;
-    if (o.ok && objAmend && objBlobVisto) marcar("objetos");
-    else if (o.ok) fb.textContent = o.fb + " Te falta recorrer el explorador: baja hasta un blob y ejecuta el amend.";
+
+/* ========================================================================
+   comprobación — la misma mecánica en los cuatro instrumentos
+   ===================================================================== */
+const COMPROBACIONES = {"objetos": [{"p": "Reescribes el commit número 3 de una rama de 20. ¿Por qué Git tiene que reescribir los 17 siguientes?", "o": [{"t": "Porque Git recalcula las diferencias acumuladas desde ese punto.", "ok": false, "fb": "Git no guarda diferencias: guarda fotos completas. Las diferencias las calcula al vuelo cuando se las pides. Vuelve a la capa 1."}, {"t": "Porque el hash de cada commit incluye el hash de su padre.", "ok": true, "fb": "Exacto. El número se calcula del contenido completo, padre incluido: cambia el padre y cambia el hijo, en cascada hasta la punta. De ahí sale la regla de no reescribir lo publicado."}, {"t": "Porque rebase copia el working tree en cada paso.", "ok": false, "fb": "Rebase reproduce cambios, pero eso no explica el cambio de números. La razón es el encadenamiento del hash del padre. Vuelve a la capa 2."}]}], "reflog": [{"p": "Tu compañero perdió trabajo en su máquina. ¿Le sirve tu reflog?", "o": [{"t": "Sí: el reflog viaja con el repositorio cuando se hace push.", "ok": false, "fb": "No viaja. El reflog es local y personal: no se clona, no se empuja, y si borras la carpeta se va con ella. Vuelve a la capa 2."}, {"t": "No: el reflog es local y personal; cada quien tiene el suyo.", "ok": true, "fb": "Correcto. Es una red de seguridad, no un respaldo. Lo que salva es lo que pasó en tu máquina."}, {"t": "Sí, si los dos trabajan sobre la misma rama.", "ok": false, "fb": "La rama no tiene nada que ver: el reflog registra los movimientos de tu HEAD, en tu máquina. Vuelve a la capa 2."}]}, {"p": "¿Qué diferencia hay entre <code>HEAD@{2}</code> y <code>HEAD~2</code>?", "o": [{"t": "Ninguna: son dos maneras de escribir lo mismo.", "ok": false, "fb": "Son dos recorridos distintos, y confundirlos después de un reset desordenado es un error caro. Vuelve a la capa 4."}, {"t": "<code>HEAD~2</code> recorre la cadena de la historia; <code>HEAD@{2}</code> recorre tu bitácora de movimientos.", "ok": true, "fb": "Eso es. Uno va por los padres, el otro por lo que hiciste tú. Después de un reset desordenado dejan de coincidir."}, {"t": "<code>HEAD@{2}</code> siempre apunta a un commit más antiguo.", "ok": false, "fb": "No hay tal garantía: si tu último movimiento fue avanzar, <code>HEAD@{2}</code> puede ser más reciente. Vuelve a la capa 4."}]}], "rebase": [{"p": "Un <code>wip</code> quedó tres líneas debajo del commit al que pertenece. ¿Basta con ponerle <code>fixup</code>?", "o": [{"t": "No: <code>fixup</code> fusiona con la línea inmediatamente anterior, así que primero hay que moverlo.", "ok": true, "fb": "Correcto, y es la trampa que se lleva a todo el mundo la primera vez. Primero se mueve la línea, después se le pone el verbo."}, {"t": "Sí: <code>fixup</code> busca su commit por el mensaje.", "ok": false, "fb": "No busca nada: fusiona con la línea de arriba, sea cual sea. Vuelve a la capa 2."}, {"t": "No, y para eso no sirve <code>fixup</code>: hay que usar <code>squash</code>.", "ok": false, "fb": "Los dos fusionan con la anterior; se diferencian en si conservan el mensaje. El problema aquí es la posición. Vuelve a la capa 4."}]}, {"p": "¿Por qué <code>--force-with-lease</code> y no <code>--force</code> a secas?", "o": [{"t": "Porque falla si alguien subió algo que tú no has visto, en vez de pisarlo.", "ok": true, "fb": "Esa es la diferencia entre republicar y destruir el trabajo de otro. Comprueba antes; <code>--force</code> no comprueba nada."}, {"t": "Porque no reescribe los hashes de los commits.", "ok": false, "fb": "Los reescribe igual: eso lo hizo el rebase, antes de publicar. Lo que cambia es la comprobación previa. Vuelve a la capa 5."}, {"t": "Porque es más rápido con historiales largos.", "ok": false, "fb": "La velocidad no tiene nada que ver. Es una comprobación de seguridad. Vuelve a la capa 5."}]}], "bisect": [{"p": "¿Por qué el script de prueba no puede vivir dentro del repositorio que estás bisecando?", "o": [{"t": "Porque bisect cambia la carpeta a versiones viejas, y el script desaparecería o volvería a una versión antigua a mitad de la búsqueda.", "ok": true, "fb": "Exacto. Cada paso hace checkout de otro commit; lo que esté dentro del árbol cambia con él. Por eso va un nivel arriba: <code>git bisect run ../prueba.sh</code>."}, {"t": "Porque Git no permite ejecutar archivos que estén versionados.", "ok": false, "fb": "Git no tiene ninguna regla así. El problema es que el contenido de la carpeta cambia en cada paso. Vuelve a la capa 5."}, {"t": "Porque ocuparía espacio en el historial.", "ok": false, "fb": "El tamaño no es el problema. El problema es que el script se ve arrastrado por el checkout. Vuelve a la capa 5."}]}, {"p": "Un commit del rango ni siquiera arranca: revienta con un error antes de calcular nada. ¿Qué respondes?", "o": [{"t": "«No se puede probar» — código 125, o <code>git bisect skip</code>.", "ok": true, "fb": "Correcto. Una medición que no se pudo tomar no es una medición fuera de rango. Bisect lo salta y busca otro commit para probar."}, {"t": "«Malo»: si no corre, evidentemente algo está mal ahí.", "ok": false, "fb": "Ese es el error que hace converger en el commit equivocado: le estás diciendo a Git «el defecto ya existía aquí» por una razón falsa, y la búsqueda se va hacia atrás. Vuelve a la capa 4."}, {"t": "«Bueno»: el defecto que busco todavía no estaba.", "ok": false, "fb": "Tampoco lo sabes: no pudiste medir. Afirmar cualquiera de los dos extremos contamina el resultado. Vuelve a la capa 4."}]}]};
+const aciertos = {};
+
+function pintarComprobacion(mid) {
+  const host = document.getElementById("check-" + mid);
+  if (!host) return;
+  const preguntas = COMPROBACIONES[mid] || [];
+  aciertos[mid] = aciertos[mid] || new Set();
+
+  const ic = document.createElement("div");
+  ic.className = "ic";
+  const head = document.createElement("div");
+  head.className = "ic-head";
+  head.innerHTML = '<h3>Comprobación</h3><span class="ref" style="margin:0" id="check-cuenta-' + mid + '"></span>';
+  const body = document.createElement("div");
+  body.className = "ic-body";
+
+  preguntas.forEach((q, qi) => {
+    const bloque = document.createElement("div");
+    bloque.style.marginBottom = qi < preguntas.length - 1 ? "22px" : "0";
+    const enunciado = document.createElement("p");
+    enunciado.style.cssText = "margin:0 0 4px;font-size:15px";
+    enunciado.innerHTML = (preguntas.length > 1 ? (qi + 1) + ". " : "") + q.p;
+    const caja = document.createElement("div");
+    caja.className = "quiz";
+    const fb = document.createElement("p");
+    fb.className = "fb";
+
+    q.o.forEach(o => {
+      const b = document.createElement("button");
+      b.type = "button"; b.innerHTML = o.t;
+      b.addEventListener("click", () => {
+        caja.querySelectorAll("button").forEach(x => x.classList.remove("si", "no"));
+        b.classList.add(o.ok ? "si" : "no");
+        fb.innerHTML = o.fb;
+        if (!caja.contains(fb)) caja.appendChild(fb);
+        if (o.ok) aciertos[mid].add(qi); else aciertos[mid].delete(qi);
+        const cuenta = document.getElementById("check-cuenta-" + mid);
+        if (cuenta) cuenta.textContent = aciertos[mid].size + " de " + preguntas.length;
+        if (aciertos[mid].size === preguntas.length) {
+          Almacen.marcar("checks", mid, true);
+          pintarProgreso();
+        }
+      });
+      caja.appendChild(b);
+    });
+    bloque.appendChild(enunciado); bloque.appendChild(caja);
+    body.appendChild(bloque);
   });
-  qz.appendChild(b);
-});
+
+  ic.appendChild(head); ic.appendChild(body);
+  host.innerHTML = "";
+  host.appendChild(ic);
+  const cuenta = document.getElementById("check-cuenta-" + mid);
+  if (cuenta) cuenta.textContent = (checks()[mid] ? preguntas.length : aciertos[mid].size) + " de " + preguntas.length;
+}
+Object.keys(COMPROBACIONES).forEach(pintarComprobacion);
 
 /* ========================================================================
    2 · terminal de reflog
@@ -1315,6 +1562,188 @@ document.getElementById("bs-reset").addEventListener("click", () =>
 document.getElementById("bs-n").addEventListener("change", () =>
   nuevoBS(Number(document.getElementById("bs-n").value)));
 nuevoBS(60);
+
+
+/* ========================================================================
+   generador de la traza — lee la salida de `git bisect log` y arma el
+   borrador del entregable. Todo pasa en este navegador: nada se envía.
+   ===================================================================== */
+const EJEMPLO_LOG = `git bisect start 'HEAD' 'informe-semana-40'
+# status: waiting for both good and bad commits
+# bad: [c248c9bf614275ab131769dbf35de679b183f7ae] Agregar nota de uso al README
+git bisect bad c248c9bf614275ab131769dbf35de679b183f7ae
+# good: [b9a1c07d1f2e4a6b8c3d5e7f9a1b2c3d4e5f6a7b] Separar la lectura del CSV en una función
+git bisect good b9a1c07d1f2e4a6b8c3d5e7f9a1b2c3d4e5f6a7b
+# good: [1edf70c4a228045229987df72a62cf2bf7c3110d] Ordenar el resumen por nodo
+git bisect good 1edf70c4a228045229987df72a62cf2bf7c3110d
+# bad: [79f6be79271868b6ff2cacb726abccb3a4675586] Simplificar el cálculo del MTTR
+git bisect bad 79f6be79271868b6ff2cacb726abccb3a4675586
+# good: [3827681afbfc712183b3248095f8bcd5a54e348e] Anotar el alcance del resumen
+git bisect good 3827681afbfc712183b3248095f8bcd5a54e348e
+# first bad commit: [79f6be79271868b6ff2cacb726abccb3a4675586] Simplificar el cálculo del MTTR`;
+
+function leerTraza(texto, n) {
+  const t = { arranco: false, bueno: null, malo: null, mensajes: {},
+              decisiones: [], pruebas: 0, saltados: 0,
+              culpable: null, mensaje: "", terminado: false, n: n, teorico: null };
+
+  texto.split(/\r?\n/).map(l => l.trim()).forEach(l => {
+    let m = l.match(/^git bisect start\b(.*)$/);
+    if (m) { t.arranco = true; return; }
+    m = l.match(/^#\s*(good|bad|skip):\s*\[([0-9a-f]{4,40})\]\s*(.*)$/i);
+    if (m) { t.mensajes[m[2]] = m[3]; return; }
+    m = l.match(/^git bisect (good|bad|skip)\s*(\S*)/);
+    if (m) { t.decisiones.push({ tipo: m[1], hash: (m[2] || "").replace(/['"]/g, "") }); return; }
+    m = l.match(/^#\s*first bad commit:\s*\[([0-9a-f]{4,40})\]\s*(.*)$/i);
+    if (m) { t.culpable = m[1]; t.mensaje = m[2]; t.terminado = true; }
+  });
+
+  /* Git registra primero los dos extremos y después cada prueba. Se separan:
+     el primer `bad` y el primer `good` son el rango, no respuestas tuyas. */
+  const resto = t.decisiones.slice();
+  const iMalo = resto.findIndex(d => d.tipo === "bad");
+  if (iMalo >= 0) { t.malo = resto[iMalo].hash; resto.splice(iMalo, 1); }
+  const iBueno = resto.findIndex(d => d.tipo === "good");
+  if (iBueno >= 0) { t.bueno = resto[iBueno].hash; resto.splice(iBueno, 1); }
+
+  t.pruebas = resto.length;
+  t.saltados = resto.filter(d => d.tipo === "skip").length;
+  if (n > 1) t.teorico = Math.ceil(Math.log2(n));
+  return t;
+}
+
+function cortito(h) { return h ? h.slice(0, 7) : "—"; }
+
+function avisosTraza(t) {
+  const av = [];
+  if (!t.arranco) {
+    av.push(["mal", "Esto no parece la salida de <code>git bisect log</code>: no aparece la línea <code>git bisect start</code>. Cópiala completa, desde la primera línea."]);
+    return av;
+  }
+  if (!t.terminado) {
+    av.push(["ojo", "La traza no llega al final: falta la línea <code># first bad commit</code>. Bisect todavía no había convergido cuando exportaste el registro — termina la búsqueda y vuelve a exportarla."]);
+  } else {
+    av.push(["bien", "Traza completa. Bisect convergió en <b>" + cortito(t.culpable) + "</b> — " + (t.mensaje || "(sin mensaje)") + "."]);
+  }
+  if (t.saltados > 0) {
+    av.push(["ojo", "Saltaste <b>" + t.saltados + "</b> commit(s) con <code>skip</code> o código 125. Eso está bien y hay que <b>anotarlo en el entregable</b>: significa que había commits que no se podían probar, y es justo la distinción que separa un bisect correcto de uno que converge en el vecino."]);
+  }
+  if (t.teorico && t.pruebas > t.teorico) {
+    av.push(["ojo", "Hiciste <b>" + t.pruebas + "</b> pruebas y el máximo teórico para " + t.n + " commits es <b>" + t.teorico + "</b>. Suele significar una respuesta al revés a mitad de camino, o un rango mayor que el declarado. Vale la pena explicarlo en la sección 2."]);
+  }
+  return av;
+}
+
+function armarMarkdown(t, logCrudo) {
+  const L = [];
+  L.push("# Entregable F0 · Traza de bisect", "");
+  L.push("> Borrador generado desde `git bisect log`. Lo que está entre paréntesis", "> lo completas tú: es lo que la traza no puede saber.", "");
+  L.push("## 1. Síntoma", "");
+  L.push("- **Qué se observó:** (el indicador y cómo se vio mal)");
+  L.push("- **Valor esperado / valor obtenido:** (por ejemplo, 2.83 h frente a 4.11 h)");
+  L.push("- **Cómo se detectó:** (tablero, informe, reclamo de alguien)");
+  L.push("- **Cuánto tiempo estuvo mal antes de notarse:** (…)", "");
+  L.push("## 2. Rango de búsqueda", "");
+  L.push("| | Referencia | Hash | Por qué se sabe que está así |");
+  L.push("|---|---|---|---|");
+  L.push("| Último bueno | `" + (t.bueno ? cortito(t.bueno) : "—") + "` | `" + (t.bueno || "—") + "` | (el informe de esa fecha era correcto) |");
+  L.push("| Primero malo | `" + (t.malo ? cortito(t.malo) : "—") + "` | `" + (t.malo || "—") + "` | (el tablero de hoy) |", "");
+  L.push("- **Commits en el rango:** " + (t.n || "(…)"));
+  L.push("- **Pasos que predije (log₂ n):** " + (t.teorico || "(…)"));
+  L.push("- **Pruebas que bisect ejecutó realmente:** " + t.pruebas);
+  L.push("- **Commits saltados (no probables):** " + t.saltados);
+  if (t.teorico && t.pruebas !== t.teorico) {
+    L.push("- **Por qué no coinciden:** (" + (t.pruebas < t.teorico
+      ? "log₂ n es el máximo, no el número exacto: con suerte en el reparto se converge antes"
+      : "revisa si alguna respuesta fue al revés o si el rango era mayor") + ")");
+  }
+  L.push("");
+  L.push("## 3. Criterio de decisión", "");
+  L.push("El script usado (`prueba.sh`) y **por qué decide así**:", "", "```bash", "(pega aquí el script)", "```", "");
+  L.push("- ¿Qué devuelve ante un commit que no ejecuta, y por qué no es `1`? (…)");
+  L.push("- ¿Se verificó contra los dos extremos conocidos antes de bisecar? (…)", "");
+  L.push("## 4. Traza", "", "```", logCrudo.trim(), "```", "");
+  L.push("## 5. Commit culpable", "");
+  L.push("- **Hash:** `" + (t.culpable || "(sin converger)") + "`");
+  L.push("- **Mensaje:** " + (t.mensaje || "(…)"));
+  L.push("- **Diff:**", "", "```diff", "(salida de git show " + (t.culpable ? cortito(t.culpable) : "<hash>") + ")", "```", "");
+  L.push("## 6. Mecanismo", "");
+  L.push("> Esta sección se deja vacía a propósito: es la única que no sale de la traza,");
+  L.push("> y es la que se sustenta en una entrevista. No basta «cambió el cálculo».");
+  L.push("> Explica **qué propiedad de estos datos** hace que el efecto tenga esa magnitud,");
+  L.push("> y en qué datos el mismo cambio habría pasado inadvertido.", "");
+  L.push("");
+  L.push("## 7. Corrección y prevención", "");
+  L.push("- **Corrección:** (…)");
+  L.push("- **Prueba que habría atrapado esto en CI** (Fase 5): (…)");
+  L.push("- **Señal que lo habría detectado el mismo día** (Fase 5, cinco señales): (…)");
+  return L.join("\n");
+}
+
+(function () {
+  const bLeer = document.getElementById("tz-leer");
+  if (!bLeer) return;
+  const caja = document.getElementById("tz-log");
+  const cuantos = document.getElementById("tz-n");
+  const lectura = document.getElementById("tz-lectura");
+
+  function leer() {
+    const crudo = caja.value.trim();
+    if (!crudo) { caja.focus(); return; }
+    const n = Number(cuantos.value) || 0;
+    const t = leerTraza(crudo, n);
+
+    const av = document.getElementById("tz-avisos");
+    av.innerHTML = "";
+    avisosTraza(t).forEach(([clase, texto]) => {
+      const d = document.createElement("div");
+      d.className = "aviso " + clase; d.innerHTML = texto;
+      av.appendChild(d);
+    });
+
+    const met = document.getElementById("tz-metricas");
+    met.innerHTML = "";
+    [["Commits en rango", t.n || "—"],
+     ["Pruebas hechas", t.pruebas],
+     ["Máximo teórico", t.teorico || "—"],
+     ["Uno por uno habría sido", t.n ? t.n - 1 : "—"],
+     ["Saltados (125)", t.saltados]].forEach(([k, v]) => {
+      const d = document.createElement("div");
+      const dt = document.createElement("dt"); dt.textContent = k;
+      const dd = document.createElement("dd"); dd.textContent = v;
+      d.appendChild(dt); d.appendChild(dd); met.appendChild(d);
+    });
+
+    document.getElementById("tz-md").textContent = armarMarkdown(t, crudo);
+    lectura.classList.add("on");
+    lectura.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    if (t.terminado) { Almacen.marcar("hechos", "entregable", true); pintarProgreso(); }
+  }
+
+  bLeer.addEventListener("click", leer);
+  document.getElementById("tz-ejemplo").addEventListener("click", () => {
+    caja.value = EJEMPLO_LOG;
+    cuantos.value = 11;
+    leer();
+  });
+
+  document.getElementById("tz-copiar").addEventListener("click", (e) => {
+    const texto = document.getElementById("tz-md").textContent;
+    const boton = e.currentTarget;
+    const ok = () => { boton.textContent = "Copiado"; setTimeout(() => { boton.textContent = "Copiar"; }, 1800); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(ok).catch(() => seleccionar());
+    } else seleccionar();
+    function seleccionar() {
+      const r = document.createRange();
+      r.selectNodeContents(document.getElementById("tz-md"));
+      const sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(r);
+      boton.textContent = "Selecciónalo y copia";
+      setTimeout(() => { boton.textContent = "Copiar"; }, 2500);
+    }
+  });
+})();
 
 /* ========================================================================
    arranque

@@ -2,6 +2,11 @@
 
 > Un hash suelto no demuestra método. Esto sí.
 > Se llena después del lab; se defiende en inglés (`../resumen-en.md`).
+>
+> **Atajo:** la pestaña **Entregable** de la plataforma lee tu `git bisect log`
+> y rellena las secciones 2, 4 y 5 solas, con los pasos comparados contra
+> log₂(n). Deja la 6 vacía a propósito — es la única que no sale de la traza.
+> https://claude.ai/artifact/VB9pErnVpXhX4x8B9Brb4z#entregable
 
 ## 1. Síntoma
 

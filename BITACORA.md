@@ -82,3 +82,24 @@ Formato: dónde estoy · qué hice · qué medí · qué sigue.
   - `docs/despliegue.md` — los cuatro pasos manuales, explicados por capas.
 - **Pendiente:** los pasos manuales son suyos (cuenta de Netlify, clave de
   Gemini, clave personal). Y sigue pendiente el lab real y `traza-bisect.md`.
+
+## Sesión 5 — Recorrido visible y generador de la traza
+- **Fase / semana:** F0 · semana 1
+- **Hecho:**
+  - **Estructura del recorrido:** cada instrumento se divide en tres tramos
+    rotulados — *Paso 1 de 3 · Entender*, *Paso 2 de 3 · Practicar* («Ahora
+    practiquemos lo aprendido»), *Paso 3 de 3 · Comprobar*. Cada tramo se marca
+    en verde cuando se cierra, así se ve dónde se va sin leer nada.
+  - **Comprobación en los cuatro instrumentos,** no solo en el primero: siete
+    preguntas en total, cada opción incorrecta devuelve a una capa concreta.
+    Un instrumento se cuenta cerrado cuando se practicó **y** se comprobó.
+  - **Generador de la traza** (pestaña Entregable): lee `git bisect log`, separa
+    los extremos del rango de las pruebas reales, cuenta los `skip`, compara los
+    pasos contra log₂(n) y arma el borrador del entregable. La sección 6 —el
+    mecanismo— la deja vacía a propósito.
+  - Enlaces directos por pestaña: `modulo-1.html#entregable`.
+- **Medido:** el lector de trazas probado contra la salida real del laboratorio,
+  una traza sin converger, una con `skip` y texto basura. Los cuatro casos dan
+  el resultado correcto.
+- **Pendiente:** el laboratorio real y la traza. La plataforma ya no tiene
+  excusas que ofrecer.
