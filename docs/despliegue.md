@@ -155,6 +155,7 @@ es sincronizar el avance y el botón del tutor.
 | El sitio quedó pausado | se acabaron los créditos del mes gratis | espera al ciclo siguiente (ver abajo) |
 | Se publicó un README suelto en vez de la plataforma | Netlify publica una rama sin `app/` | revisa la rama de producción (paso 0) |
 | El despliegue falla en «Installing dependencies» | versión de `@netlify/blobs` | mira el registro del despliegue: dice qué versión falta |
+| «Secrets scanning found secrets in build» | Netlify trata **toda** variable de entorno como secreta y busca su valor en el repositorio | lee el log, no el resumen del asistente: dice **qué variable** y **en qué línea**. Si el valor no es un secreto (el nombre de un modelo, por ejemplo), se excluye esa clave con `SECRETS_SCAN_OMIT_KEYS` en `netlify.toml` — ya está puesto para `GEMINI_MODELO` |
 
 **El límite real del plan gratuito de Netlify.** Son créditos mensuales, y
 cuando se acaban **el sitio se pausa** hasta el mes siguiente. Para una persona

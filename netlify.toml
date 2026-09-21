@@ -4,7 +4,16 @@
   functions = "netlify/functions"
 
 [build.environment]
-  NODE_VERSION = "20"
+  # @netlify/blobs 11 exige Node 22 o superior. Con 20 el despliegue pasa con
+  # avisos y luego el guardado del progreso falla en ejecución.
+  NODE_VERSION = "22"
+
+  # Netlify trata TODA variable de entorno como secreta y falla el despliegue
+  # si encuentra su valor en el repositorio. GEMINI_MODELO no es un secreto:
+  # es el nombre de un modelo («gemini-2.5-flash-lite»), y aparece a propósito
+  # en el código como valor por defecto y en la guía de despliegue. Se excluye
+  # solo esa clave; GEMINI_API_KEY y CLAVE_PERSONAL siguen vigiladas.
+  SECRETS_SCAN_OMIT_KEYS = "GEMINI_MODELO"
 
 # El sitio es contenido educativo público; lo único sensible es la clave de
 # Gemini, que vive en las variables de entorno y nunca llega al navegador.
