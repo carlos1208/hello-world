@@ -1,0 +1,49 @@
+# ---- Datos: nunca se versionan ----
+datos/*
+*.csv
+*.parquet
+*.delta/
+*.avro
+*.json.gz
+!docs/**/*.json
+
+# ---- Credenciales y configuración local ----
+.env
+.env.*
+*.pem
+*.key
+secrets.*
+.databrickscfg
+.azure/
+
+# ---- Notebooks ----
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# ---- Spark / Delta local ----
+spark-warehouse/
+metastore_db/
+derby.log
+checkpoints/
+
+# ---- Sistema operativo y editores ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Excepción: la nota que explica por qué esta carpeta está vacía en el repo
+!datos/README.md
