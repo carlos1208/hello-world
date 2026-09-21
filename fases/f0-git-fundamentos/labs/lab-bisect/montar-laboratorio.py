@@ -197,15 +197,26 @@ PRUEBA = """#!/usr/bin/env bash
 #     0   commit bueno
 #     1   commit malo
 #   125   no se puede probar (sáltalo)
+#   128   abortar: aquí, que no hay intérprete de Python
 set -u
 RAIZ="$(cd "$(dirname "$0")" && pwd)"
 ESPERADO=%(esperado).2f
 
-SALIDA="$(python3 "$RAIZ/repo/pipeline.py" "$RAIZ/alarmas.csv" 2>/dev/null)" || exit 125
+# El nombre del intérprete cambia según el sistema: en Linux y macOS suele ser
+# python3; en Windows, python o el lanzador py. Se resuelve una vez.
+if command -v python3 >/dev/null 2>&1; then   PY=python3
+elif command -v python >/dev/null 2>&1; then  PY=python
+elif command -v py >/dev/null 2>&1; then      PY="py -3"
+else
+  echo "No encuentro Python. Instalalo o ajusta este script." >&2
+  exit 128
+fi
+
+SALIDA="$($PY "$RAIZ/repo/pipeline.py" "$RAIZ/alarmas.csv" 2>/dev/null)" || exit 125
 VALOR="$(printf '%%s\\n' "$SALIDA" | sed -n 's/^MTTR_HORAS=//p')"
 [ -n "$VALOR" ] || exit 125
 
-python3 - "$VALOR" "$ESPERADO" <<'PY'
+$PY - "$VALOR" "$ESPERADO" <<'PY'
 import sys
 obtenido, esperado = float(sys.argv[1]), float(sys.argv[2])
 sys.exit(0 if abs(obtenido - esperado) < 0.01 else 1)

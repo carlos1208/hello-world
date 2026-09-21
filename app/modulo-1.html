@@ -272,6 +272,10 @@
   .prediccion .q { font-size: 15.5px; font-weight: 500; margin: 9px 0 2px; }
   .prediccion .nota { font-size: 13px; color: var(--faint); margin: 6px 0 0; }
   .velado { display: none !important; }
+  .cerrojo { background: var(--surface); border: 1px dashed var(--line); border-radius: 11px;
+    padding: 18px 17px; margin-bottom: 16px; text-align: center; }
+  .cerrojo b { display: block; font-size: 15px; margin-bottom: 4px; }
+  .cerrojo span { font-size: 13.5px; color: var(--muted); }
 
   /* P2 · el glosario distingue lo ya enseñado de lo que falta */
   dfn.g.visto { border-bottom-style: dotted; border-bottom-color: var(--faint); }
@@ -1435,6 +1439,7 @@ pintarObjetos();
    ===================================================================== */
 const PREDICCIONES = {
   objetos: {
+    tras: "Explorador de objetos · terminal",
     q: "Vas a pulsar <code>git commit --amend</code> para corregirle el mensaje a una foto. ¿Qué le pasa a su número de serie?",
     o: [
       { t: "Se queda igual: cambió el mensaje, no los archivos.", ok: false,
@@ -1446,6 +1451,7 @@ const PREDICCIONES = {
     ]
   },
   reflog: {
+    tras: "Terminal de reflog · con la cadena de commits dibujada",
     q: "Sobre una rama de 8 commits alguien acaba de ejecutar <code>git reset --hard HEAD~3</code>. ¿Qué les pasó a los tres últimos?",
     o: [
       { t: "Se borraron del disco.", ok: false,
@@ -1457,6 +1463,7 @@ const PREDICCIONES = {
     ]
   },
   rebase: {
+    tras: "Terminal + editor de <code>git rebase -i</code>",
     q: "En la lista hay un <code>wip</code> tres líneas por debajo del commit al que pertenece. Si le pones <code>fixup</code> sin moverlo, ¿con cuál se fusiona?",
     o: [
       { t: "Con el commit al que pertenece: Git lo reconoce por el contenido.", ok: false,
@@ -1468,6 +1475,7 @@ const PREDICCIONES = {
     ]
   },
   bisect: {
+    tras: "Simulador de bisect · terminal",
     q: "Tienes <b>60 commits</b> en el rango y partes siempre por la mitad. ¿Cuántas pruebas hacen falta para encontrar el culpable?",
     o: [
       { t: "Unas 30: la mitad de los commits.", ok: false,
@@ -1534,6 +1542,14 @@ function pintarPrediccion(mid) {
   caja.appendChild(ops); caja.appendChild(fb);
   host.innerHTML = "";
   host.appendChild(caja);
+
+  /* Que se vea que hay un instrumento detrás: esconderlo sin avisar hacía
+     pensar que el módulo no tenía ejercicio. */
+  const cerrojo = document.createElement("div");
+  cerrojo.className = "cerrojo";
+  cerrojo.innerHTML = "<b>" + (d.tras || "El instrumento") + "</b>" +
+    "<span>Se abre en cuanto respondas aquí arriba. No hace falta acertar.</span>";
+  host.appendChild(cerrojo);
 }
 
 /* ========================================================================
