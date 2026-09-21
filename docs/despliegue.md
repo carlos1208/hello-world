@@ -36,7 +36,7 @@ nunca la ve. Esto no es opcional; es la razón de que el proyecto tenga funcione
 El trabajo vive en la rama `claude/cloud-data-eng-setup-6qj2dq`, y la rama por
 defecto del repositorio es `master`, que **todavía no tiene la carpeta `app/`**.
 Netlify publica la rama de producción, así que si no le dices cuál es, va a
-publicar `master` y verás el `hello world` viejo o un error.
+publicar `master` y verás el README viejo del repositorio, o un error.
 
 Dos maneras de resolverlo, y da igual cuál elijas:
 
@@ -55,7 +55,7 @@ Empieza con la rápida. La fusión se hace cuando cierres la Fase 0.
 1. Entra a [netlify.com](https://www.netlify.com/) → **Sign up** → elige
    **GitHub** (así ya queda conectado con tu repositorio).
 2. **Add new site** → **Import an existing project** → **GitHub** →
-   autoriza → elige `carlos1208/hello-world`.
+   autoriza → elige `carlos1208/ruta-data-engineering`.
 3. Netlify te muestra la configuración. **No cambies nada**: ya viene escrita en
    el archivo `netlify.toml` del repositorio (publica `app/`, las funciones
    salen de `netlify/functions/`).
@@ -151,7 +151,7 @@ es sincronizar el avance y el botón del tutor.
 | «Clave personal incorrecta» | no coincide con `CLAVE_PERSONAL` | revisa mayúsculas y espacios |
 | El avance no pasa al celular | clave distinta en cada aparato | escribe la misma en los dos |
 | El sitio quedó pausado | se acabaron los créditos del mes gratis | espera al ciclo siguiente (ver abajo) |
-| Se publicó el «hello world» viejo | Netlify está publicando `master` | cambia la rama de producción (paso 0) |
+| Se publicó un README suelto en vez de la plataforma | Netlify está publicando `master` | cambia la rama de producción (paso 0) |
 | El despliegue falla en «Installing dependencies» | versión de `@netlify/blobs` | mira el registro del despliegue: dice qué versión falta |
 
 **El límite real del plan gratuito de Netlify.** Son créditos mensuales, y
