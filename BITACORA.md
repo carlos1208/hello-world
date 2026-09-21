@@ -103,3 +103,29 @@ Formato: dónde estoy · qué hice · qué medí · qué sigue.
   el resultado correcto.
 - **Pendiente:** el laboratorio real y la traza. La plataforma ya no tiene
   excusas que ofrecer.
+
+## Sesión 6 — El sitio publicado, y lo que enseñó publicarlo
+- **Fase / semana:** F0 · semana 1
+- **Hecho:** la plataforma queda publicada en Netlify desde `master`. Cuatro
+  PR fusionados (#2 a #4) y tres fallos reales encontrados por el camino:
+  - **Escaneo de secretos.** Netlify trata toda variable de entorno como
+    secreta y falló el despliegue por `GEMINI_MODELO` — el nombre de un
+    modelo, no una clave. El asistente de Netlify diagnosticó mal (culpó a la
+    clave de Gemini y mandó a reescribir el historial); el registro decía qué
+    variable y en qué línea. **Leer la traza, no el resumen.**
+  - **Node 20 contra Node 22.** `@netlify/blobs` exige 22 y `netlify.toml`
+    fijaba 20. El despliegue pasaba con avisos: solo habría fallado al
+    sincronizar el avance entre dispositivos. Un sistema que corre y entrega
+    mal, otra vez.
+  - **404 del tutor.** No era de Netlify: era Google. `gemini-2.5-flash-lite`
+    está en retirada (apagado el 16 de octubre de 2026) y la API responde 404
+    con un modelo que ya no existe. La función dejó de depender de un nombre
+    fijo: prueba candidatos vigentes y recuerda el que sirve.
+- **Además:** favicon propio, avisos flotantes para que ninguna acción quede
+  muda (guardar la clave no daba señal), y movimiento con intención —
+  desactivado bajo `prefers-reduced-motion`.
+- **Medido:** despliegue en verde, 712 archivos escaneados sin secretos, dos
+  funciones publicadas.
+- **Pendiente:** verificar el tutor y la sincronización en el sitio real. Y lo
+  de siempre, que sigue sin moverse: el laboratorio de bisect y la sección 6
+  del entregable.
