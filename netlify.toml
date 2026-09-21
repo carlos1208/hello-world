@@ -1,0 +1,21 @@
+# Despliegue del sitio de la ruta. Pasos: docs/despliegue.md
+[build]
+  publish = "app"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# El sitio es contenido educativo público; lo único sensible es la clave de
+# Gemini, que vive en las variables de entorno y nunca llega al navegador.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"

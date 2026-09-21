@@ -1,0 +1,17 @@
+{
+  "name": "Ruta Cloud & Data Engineering",
+  "short_name": "Ruta CDE",
+  "description": "Plataforma de práctica de la ruta de 39 semanas hacia cloud y data engineering.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#EDF0F6",
+  "theme_color": "#EDF0F6",
+  "lang": "es",
+  "icons": [
+    { "src": "icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
